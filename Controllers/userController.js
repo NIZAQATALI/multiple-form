@@ -13,12 +13,9 @@ const path = require('path')
 
 var  User =  db.userModel;
 const register = async (req, res) => {
- 
   const { email } = req.body;
-
   // Check if the user with the provided email already exists
   const existingUser = await User.findOne({ where: { email } });
-
   if (existingUser) {
     // User with the email already exists, update the user
     await userService.updateUser(existingUser.id, req.body);
@@ -154,16 +151,35 @@ const updateUser = async (req, res) => {
     try {
 const id=req.params.userId;
 const step=req.params.stepNumber;
-console.log(step,"...................................")
       const updatedUser = await userService.updateUser(id,step, req.body);
-      console.log("Updated User:..................................", updatedUser); // Now it should be defined
+ // Now it should be defined
       res.status(200).json(updatedUser);
     } catch (err) {
       res.status(500).json(err);
     }
-  
 };
+const uploadForm = async (req, res) => {
+  try {
+const id=req.params.userId;
 
+
+    const updatedUser = await userService.uploadForm(id,{...req.body,fileschedule_pdf_name:req.file.path
+     // driving_licence:req.files.driving_licence.filename ,
+      // FormA1099_name:req.files.FormA1099_name[0].filename,
+      // FormB1099_name:req.files.FormB1099_name[0].filename,
+      // ks22020:req.files.ks22020[0].filename,
+      // ks2020:req.files.ks2020[0].filename,
+      // Tax_Return_2020:req.files.Tax_Return_2020[0].filename,
+      // Tax_Return_2021:req.files.Tax_Return_2021[0].filename,
+      // supplemental_attachment_2020:req.files.supplemental_attachment_2020[0].filename,
+      // supplemental_attachment_2021:req.files.supplemental_attachment_2021[0].filename,
+    } );
+// Now it should be defined
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
  const sendotp = async (req, res) => {
   console.log(req.body)
   const _otp = Math.floor(100000 + Math.random() * 900000)
@@ -343,7 +359,31 @@ const upload = multer({
   }
 }).single('schedule_pdf_name')
 
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     const destinationPath = path.join(__dirname, 'Images');
+//     cb(null, 'Images');
+//   },
+//   filename: (req, file, cb) => {
+//       cb(null, Date.now() + path.extname(file.originalname))
+//   }
+// })
+// const upload = multer({
 
+//   storage: storage,
+//   limits: { fileSize: '5000000' },
+//   fileFilter: (req, file, cb) => {
+//       const fileTypes = /jpeg|jpg|png|gif|pdf/
+//       const mimeType = fileTypes.test(file.mimetype)  
+//       const extname = fileTypes.test(path.extname(file.originalname))
+//       if(mimeType && extname) {
+//           return cb(null, true)
+//       }
+     
+//       cb('Give proper files formate to upload')
+//   }
+// }).single('schedule_pdf_name')
+//.fields([{ name: 'driving_licence', maxCount: 1 }, { name: 'FormA1099_name', maxCount: 1 },, { name: 'FormB1099_name', maxCount: 1 }, { name: 'ks22020', maxCount: 1 }, { name: 'ks2020', maxCount: 1 }, { name: 'Tax_Return_2020', maxCount: 1 }, { name: 'Tax_Return_2021', maxCount: 1 }, { name: 'supplemental_attachment_2020', maxCount: 1 }, { name: 'supplemental_attachment_2021', maxCount: 1 }, { name: 'supplemental_attachment_2021', maxCount: 1 }]);
 
 module.exports = {
   registerViaInvite,
@@ -356,5 +396,6 @@ module.exports = {
   sendotp,
   submitotp,
   sendInvitation,
-  upload
+  upload,
+  uploadForm
 };

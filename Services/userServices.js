@@ -158,6 +158,30 @@ user.step = step;
     return {status:500 ,error};
   }
 };
+const uploadForm = async (id, updateData) => {
+  try {
+    console.log("updateUser function called with id:", id);
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    // Dynamically update user properties based on updateData
+    for (const key in updateData) {
+      if (updateData.hasOwnProperty(key)) {
+        user[key] = updateData[key];
+      }
+    }
+
+
+
+    // Save the changes to the database
+    await user.save();
+    return { status: 200, user: user.toJSON() };
+  } catch (error) {
+    console.error("Error updating user:", error);
+    return {status:500 ,error};
+  }
+};
 const submitOtp = async (otp, newPassword) => {
   try {
     const result = await User.findOne({ otp: otp });
@@ -185,15 +209,12 @@ const submitOtp = async (otp, newPassword) => {
 const deleteUser = async (userId, callback) => {
   try {
     const user = await User.findByPk(userId);
-
     if (!user) {
       return callback({
         errMessage: 'User not found',
       });
     }
-
     await user.destroy();
-
     return callback(null, { message: 'User deleted successfully' });
   } catch (err) {
     return callback({
@@ -210,5 +231,6 @@ module.exports = {
   getUserWithMail,
   updateUser ,
   submitOtp ,
-  deleteUser
+  deleteUser,
+  uploadForm
 };
