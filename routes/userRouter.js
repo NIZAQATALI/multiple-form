@@ -5,7 +5,7 @@ const router = express.Router();
 router.post("/create", userController.register);
 router.post("/login", userController.login);
 router.put("/:stepNumber/:userId",   userController.updateUser);
-router.put("/:userId",userController.upload, userController.uploadForm);
+router.put("/:userId", userController.upload,userController.uploadForm);
 
 
 module.exports = router;

@@ -159,21 +159,21 @@ const step=req.params.stepNumber;
     }
 };
 const uploadForm = async (req, res) => {
+ 
   try {
 const id=req.params.userId;
-
-
-    const updatedUser = await userService.uploadForm(id,{...req.body,fileschedule_pdf_name:req.file.path
-     // driving_licence:req.files.driving_licence.filename ,
-      // FormA1099_name:req.files.FormA1099_name[0].filename,
-      // FormB1099_name:req.files.FormB1099_name[0].filename,
-      // ks22020:req.files.ks22020[0].filename,
-      // ks2020:req.files.ks2020[0].filename,
-      // Tax_Return_2020:req.files.Tax_Return_2020[0].filename,
-      // Tax_Return_2021:req.files.Tax_Return_2021[0].filename,
-      // supplemental_attachment_2020:req.files.supplemental_attachment_2020[0].filename,
-      // supplemental_attachment_2021:req.files.supplemental_attachment_2021[0].filename,
-    } );
+console.log("Uploading..........................",req.body)
+console.log("Uploading..........................",req.files)
+    const updatedUser = await userService.uploadForm(id,{...req.body,schedule_pdf_name:req.files.schedule_pdf_name[0].path, 
+     driving_licence:req.files.driving_licence[0].path ,
+      FormA1099_name:req.files.FormA1099_name[0].path,
+      FormB1099_name:req.files.FormB1099_name[0].path,
+      ks22020:req.files.ks22020[0].path,
+      ks2020:req.files.ks2020[0].path,
+      Tax_Return_2020:req.files.Tax_Return_2020[0].path,
+      Tax_Return_2021:req.files.Tax_Return_2021[0].path,
+      supplemental_attachment_2020:req.files.supplemental_attachment_2020[0].path,
+      supplemental_attachment_2021:req.files.supplemental_attachment_2021[0].path,} );
 // Now it should be defined
     res.status(200).json(updatedUser);
   } catch (err) {
@@ -349,7 +349,7 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: '5000000' },
   fileFilter: (req, file, cb) => {
-      const fileTypes = /jpeg|jpg|png|gif|pdf/
+      const fileTypes = /jpeg|jpg|png|pdf/
       const mimeType = fileTypes.test(file.mimetype)  
       const extname = fileTypes.test(path.extname(file.originalname))
       if(mimeType && extname) {
@@ -357,7 +357,19 @@ const upload = multer({
       }
       cb('Give proper files formate to upload')
   }
-}).single('schedule_pdf_name')
+}).fields([
+  { name: 'schedule_pdf_name', maxCount: 1 },
+  { name: 'driving_licence', maxCount: 1 },
+  { name: 'FormA1099_name', maxCount: 1 },
+  { name: 'FormB1099_name', maxCount: 1 },
+  { name: 'ks22020', maxCount: 1 },
+  { name: 'ks2020', maxCount: 1 },
+  { name: 'Tax_Return_2020', maxCount: 1 },
+  { name: 'Tax_Return_2021', maxCount: 1 },
+  { name: 'supplemental_attachment_2020', maxCount: 1 },
+  { name: 'supplemental_attachment_2021', maxCount: 1 },
+  // Add more fields as needed
+])
 
 // const storage = multer.diskStorage({
 //   destination: (req, file, cb) => {
