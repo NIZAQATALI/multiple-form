@@ -188,7 +188,7 @@ const id=req.params.userId;
       email: req.body.email,
     },
   })
-console.log(opt,",,,,,,,,,,,,,")
+
   // send to user mail
   if (!user) {
       res.send({ code: 500, message: 'user not found' })
