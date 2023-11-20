@@ -42,7 +42,7 @@ newUser.record_id=newUser.id;
 const login = async (email, callback) => {
   try {
     const user = await User.findOne({ where: { email } });
-    if (!user) return callback({ errMessage: "Your email/password is wrong!" });
+    if (!user) return callback({ errMessage: "Your email is wrong!" });
     return callback(false, { ...user.toJSON() });
   } catch (err) {
     return callback({
@@ -134,9 +134,10 @@ const getUserWithMail = async (email, callback) => {
 //     return res.status(500).json(error);
 //   }
 // };
-const updateUser = async (id,step, updateData) => {
+const updateUser = async (id, updateData) => {
   try {
     console.log("updateUser function called with id:", id);
+    console.log(updateData);
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -147,7 +148,7 @@ const updateUser = async (id,step, updateData) => {
         user[key] = updateData[key];
       }
     }
-user.step = step;
+
 
 
     // Save the changes to the database

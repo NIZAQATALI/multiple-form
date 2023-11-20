@@ -70,7 +70,6 @@ const register = async (req, res) => {
 // }};
 const registerViaInvite = async  (req, res) => {
   const token = req.query.token;
-
   const invitationToken = jwt.decode(token);
   const {  email, name ,surname,  password } = req.body;
  const Invited_Email = invitationToken.id
@@ -121,7 +120,7 @@ const getUser = async (req, res) => {
   await userService.getUser(userId, (err, result) => {
     if (err) return res.status(404).send(err);
     result.password = undefined;
-    result.__v = undefined;
+  
     return res.status(200).send(result);
   });
 };
@@ -133,7 +132,6 @@ const getAllUser = async (req, res) => {
 };
 const getUserWithMail = async(req,res) => {
   const {email} = req.body;
- 
   await userService.getUserWithMail(email,(err,result)=>{
     if(err) return res.status(404).send(err);
     const dataTransferObject = {
@@ -146,12 +144,14 @@ const getUserWithMail = async(req,res) => {
     return res.status(200).send(dataTransferObject);
   })
 }
-
 const updateUser = async (req, res) => {
-    try {
-const id=req.params.userId;
-const step=req.params.stepNumber;
-      const updatedUser = await userService.updateUser(id,step, req.body);
+    try {   
+const id=req.user.id;
+let step=req.params.stepNumber;
+const nextstep = req.params.stepNumber;
+const prevstep = req.user.step;
+ step = (nextstep >= prevstep) ? nextstep : prevstep;
+      const updatedUser = await userService.updateUser(id, {...req.body,step:step});
  // Now it should be defined
       res.status(200).json(updatedUser);
     } catch (err) {
@@ -162,8 +162,7 @@ const uploadForm = async (req, res) => {
  
   try {
 const id=req.params.userId;
-console.log("Uploading..........................",req.body)
-console.log("Uploading..........................",req.files)
+
     const updatedUser = await userService.uploadForm(id,{...req.body,schedule_pdf_name:req.files.schedule_pdf_name[0].path, 
      driving_licence:req.files.driving_licence[0].path ,
       FormA1099_name:req.files.FormA1099_name[0].path,
@@ -182,14 +181,14 @@ console.log("Uploading..........................",req.files)
 };
  const sendotp = async (req, res) => {
   console.log(req.body)
-  const _otp = Math.floor(100000 + Math.random() * 900000)
-  console.log(_otp)
+  const _otp = `S-${Math.floor(100000 + Math.random() * 900000)}`
+  console.log(typeof(_otp),",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")
   let user = await User.findOne(  {
     where: {
       email: req.body.email,
     },
   })
-
+console.log(opt,",,,,,,,,,,,,,")
   // send to user mail
   if (!user) {
       res.send({ code: 500, message: 'user not found' })
@@ -215,10 +214,23 @@ console.log("Uploading..........................",req.files)
       if (info.messageId) {
         console.log(info, 84);
   
-        await user.update({
-          otp: _otp,
-          otpUsed: false,
-        });
+        // await user.update({
+        //   otp: _otp,
+        //   otpUsed: false,
+        // });
+        // Update the user's OTP and set otpUsed to false
+await User.update(
+  {
+    otp: _otp,
+    otpUsed: false,
+  },
+  {
+    where: {
+
+      id: user.id, 
+    },
+  }
+);
   
         res.status(200).json({ code: 200, message: 'OTP sent' });
       } else {
@@ -228,26 +240,29 @@ console.log("Uploading..........................",req.files)
 }
 const submitotp = async (req, res) => {
   try {
-    console.log("updated..............................")
+   
    // Assuming you have the password in the request body
-const password = req.body.password;
-    const result = await User.findOne({  where: {
-      otp: req.body.otp,
-    }, });
-console.log(result);
+
+    // const result = await User.findOne({  where: {
+    //   otp: req.body.otp,
+    // }, });
+    const result = await User.findOne({
+      where: {
+        otp: req.body.otp,
+      },
+    });
+console.log(result),"otttttpppppp";
     if (!result) {
       return res.status(404).json({ code: 404, message: 'OTP not found' });
     }
-
     if (result.otpUsed) {
       return res.status(400).json({ code: 400, message: 'OTP already used' });
     }
-    const salt = await bcrypt.genSalt(10);
-    req.body.password = await bcrypt.hash(req.body.password, salt);
+ 
     // Mark the OTP as used and update the password
    // Update the record where email matches and otpUsed is false
 const updatedResult = await User.update(
-  { otpUsed: true, password:req.body.password},
+  { otpUsed: true},
   {
     where: {
       email:result.email,
@@ -255,11 +270,30 @@ const updatedResult = await User.update(
     }
   }
 );
-if (updatedResult[0] === 1) {
-  return res.status(200).json({ code: 200, message: 'Password updated' });
-} else {
-  return res.status(404).json({ code: 404, message: 'Email not found or OTP has already been used' });
-}
+// if (updatedResult[0] === 1) {
+
+//   return res.status(200).json({ code: 200, message: 'Password updated' });
+// } else {
+//   return res.status(404).json({ code: 404, message: 'Email not found or OTP has already been used' });
+// }
+
+    // Call the login function to log in the user
+    await userService.login(result.email, async (loginErr, loginResult) => {
+      if (loginErr) {
+        return res.status(400).json({ code: 400, message: 'Login failed after OTP verification', error: loginErr });
+      }
+      // Attach the generated token to the login result
+      loginResult.token = auth.generateToken(
+        loginResult.id.toString(),
+        loginResult.email
+      );
+      // Send the response with the logged-in user details
+      return res.status(200).json({
+        code: 200,
+        message: ' User logged in successfully',
+        user: loginResult,
+      });
+    });
 } catch (err) {
 console.error(err); // Log the error for debugging
 return res.status(500).json({ code: 500, message: 'Server error' });

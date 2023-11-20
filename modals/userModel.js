@@ -234,7 +234,7 @@ module.exports = (sequelize, DataTypes) => {
    
    
     otp: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     invitationToken: {
       type: DataTypes.STRING,
