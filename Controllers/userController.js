@@ -10,13 +10,12 @@ var db = require('../modals/index.js');
 // image Upload
 const multer = require('multer')
 const path = require('path')
-
 var  User =  db.userModel;
 const register = async (req, res) => {
   const { email } = req.body;
   // Check if the user with the provided email already exists
   const existingUser = await User.findOne({ where: { email } });
-  if (existingUser) {
+  if (existingUser && (existingUser.applicationStatus == null||existingUser.applicationStatus==false)) {
     // User with the email already exists, update the user
     await userService.updateUser(existingUser.id, req.body);
     return res.status(200).send({ message: "User updated successfully!" });
@@ -188,10 +187,12 @@ const id=req.params.userId;
       email: req.body.email,
     },
   })
-
   // send to user mail
+  // if (!user) {
+  //     res.send({ code: 500, message: 'user not found' })
+  // }
   if (!user) {
-      res.send({ code: 500, message: 'user not found' })
+    return res.status(500).json({ code: 500, message: 'User not found' });
   }
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -251,7 +252,6 @@ const submitotp = async (req, res) => {
         otp: req.body.otp,
       },
     });
-console.log(result),"otttttpppppp";
     if (!result) {
       return res.status(404).json({ code: 404, message: 'OTP not found' });
     }
@@ -365,10 +365,7 @@ const{ email} = req.body
 //       res.send({ code: 500, message: 'otp is wrong' })
 
 //   })
-
-
 // }
-
 // 8. Upload Image Controller
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -404,7 +401,6 @@ const upload = multer({
   { name: 'supplemental_attachment_2021', maxCount: 1 },
   // Add more fields as needed
 ])
-
 // const storage = multer.diskStorage({
 //   destination: (req, file, cb) => {
 //     const destinationPath = path.join(__dirname, 'Images');
@@ -415,7 +411,6 @@ const upload = multer({
 //   }
 // })
 // const upload = multer({
-
 //   storage: storage,
 //   limits: { fileSize: '5000000' },
 //   fileFilter: (req, file, cb) => {

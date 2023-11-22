@@ -26,7 +26,7 @@ newUser.record_id=newUser.id;
       const uniqueViolation = err.errors.find(error => error.type === 'unique violation');
       if (uniqueViolation) {
         return callback({
-          errMessage: "Email already in use!",
+          errMessage: "Email already in use!  &&  if  you  have  already  submitted  your  application  then  ypu  can  not  be  edit  this  after  submission  otherwise  use   another email  to  Register!   ",
           details: uniqueViolation,
         });
       } else {
@@ -159,12 +159,40 @@ const updateUser = async (id, updateData) => {
     return {status:500 ,error};
   }
 };
+// const uploadForm = async (id, updateData) => {
+//   try {
+//     console.log("updateUser function called with id:", id);
+//     const user = await User.findByPk(id);
+//     // if (!user) {
+//     //   return res.status(404).json({ error: 'User not found' });
+//     // }
+//     if (!user) {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
+//     // Dynamically update user properties based on updateData
+//     for (const key in updateData) {
+//       if (updateData.hasOwnProperty(key)) {
+//         user[key] = updateData[key];
+//       }
+//     }
+// user.applicationStatus = true;
+
+
+//     // Save the changes to the database
+//     await user.save();
+//     return { status: 200, user:user.toJSON() };
+//   } catch (error) {
+//     console.error("Error updating user:", error);
+//     return {status:500 ,error};
+//   }
+// };
 const uploadForm = async (id, updateData) => {
   try {
     console.log("updateUser function called with id:", id);
     const user = await User.findByPk(id);
+  
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return { error: 'User not found' };
     }
     // Dynamically update user properties based on updateData
     for (const key in updateData) {
@@ -173,14 +201,21 @@ const uploadForm = async (id, updateData) => {
       }
     }
 
-
+    user.applicationStatus = true;
 
     // Save the changes to the database
     await user.save();
-    return { status: 200, user: user.toJSON() };
+
+    return { status: 200, message: "Application  Submiited  succesfully", user: user.toJSON() };
   } catch (error) {
     console.error("Error updating user:", error);
-    return {status:500 ,error};
+    
+    // Handle specific error cases
+    if (error.message === 'User not found') {
+      return { status: 404, error: 'User not found' };
+    }
+
+    return { status: 500, error: 'Internal Server Error' };
   }
 };
 const submitOtp = async (otp, newPassword) => {

@@ -242,6 +242,11 @@ module.exports = (sequelize, DataTypes) => {
     otpUsed: {
       type: DataTypes.BOOLEAN,
     },
+    applicationStatus: {
+      type: DataTypes.BOOLEAN,
+      default: false,
+    
+    },
     companies: {
       type: DataTypes.STRING, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array

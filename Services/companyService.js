@@ -71,25 +71,22 @@ const create = async (companyData, id, callback) => {
 	try {
 
 
-		 // Check if a company with the same name already exists
-		 const existingCompany = await Company.findOne({
-			where: {
-			  business_name: companyData.business_name,
-			},
-		  });
-	  
-		  if (existingCompany) {
-			return callback({
-			  errMessage: 'Company with the same name already exists!',
-			});
-		  }
+		//  // Check if a company with the same name already exists
+		//  const existingCompany = await Company.findOne({
+		// 	where: {
+		// 	  business_name: companyData.business_name,
+		// 	},
+		//   });
+		//   if (existingCompany) {
+		// 	return callback({
+		// 	  errMessage: 'Company with the same name already exists!',
+		// 	});
+		//   }
 	  
 	  // Create and save new Company
 	  const newCompany = await Company.create({ ...companyData, owner: JSON.stringify(id) });
-  
 	  // Add this Company to the owner's Companies list
 	  const user = await User.findByPk(id);
-  
 	  if (!user) {
 		return callback({
 		  errMessage: 'User not found',
