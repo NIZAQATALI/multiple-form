@@ -269,7 +269,6 @@ await User.update(
 const submitotp = async (req, res) => {
   try {
    // Assuming you have the password in the request body
-
     // const result = await User.findOne({  where: {
     //   otp: req.body.otp,
     // }, });
