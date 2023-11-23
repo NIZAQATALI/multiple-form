@@ -3,6 +3,7 @@ const userController = require("../Controllers/userController");
 const router = express.Router();
  const auth = require("../MiddleWares/auth");
 router.post("/create", userController.register);
+router.post("/checkMail", userController.checkEmail);
 router.post("/login", userController.login);
 router.post("/send-invitation", userController.sendotp);
 router.post("/verify", userController.submitotp);

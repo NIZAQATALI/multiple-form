@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes, Op } = require('sequelize');
-//  Passing parameters separately (other dialects)
+  // Passing parameters separately (other dialects)
 const sequelize = new Sequelize('myAppform', 'root', '12345', {
     host: 'localhost',
     dialect: 'mysql',

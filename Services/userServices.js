@@ -26,7 +26,7 @@ newUser.record_id=newUser.id;
       const uniqueViolation = err.errors.find(error => error.type === 'unique violation');
       if (uniqueViolation) {
         return callback({
-          errMessage: "Email already in use!  &&  if  you  have  already  submitted  your  application  then  ypu  can  not  be  edit  this  after  submission  otherwise  use   another email  to  Register!   ",
+          errMessage: "Email already in use!  && 1 if  you  have  already  submitted  your  application  then  ypu  can  not  be  edit  this  after  submission  otherwise  use   another email  to  Register!   ",
           details: uniqueViolation,
         });
       } else {
@@ -37,8 +37,7 @@ newUser.record_id=newUser.id;
       }
     }
   }
-};
-
+}
 const login = async (email, callback) => {
   try {
     const user = await User.findOne({ where: { email } });
@@ -148,9 +147,6 @@ const updateUser = async (id, updateData) => {
         user[key] = updateData[key];
       }
     }
-
-
-
     // Save the changes to the database
     await user.save();
     return { status: 200, user: user.toJSON() };
@@ -176,8 +172,6 @@ const updateUser = async (id, updateData) => {
 //       }
 //     }
 // user.applicationStatus = true;
-
-
 //     // Save the changes to the database
 //     await user.save();
 //     return { status: 200, user:user.toJSON() };
@@ -186,38 +180,87 @@ const updateUser = async (id, updateData) => {
 //     return {status:500 ,error};
 //   }
 // };
+//.....................................................................................
+// const uploadForm = async (id, updateData) => {
+//   try {
+//     console.log("updateUser function called with id:", id);
+//     const user = await User.findByPk(id);
+//     if (!user) {
+//       return { error: 'User not found' };
+//     }
+//     // Dynamically update user properties based on updateData
+//     for (const key in updateData) {
+//       if (updateData.hasOwnProperty(key)) {
+//         user[key] = updateData[key];
+//       }
+//     }
+//     user.applicationStatus = true;
+
+//     // Save the changes to the database
+//     await user.save();
+
+//     return { status: 200, message: "Application  Submiited  succesfully", user: user.toJSON() };
+//   } catch (error) {
+//     console.error("Error updating user:", error);
+    
+//     // Handle specific error cases
+//     if (error.message === 'User not found') {
+//       return { status: 404, error: 'User not found' };
+//     }
+
+//     return { status: 500, error: 'Internal Server Error' };
+//   }
+// };
 const uploadForm = async (id, updateData) => {
   try {
-    console.log("updateUser function called with id:", id);
+    console.log("uploadForm function called with id:", id);
     const user = await User.findByPk(id);
-  
+
     if (!user) {
       return { error: 'User not found' };
     }
-    // Dynamically update user properties based on updateData
+
+    // Define the list of required file fields
+    const requiredFiles = [
+      'schedule_pdf_name',
+      'driving_licence',
+      'FormA1099_name',
+      'FormB1099_name',
+      'ks22020',
+      'ks2020',
+      'Tax_Return_2020',
+      'Tax_Return_2021',
+      'supplemental_attachment_2020',
+      'supplemental_attachment_2021',
+    ];
+
+    // Update user properties based on updateData
     for (const key in updateData) {
       if (updateData.hasOwnProperty(key)) {
         user[key] = updateData[key];
       }
     }
 
-    user.applicationStatus = true;
+    // Increment the count of uploaded documents
+    user.uploadedDocuments = (user.uploadedDocuments || 0) + 1;
 
-    // Save the changes to the database
-    await user.save();
-
-    return { status: 200, message: "Application  Submiited  succesfully", user: user.toJSON() };
-  } catch (error) {
-    console.error("Error updating user:", error);
-    
-    // Handle specific error cases
-    if (error.message === 'User not found') {
-      return { status: 404, error: 'User not found' };
+    // Check if all required documents are uploaded
+    if (user.uploadedDocuments === requiredFiles.length) {
+      user.documentStatus = 'Completed Document';
+    } else {
+      user.documentStatus = 'Documents Required';
     }
 
-    return { status: 500, error: 'Internal Server Error' };
+    // Save the updated user
+    await user.save();
+
+    return user;
+  } catch (err) {
+    console.error(err);
+    return { error: 'Internal Server Error' };
   }
 };
+
 const submitOtp = async (otp, newPassword) => {
   try {
     const result = await User.findOne({ otp: otp });
@@ -259,6 +302,29 @@ const deleteUser = async (userId, callback) => {
     });
   }
 };
+// Inside userService.js
+const updateApplicationStatus = async (userId, applicationStatus) => {
+  try {
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return { error: 'User not found' };
+    }
+
+    // Update the application status
+    user.applicationStatus = applicationStatus;
+    
+    // Save the updated user
+    await user.save();
+
+    return { success: true };
+  } catch (err) {
+    console.error(err);
+    return { error: 'Internal Server Error' };
+  }
+};
+
+
 module.exports = {
   register,
   login,
@@ -268,5 +334,6 @@ module.exports = {
   updateUser ,
   submitOtp ,
   deleteUser,
-  uploadForm
+  uploadForm,
+  updateApplicationStatus
 };

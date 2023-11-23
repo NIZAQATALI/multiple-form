@@ -18,7 +18,7 @@ const register = async (req, res) => {
   if (existingUser && (existingUser.applicationStatus == null||existingUser.applicationStatus==false)) {
     // User with the email already exists, update the user
     await userService.updateUser(existingUser.id, req.body);
-    return res.status(200).send({ message: "User updated successfully!" });
+    return res.status(200).send({ message: "User updated successfully!"});
   } else {
     // User doesn't exist, proceed to register a new user
     await userService.register(req.body, async (err, result) => {
@@ -143,25 +143,42 @@ const getUserWithMail = async(req,res) => {
     return res.status(200).send(dataTransferObject);
   })
 }
+// const updateUser = async (req, res) => {
+//     try {   
+// const id=req.user.id;
+// let step=req.params.stepNumber;
+// const nextstep = req.params.stepNumber;
+// const prevstep = req.user.step;
+//  step = (nextstep >= prevstep) ? nextstep : prevstep;
+
+//       const updatedUser = await userService.updateUser(id, {...req.body,step:step});
+//  // Now it should be defined
+//       res.status(200).json(updatedUser);
+//     } catch (err) {
+//       res.status(500).json(err);
+//     }
+// };
 const updateUser = async (req, res) => {
-    try {   
-const id=req.user.id;
-let step=req.params.stepNumber;
-const nextstep = req.params.stepNumber;
-const prevstep = req.user.step;
- step = (nextstep >= prevstep) ? nextstep : prevstep;
-      const updatedUser = await userService.updateUser(id, {...req.body,step:step});
- // Now it should be defined
+  try {
+      const id = req.user.id;
+      let step = req.params.stepNumber;
+      const nextstep = req.params.stepNumber;
+      const prevstep = req.user.step;
+      step = (nextstep >= prevstep) ? nextstep : prevstep;
+      // Check if user.applicationStatus is true
+      if (req.user.applicationStatus) {
+          return res.status(400).json({ error: 'You have already submitted documents. Data cannot be updated.' });
+      }
+      const updatedUser = await userService.updateUser(id, { ...req.body, step: step });
+      // Now it should be defined
       res.status(200).json(updatedUser);
-    } catch (err) {
+  } catch (err) {
       res.status(500).json(err);
-    }
+  }
 };
 const uploadForm = async (req, res) => {
- 
   try {
 const id=req.params.userId;
-
     const updatedUser = await userService.uploadForm(id,{...req.body,schedule_pdf_name:req.files.schedule_pdf_name[0].path, 
      driving_licence:req.files.driving_licence[0].path ,
       FormA1099_name:req.files.FormA1099_name[0].path,
@@ -178,19 +195,32 @@ const id=req.params.userId;
     res.status(500).json(err);
   }
 };
+const checkEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    // Check if the user with the provided email already exists
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      // If the user already exists, send a custom error response
+      return res.status(400).json({ error: 'User with this email already exists.' });
+    } else {
+      // If the user doesn't exist, send a success message
+      return res.status(400).json({ message: 'Email is available.' });
+    }
+  } catch (error) {
+    console.error('Error checking email:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
  const sendotp = async (req, res) => {
   console.log(req.body)
   const _otp = `S-${Math.floor(100000 + Math.random() * 900000)}`
-  console.log(typeof(_otp),",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")
+  
   let user = await User.findOne(  {
     where: {
       email: req.body.email,
     },
   })
-  // send to user mail
-  // if (!user) {
-  //     res.send({ code: 500, message: 'user not found' })
-  // }
   if (!user) {
     return res.status(500).json({ code: 500, message: 'User not found' });
   }
@@ -204,17 +234,15 @@ const id=req.params.userId;
       }
   })
   let info = await transporter.sendMail({
-      from: 'hafiznizaqatali@gmail.com',
+      from: 'afaq58681@gmail.com',
       to: req.body.email, // list of receivers
       subject: "OTP", // Subject line
       text: String(_otp),
   })
   if (info.messageId) {
-
       console.log(info, 84)
       if (info.messageId) {
         console.log(info, 84);
-  
         // await user.update({
         //   otp: _otp,
         //   otpUsed: false,
@@ -232,7 +260,6 @@ await User.update(
     },
   }
 );
-  
         res.status(200).json({ code: 200, message: 'OTP sent' });
       } else {
         res.status(500).json({ code: 500, message: 'Server error' });
@@ -241,7 +268,6 @@ await User.update(
 }
 const submitotp = async (req, res) => {
   try {
-   
    // Assuming you have the password in the request body
 
     // const result = await User.findOne({  where: {
@@ -258,7 +284,6 @@ const submitotp = async (req, res) => {
     if (result.otpUsed) {
       return res.status(400).json({ code: 400, message: 'OTP already used' });
     }
- 
     // Mark the OTP as used and update the password
    // Update the record where email matches and otpUsed is false
 const updatedResult = await User.update(
@@ -378,7 +403,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({
   storage: storage,
-  limits: { fileSize: '5000000' },
+  limits: { fileSize: '5000000'},
   fileFilter: (req, file, cb) => {
       const fileTypes = /jpeg|jpg|png|pdf/
       const mimeType = fileTypes.test(file.mimetype)  
@@ -425,7 +450,19 @@ const upload = multer({
 //   }
 // }).single('schedule_pdf_name')
 //.fields([{ name: 'driving_licence', maxCount: 1 }, { name: 'FormA1099_name', maxCount: 1 },, { name: 'FormB1099_name', maxCount: 1 }, { name: 'ks22020', maxCount: 1 }, { name: 'ks2020', maxCount: 1 }, { name: 'Tax_Return_2020', maxCount: 1 }, { name: 'Tax_Return_2021', maxCount: 1 }, { name: 'supplemental_attachment_2020', maxCount: 1 }, { name: 'supplemental_attachment_2021', maxCount: 1 }, { name: 'supplemental_attachment_2021', maxCount: 1 }]);
+const updateApplicationStatus = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
+    // Assuming you have a service method for updating application status
+    const updatedStatus = await userService.updateApplicationStatus(userId, req.body.applicationStatus);
+
+    res.status(200).json(updatedStatus);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 module.exports = {
   registerViaInvite,
   register,
@@ -438,5 +475,7 @@ module.exports = {
   submitotp,
   sendInvitation,
   upload,
-  uploadForm
+  uploadForm,
+  updateApplicationStatus,
+  checkEmail
 };
