@@ -181,85 +181,85 @@ const updateUser = async (id, updateData) => {
 //   }
 // };
 //.....................................................................................
-// const uploadForm = async (id, updateData) => {
-//   try {
-//     console.log("updateUser function called with id:", id);
-//     const user = await User.findByPk(id);
-//     if (!user) {
-//       return { error: 'User not found' };
-//     }
-//     // Dynamically update user properties based on updateData
-//     for (const key in updateData) {
-//       if (updateData.hasOwnProperty(key)) {
-//         user[key] = updateData[key];
-//       }
-//     }
-//     user.applicationStatus = true;
-
-//     // Save the changes to the database
-//     await user.save();
-
-//     return { status: 200, message: "Application  Submiited  succesfully", user: user.toJSON() };
-//   } catch (error) {
-//     console.error("Error updating user:", error);
-    
-//     // Handle specific error cases
-//     if (error.message === 'User not found') {
-//       return { status: 404, error: 'User not found' };
-//     }
-
-//     return { status: 500, error: 'Internal Server Error' };
-//   }
-// };
 const uploadForm = async (id, updateData) => {
   try {
-    console.log("uploadForm function called with id:", id);
+    console.log("updateUser function called with id:", id);
     const user = await User.findByPk(id);
-
     if (!user) {
       return { error: 'User not found' };
     }
-
-    // Define the list of required file fields
-    const requiredFiles = [
-      'schedule_pdf_name',
-      'driving_licence',
-      'FormA1099_name',
-      'FormB1099_name',
-      'ks22020',
-      'ks2020',
-      'Tax_Return_2020',
-      'Tax_Return_2021',
-      'supplemental_attachment_2020',
-      'supplemental_attachment_2021',
-    ];
-
-    // Update user properties based on updateData
+    // Dynamically update user properties based on updateData
     for (const key in updateData) {
       if (updateData.hasOwnProperty(key)) {
         user[key] = updateData[key];
       }
     }
+    user.applicationStatus = true;
 
-    // Increment the count of uploaded documents
-    user.uploadedDocuments = (user.uploadedDocuments || 0) + 1;
-
-    // Check if all required documents are uploaded
-    if (user.uploadedDocuments === requiredFiles.length) {
-      user.documentStatus = 'Completed Document';
-    } else {
-      user.documentStatus = 'Documents Required';
-    }
-
-    // Save the updated user
+    // Save the changes to the database
     await user.save();
 
-    return user;
-  } catch (err) {
-    console.error(err);
-    return { error: 'Internal Server Error' };
+    return { status: 200, message: "Application  Submiited  succesfully", user: user.toJSON() };
+  } catch (error) {
+    console.error("Error updating user:", error);
+    
+    // Handle specific error cases
+    if (error.message === 'User not found') {
+      return { status: 404, error: 'User not found' };
+    }
+
+    return { status: 500, error: 'Internal Server Error' };
   }
 };
+// const uploadForm = async (id, updateData) => {
+//   try {
+//     console.log("uploadForm function called with id:", id);
+//     const user = await User.findByPk(id);
+
+//     if (!user) {
+//       return { error: 'User not found' };
+//     }
+
+//     // Define the list of required file fields
+//     const requiredFiles = [
+//       'schedule_pdf_name',
+//       'driving_licence',
+//       'FormA1099_name',
+//       'FormB1099_name',
+//       'ks22020',
+//       'ks2020',
+//       'Tax_Return_2020',
+//       'Tax_Return_2021',
+//       'supplemental_attachment_2020',
+//       'supplemental_attachment_2021',
+//     ];
+
+//     // Update user properties based on updateData
+//     for (const key in updateData) {
+//       if (updateData.hasOwnProperty(key)) {
+//         user[key] = updateData[key];
+//       }
+//     }
+
+//     // Increment the count of uploaded documents
+//     user.uploadedDocuments = (user.uploadedDocuments || 0) + 1;
+
+//     // Check if all required documents are uploaded
+//     if (user.uploadedDocuments === requiredFiles.length) {
+//       user.documentStatus = 'Completed Document';
+//     } else {
+//       user.documentStatus = 'Documents Required';
+//     }
+
+//     // Save the updated user
+//     await user.save();
+
+//     return user;
+//   } catch (err) {
+//     console.error(err);
+//     return { error: 'Internal Server Error' };
+//   }
+// };
 
 const submitOtp = async (otp, newPassword) => {
   try {

@@ -179,16 +179,27 @@ const updateUser = async (req, res) => {
 const uploadForm = async (req, res) => {
   try {
 const id=req.params.userId;
-    const updatedUser = await userService.uploadForm(id,{...req.body,schedule_pdf_name:req.files.schedule_pdf_name[0].path, 
+console.log("req.files.schedule_pdf_name[0].name",req.files.schedule_pdf_name[0])
+    const updatedUser = await userService.uploadForm(id,{...req.body,schedule_pdf_name:req.files.schedule_pdf_name[0].originalname, 
+      schedule_pdf:req.files.schedule_pdf_name[0].path,
+      driving_licence_name:req.files.driving_licence[0].originalname ,
      driving_licence:req.files.driving_licence[0].path ,
-      FormA1099_name:req.files.FormA1099_name[0].path,
-      FormB1099_name:req.files.FormB1099_name[0].path,
+      FormA1099:req.files.FormA1099_name[0].path,
+      FormA1099_name:req.files.FormA1099_name[0].originalname,
+      FormB1099:req.files.FormB1099_name[0].path,
+      FormB1099_name:req.files.FormB1099_name[0].originalname,
       ks22020:req.files.ks22020[0].path,
+      ks22020_name:req.files.ks22020[0].originalname,
       ks2020:req.files.ks2020[0].path,
+      ks22020_name:req.files.ks2020[0].originalname,
       Tax_Return_2020:req.files.Tax_Return_2020[0].path,
+      Tax_Return_2020_name:req.files.Tax_Return_2020[0].originalname,
       Tax_Return_2021:req.files.Tax_Return_2021[0].path,
+      Tax_Return_2021_name:req.files.Tax_Return_2021[0].originalname,
       supplemental_attachment_2020:req.files.supplemental_attachment_2020[0].path,
-      supplemental_attachment_2021:req.files.supplemental_attachment_2021[0].path,} );
+      supplemental_attachment_2020_name:req.files.supplemental_attachment_2020[0].originalname,
+      supplemental_attachment_2021:req.files.supplemental_attachment_2021[0].path,
+      supplemental_attachment_2021_name:req.files.supplemental_attachment_2020[0].originalname,} );
 // Now it should be defined
     res.status(200).json(updatedUser);
   } catch (err) {
@@ -201,6 +212,7 @@ const checkEmail = async (req, res) => {
     // Check if the user with the provided email already exists
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
+
       // If the user already exists, send a custom error response
       return res.status(400).json({ error: 'User with this email already exists.' });
     } else {
