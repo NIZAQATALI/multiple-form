@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     customer_id:{
       type: DataTypes.INTEGER,
     },
-    name:{
+    step:{
       type: DataTypes.INTEGER,
     },
     email: {
