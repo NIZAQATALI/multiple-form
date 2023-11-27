@@ -11,33 +11,34 @@ var db = require('../modals/index.js');
 const multer = require('multer')
 const path = require('path')
 var  User =  db.userModel;
-const register = async (req, res) => {
-  const { email } = req.body;
-  // Check if the user with the provided email already exists
-  const existingUser = await User.findOne({ where: { email } });
-  if (existingUser && (existingUser.applicationStatus == null||existingUser.applicationStatus==false)) {
-    // User with the email already exists, update the user
-    await userService.updateUser(existingUser.id, req.body);
-    return res.status(200).send({ message: "User updated successfully!"});
-  } else {
-    // User doesn't exist, proceed to register a new user
-    await userService.register(req.body, async (err, result) => {
-      if (err) return res.status(400).send(err);
-      // Log in the newly registered user
-      await userService.login(email, async (loginErr, loginResult) => {
-        if (loginErr) return res.status(400).send(loginErr);
-        loginResult.token = auth.generateToken(
-          loginResult.id.toString(),
-          loginResult.email
-        );
-        return res.status(201).send({
-          message: "User registered and logged in successfully!",
-          user: loginResult,
-        });
-      });
-    });
-  }
-};
+//user   registration, updation(on the  bases  of  existing  user ) and  login  
+// const register = async (req, res) => {
+//   const { email } = req.body;
+//   // Check if the user with the provided email already exists
+//   const existingUser = await User.findOne({ where: { email } });
+//   if (existingUser && (existingUser.applicationStatus == null||existingUser.applicationStatus==false)) {
+//     // User with the email already exists, update the user
+//     await userService.updateUser(existingUser.id, req.body);
+//     return res.status(200).send({ message: "User updated successfully!"});
+//   } else {
+//     // User doesn't exist, proceed to register a new user
+//     await userService.register(req.body, async (err, result) => {
+//       if (err) return res.status(400).send(err);
+//       // Log in the newly registered user
+//       await userService.login(email, async (loginErr, loginResult) => {
+//         if (loginErr) return res.status(400).send(loginErr);
+//         loginResult.token = auth.generateToken(
+//           loginResult.id.toString(),
+//           loginResult.email
+//         );
+//         return res.status(201).send({
+//           message: "User registered and logged in successfully!",
+//           user: loginResult,
+//         });
+//       });
+//     });
+//   }
+// };
 
 // const register = async  (req, res) => {
 //   const { email, } = req.body;
@@ -67,6 +68,33 @@ const register = async (req, res) => {
 //       });
 //     });
 // }};
+const register = async (req, res) => {
+  const { email } = req.body;
+  // Check if the user with the provided email already exists
+  const existingUser = await User.findOne({ where: { email } });
+  if (existingUser && (existingUser.applicationStatus == null || existingUser.applicationStatus == false)) {
+    // User with the email already exists, return an error
+    return res.status(400).send({ message: "User with this email already exists and cannot be updated." });
+  } else {
+    // User doesn't exist, proceed to register a new user
+    await userService.register(req.body, async (err, result) => {
+      if (err) return res.status(400).send(err);
+      // Log in the newly registered user
+      await userService.login(email, async (loginErr, loginResult) => {
+        if (loginErr) return res.status(400).send(loginErr);
+        loginResult.token = auth.generateToken(
+          loginResult.id.toString(),
+          loginResult.email
+        );
+        return res.status(201).send({
+          message: "User registered and logged in successfully!",
+          user: loginResult,
+        });
+      });
+    });
+  }
+};
+
 const registerViaInvite = async  (req, res) => {
   const token = req.query.token;
   const invitationToken = jwt.decode(token);
@@ -206,7 +234,7 @@ console.log("req.files.schedule_pdf_name[0].name",req.files.schedule_pdf_name[0]
     res.status(500).json(err);
   }
 };
-const checkEmail = async (req, res) => {
+const checkEmail = async (req, res) => { 
   try {
     const { email } = req.body;
     // Check if the user with the provided email already exists
