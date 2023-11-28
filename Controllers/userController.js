@@ -207,27 +207,54 @@ const updateUser = async (req, res) => {
 const uploadForm = async (req, res) => {
   try {
 const id=req.params.userId;
-console.log("req.files.schedule_pdf_name[0].name",req.files.schedule_pdf_name[0])
-    const updatedUser = await userService.uploadForm(id,{...req.body,schedule_pdf_name:req.files.schedule_pdf_name[0].originalname, 
-      schedule_pdf:req.files.schedule_pdf_name[0].path,
-      driving_licence_name:req.files.driving_licence[0].originalname ,
-     driving_licence:req.files.driving_licence[0].path ,
-      FormA1099:req.files.FormA1099_name[0].path,
-      FormA1099_name:req.files.FormA1099_name[0].originalname,
-      FormB1099:req.files.FormB1099_name[0].path,
-      FormB1099_name:req.files.FormB1099_name[0].originalname,
-      ks22020:req.files.ks22020[0].path,
-      ks22020_name:req.files.ks22020[0].originalname,
-      ks2020:req.files.ks2020[0].path,
-      ks22020_name:req.files.ks2020[0].originalname,
-      Tax_Return_2020:req.files.Tax_Return_2020[0].path,
-      Tax_Return_2020_name:req.files.Tax_Return_2020[0].originalname,
-      Tax_Return_2021:req.files.Tax_Return_2021[0].path,
-      Tax_Return_2021_name:req.files.Tax_Return_2021[0].originalname,
-      supplemental_attachment_2020:req.files.supplemental_attachment_2020[0].path,
-      supplemental_attachment_2020_name:req.files.supplemental_attachment_2020[0].originalname,
-      supplemental_attachment_2021:req.files.supplemental_attachment_2021[0].path,
-      supplemental_attachment_2021_name:req.files.supplemental_attachment_2020[0].originalname,} );
+const updatedUserFiles = {};
+// Add files to the updatedUserFiles object only if they are present in the request
+if (req.files.schedule_pdf) {
+  updatedUserFiles.schedule_pdf_name = req.files.schedule_pdf[0].originalname;
+  updatedUserFiles.schedule_pdf = req.files.schedule_pdf[0].path
+}
+console.log("UpdatedUserFiles",updatedUserFiles);
+console.log("UpdatedUserFiles",updatedUserFiles.schedule_pdf_name);
+if (req.files.driving_licence) {
+  updatedUserFiles.driving_licence_name = req.files.driving_licence[0].originalname;
+  updatedUserFiles.driving_licence = req.files.driving_licence[0].path;
+}
+if (req.files.FormA1099) {
+  updatedUserFiles.FormA1099_name = req.files.FormA1099[0].originalname;
+  updatedUserFiles.FormA1099 = req.files.FormA1099[0].path;
+}
+if (req.files.FormB1099) {
+  updatedUserFiles.FormB1099_name = req.files.FormB1099[0].originalname;
+  updatedUserFiles.FormB1099 = req.files.FormB1099[0].path;
+}
+if (req.files.ks22020) {
+  updatedUserFiles.ks22020_name = req.files.ks22020[0].originalname;
+  updatedUserFiles.ks22020 = req.files.ks22020[0].path;
+}
+if (req.files.ks2020) {
+  updatedUserFiles.ks2020_name = req.files.ks2020[0].originalname;
+  updatedUserFiles.ks2020 = req.files.ks2020[0].path;
+}
+
+if (req.files.Tax_Return_2020) {
+  updatedUserFiles.Tax_Return_2020_name = req.files.Tax_Return_2020[0].originalname;
+  updatedUserFiles.Tax_Return_2020 = req.files.Tax_Return_2020[0].path;
+}
+if (req.files.Tax_Return_2021) {
+  updatedUserFiles.Tax_Return_2021_name = req.files.Tax_Return_2021[0].originalname;
+  updatedUserFiles.Tax_Return_2021 = req.files.Tax_Return_2021[0].path;
+}
+if (req.files.supplemental_attachment_2020) {
+  updatedUserFiles.supplemental_attachment_2020_name = req.files.supplemental_attachment_2020[0].originalname;
+  updatedUserFiles.supplemental_attachment_2020 = req.files.supplemental_attachment_2020[0].path;
+}
+
+if (req.files.supplemental_attachment_2021) {
+  updatedUserFiles.supplemental_attachment_2021_name = req.files.supplemental_attachment_2021[0].originalname;
+  updatedUserFiles.supplemental_attachment_2021 = req.files.supplemental_attachment_2021[0].path;
+}
+console.log("updated user files:",updatedUserFiles)
+    const updatedUser = await userService.uploadForm(id,{...req.body,...updatedUserFiles,} );
 // Now it should be defined
     res.status(200).json(updatedUser);
   } catch (err) {
@@ -240,7 +267,6 @@ const checkEmail = async (req, res) => {
     // Check if the user with the provided email already exists
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-
       // If the user already exists, send a custom error response
       return res.status(400).json({ error: 'User with this email already exists.' });
     } else {
@@ -299,8 +325,7 @@ await User.update(
       id: user.id, 
     },
   }
-);
-        res.status(200).json({ code: 200, message: 'OTP sent' });
+);    res.status(200).json({ code: 200, message: 'OTP sent' });
       } else {
         res.status(500).json({ code: 500, message: 'Server error' });
       }
@@ -374,8 +399,6 @@ const{ email} = req.body
   console.log(decodedToken)
   // Create a link for registration. This link should contain the invitation token.
   const registrationLink = ` http://localhost:3000/registerWithInvite?token=${invitationToken}`;
-  
-
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
@@ -453,10 +476,10 @@ const upload = multer({
       cb('Give proper files formate to upload')
   }
 }).fields([
-  { name: 'schedule_pdf_name', maxCount: 1 },
+  { name: 'schedule_pdf', maxCount: 1 },
   { name: 'driving_licence', maxCount: 1 },
-  { name: 'FormA1099_name', maxCount: 1 },
-  { name: 'FormB1099_name', maxCount: 1 },
+  { name: 'FormA1099', maxCount: 1 },
+  { name: 'FormB1099', maxCount: 1 },
   { name: 'ks22020', maxCount: 1 },
   { name: 'ks2020', maxCount: 1 },
   { name: 'Tax_Return_2020', maxCount: 1 },
