@@ -209,10 +209,16 @@ const uploadForm = async (req, res) => {
 const id=req.params.userId;
 const updatedUserFiles = {};
 // Add files to the updatedUserFiles object only if they are present in the request
-if (req.files.schedule_pdf) {
-  updatedUserFiles.schedule_pdf_name = req.files.schedule_pdf[0].originalname;
-  updatedUserFiles.schedule_pdf = req.files.schedule_pdf[0].path
-}
+// if (req.files.schedule_pdf) {
+//   updatedUserFiles.schedule_pdf_name = req.files.schedule_pdf[0].originalname;
+//   updatedUserFiles.schedule_pdf = req.files.schedule_pdf[0].path
+// }
+console.log("UpdatedUserFiles",req.files.schedule_pdf);
+  if (req.files.schedule_pdf) {   
+console.log("UpdatedUserFiles 7777",updatedUserFiles);
+      const uniqueIdentifier = req.files.schedule_pdf[0].path;
+      updatedUserFiles.schedule_pdf = uniqueIdentifier;
+    }
 console.log("UpdatedUserFiles",updatedUserFiles);
 console.log("UpdatedUserFiles",updatedUserFiles.schedule_pdf_name);
 if (req.files.driving_licence) {
@@ -235,7 +241,6 @@ if (req.files.ks2020) {
   updatedUserFiles.ks2020_name = req.files.ks2020[0].originalname;
   updatedUserFiles.ks2020 = req.files.ks2020[0].path;
 }
-
 if (req.files.Tax_Return_2020) {
   updatedUserFiles.Tax_Return_2020_name = req.files.Tax_Return_2020[0].originalname;
   updatedUserFiles.Tax_Return_2020 = req.files.Tax_Return_2020[0].path;
@@ -254,6 +259,7 @@ if (req.files.supplemental_attachment_2021) {
   updatedUserFiles.supplemental_attachment_2021 = req.files.supplemental_attachment_2021[0].path;
 }
 console.log("updated user files:",updatedUserFiles)
+
     const updatedUser = await userService.uploadForm(id,{...req.body,...updatedUserFiles,} );
 // Now it should be defined
     res.status(200).json(updatedUser);
@@ -281,7 +287,6 @@ const checkEmail = async (req, res) => {
  const sendotp = async (req, res) => {
   console.log(req.body)
   const _otp = `S-${Math.floor(100000 + Math.random() * 900000)}`
-  
   let user = await User.findOne(  {
     where: {
       email: req.body.email,

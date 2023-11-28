@@ -198,16 +198,13 @@ const uploadForm = async (id, updateData) => {
 
     // Save the changes to the database
     await user.save();
-
     return { status: 200, message: "Application  Submiited  succesfully", user: user.toJSON() };
   } catch (error) {
     console.error("Error updating user:", error);
-    
     // Handle specific error cases
     if (error.message === 'User not found') {
       return { status: 404, error: 'User not found' };
     }
-
     return { status: 500, error: 'Internal Server Error' };
   }
 };
@@ -270,16 +267,13 @@ const submitOtp = async (otp, newPassword) => {
     if (result.otpUsed) {
       throw { code: 400, message: 'OTP already used' };
     }
-
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
-
     // Mark the OTP as used and update the password
     await User.updateOne(
       { email: result.email, otpUsed: false }, // Only update if otpUsed is false
       { otpUsed: true, password: hashedPassword }
     );
-
     return { code: 200, message: 'Password updated' };
   } catch (err) {
     throw { code: 500, message: 'Server error' };
@@ -306,14 +300,11 @@ const deleteUser = async (userId, callback) => {
 const updateApplicationStatus = async (userId, applicationStatus) => {
   try {
     const user = await User.findByPk(userId);
-
     if (!user) {
       return { error: 'User not found' };
     }
-
     // Update the application status
     user.applicationStatus = applicationStatus;
-    
     // Save the updated user
     await user.save();
 
