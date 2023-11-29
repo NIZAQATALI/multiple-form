@@ -9,6 +9,6 @@ router.post("/send-invitation", userController.sendotp);
 router.post("/verify", userController.submitotp);
 router.get("/getUser",auth.verifyToken, userController.getUser);
 router.put("/:stepNumber/updateuser", auth.verifyToken,  userController.updateUser);
-router.put("/:userId", userController.upload,userController.uploadForm);
-router.delete("/:userId/:fileName" ,userController.removeFile);
+router.put("/upload-form-data", userController.upload, auth.verifyToken,userController.uploadForm);
+// router.delete("/:userId/:fileName",auth.verifyToken ,userController.removeFile);
 module.exports = router;

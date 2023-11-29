@@ -207,7 +207,9 @@ const updateUser = async (req, res) => {
 };
 const uploadForm = async (req, res) => {
   try {
-const id=req.params.userId;
+    console.log("uoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
+const id=req.user.id;
+
 const updatedUserFiles = {};
 //Add files to the updatedUserFiles object only if they are present in the request
 if (req.files.schedule_pdf) {
@@ -254,13 +256,11 @@ if (req.files.supplemental_attachment_2020) {
   updatedUserFiles.supplemental_attachment_2020_name = req.files.supplemental_attachment_2020[0].originalname;
   updatedUserFiles.supplemental_attachment_2020 = req.files.supplemental_attachment_2020[0].path;
 }
-
 if (req.files.supplemental_attachment_2021) {
   updatedUserFiles.supplemental_attachment_2021_name = req.files.supplemental_attachment_2021[0].originalname;
   updatedUserFiles.supplemental_attachment_2021 = req.files.supplemental_attachment_2021[0].path;
 }
 console.log("updated user files:",updatedUserFiles)
-
     const updatedUser = await userService.uploadForm(id,{...req.body,...updatedUserFiles,} );
 // Now it should be defined
     res.status(200).json(updatedUser);
@@ -528,31 +528,44 @@ const updateApplicationStatus = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
 // Define the removeFile controller function
-const removeFile = async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const fileName = req.params.fileName;
-    // Construct the file path
-    const filePath = path.join(__dirname, '../Images', fileName); // Adjust the path based on your project structure
-    // Check if the file exists
-    if (fs.existsSync(filePath)) {
-      // Remove the file
-      fs.unlinkSync(filePath);
+// const removeFile = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+//     const fileName = req.params.fileName;
+//     // Construct the file path
+//     const filePath = path.join(__dirname, '../Images', fileName); // Adjust the path based on your project structure
+//     // Check if the file exists
+//     if (fs.existsSync(filePath)) {
+//       const user = await userService.getUser(userId);
+//       console.log("field nameeeeeeeeeeeeeeeeeee")
+//       return
+//       const fieldName = findFieldForFile(user,fileName);
+//       if (!fieldName) {
+//         return res.status(400).json({ error: 'File name not recognized.' });
+//       }
+//       // Remove the file
+//       fs.unlinkSync(filePath);
+//        // Update your database to remove the file reference
+//        await userService.removeFileFromUser(userId);
 
-      // You may also want to update your database to remove the file reference
-      // Example: await userService.removeFileFromUser(userId, fileName);
-
-      res.status(200).json({ message: 'File removed successfully.' });
-    } else {
-      res.status(404).json({ error: 'File not found.' });
-    }
-  } catch (err) {
-    console.error('Error removing file:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
+//       res.status(200).json({ message: 'File removed successfully.' });
+//     } else {
+//       res.status(404).json({ error: 'File not found.' });
+//     }
+//   } catch (err) {
+//     console.error('Error removing file:', err);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// };
+// const findFieldForFile = (user, fileName) => {
+//   for (const [fieldName, fieldValue] of Object.entries(user)) {
+//     if (fieldValue && (fieldValue.includes(fileName) || fieldValue.endsWith(fileName))) {
+//       return fieldName;
+//     }
+//   }
+//   return null; // Return null if no matching field is found
+// };
 module.exports = {
   registerViaInvite,
   register,
@@ -568,5 +581,5 @@ module.exports = {
   uploadForm,
   updateApplicationStatus,
   checkEmail,
-  removeFile
+
 };

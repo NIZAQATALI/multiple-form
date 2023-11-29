@@ -180,7 +180,6 @@ const updateUser = async (id, updateData) => {
 //     return {status:500 ,error};
 //   }
 // };
-//.....................................................................................
 const uploadForm = async (id, updateData) => {
   try {
     console.log("updateUser function called with id:", id);
@@ -257,7 +256,6 @@ const uploadForm = async (id, updateData) => {
 //     return { error: 'Internal Server Error' };
 //   }
 // };
-
 const submitOtp = async (otp, newPassword) => {
   try {
     const result = await User.findOne({ otp: otp });
@@ -307,11 +305,28 @@ const updateApplicationStatus = async (userId, applicationStatus) => {
     user.applicationStatus = applicationStatus;
     // Save the updated user
     await user.save();
-
     return { success: true };
   } catch (err) {
     console.error(err);
     return { error: 'Internal Server Error' };
+  }
+};
+const removeFileFromUser = async (userId) => {
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return { error: 'User not found' };
+    }
+    // Remove the file name  and  file  path   from the user's files array
+    user.files = user.files.filter(file => file !== fileName);
+
+    // Save the changes to the database
+    await user.save();
+    
+    return { status: 200, message: 'File reference removed from user successfully', user: user.toJSON() };
+  } catch (error) {
+    console.error("Error removing file reference from user:", error);
+    return { status: 500, error: 'Internal Server Error' };
   }
 };
 
@@ -326,5 +341,6 @@ module.exports = {
   submitOtp ,
   deleteUser,
   uploadForm,
-  updateApplicationStatus
+  updateApplicationStatus,
+  removeFileFromUser
 };
