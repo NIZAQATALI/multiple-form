@@ -152,6 +152,16 @@ const getUser = async (req, res) => {
     return res.status(200).send(result);
   });
 };
+const getAllFiles = async (req, res) => {
+  const userId =   req.user.id;
+  console.log("userId......",userId);
+  await userService.getAllFiles(userId, (err, result) => {
+    if (err) return res.status(404).send(err);
+    result.password = undefined;
+  
+    return res.status(200).send(result);
+  });
+};
 const getAllUser = async (req, res) => {
   await userService.getAllUser( (err, result) => {
     if (err) return res.status(404).send(err);
@@ -205,11 +215,23 @@ const updateUser = async (req, res) => {
       res.status(500).json(err);
   }
 };
+const updateApplication = async (req, res) => {
+  try {
+      // Check if user.applicationStatus is true
+      if (req.user.applicationStatus) {
+          return res.status(400).json({ error: 'You have already submitted documents. Data cannot be updated.' });
+      }
+   const id  = req.user.id;
+      const updatedUser = await userService.updateApplication(id);
+      // Now it should be defined
+      res.status(200).json(updatedUser);
+  } catch (err) {
+      res.status(500).json(err);
+  }
+};
 const uploadForm = async (req, res) => {
   try {
-    console.log("uoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
 const id=req.user.id;
-
 const updatedUserFiles = {};
 //Add files to the updatedUserFiles object only if they are present in the request
 if (req.files.schedule_pdf) {
@@ -370,7 +392,6 @@ const updatedResult = await User.update(
 // } else {
 //   return res.status(404).json({ code: 404, message: 'Email not found or OTP has already been used' });
 // }
-
     // Call the login function to log in the user
     await userService.login(result.email, async (loginErr, loginResult) => {
       if (loginErr) {
@@ -511,8 +532,7 @@ const upload = multer({
 //       const extname = fileTypes.test(path.extname(file.originalname))
 //       if(mimeType && extname) {
 //           return cb(null, true)
-//       }
-     
+//       }12qqqq
 //       cb('Give proper files formate to upload')
 //   }
 // }).single('schedule_pdf_name')
@@ -529,43 +549,32 @@ const updateApplicationStatus = async (req, res) => {
   }
 };
 // Define the removeFile controller function
-// const removeFile = async (req, res) => {
-//   try {
-//     const userId = req.user.id;
-//     const fileName = req.params.fileName;
-//     // Construct the file path
-//     const filePath = path.join(__dirname, '../Images', fileName); // Adjust the path based on your project structure
-//     // Check if the file exists
-//     if (fs.existsSync(filePath)) {
-//       const user = await userService.getUser(userId);
-//       console.log("field nameeeeeeeeeeeeeeeeeee")
-//       return
-//       const fieldName = findFieldForFile(user,fileName);
-//       if (!fieldName) {
-//         return res.status(400).json({ error: 'File name not recognized.' });
-//       }
-//       // Remove the file
-//       fs.unlinkSync(filePath);
-//        // Update your database to remove the file reference
-//        await userService.removeFileFromUser(userId);
+const removeFile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const {key} = req.body
+    console.log(key,"lllllllllllllllllllllllllllllllllllll");
+    // Construct the file path
+    const filePath = path.join(__dirname, '../Images', fileName); // Adjust the path based on your project structure
+    // Check if the file exists
+    if (fs.existsSync(filePath)) {
+     console.log("File Path....",filePath);
+     // Extract the file name from the full path
+const fileName = path.basename(filePath);
+console.log("filenameeeeeeeeeeeeee",fileName)
+      // Remove the file
+      fs.unlinkSync(filePath);
+       // Update your database to remove the file reference
+      res.status(200).json({ message: 'File removed successfully.' });
+    } else {
+      res.status(404).json({ error: 'File not found.' });
+    }
+  } catch (err) {
+    console.error('Error removing file:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
-//       res.status(200).json({ message: 'File removed successfully.' });
-//     } else {
-//       res.status(404).json({ error: 'File not found.' });
-//     }
-//   } catch (err) {
-//     console.error('Error removing file:', err);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// };
-// const findFieldForFile = (user, fileName) => {
-//   for (const [fieldName, fieldValue] of Object.entries(user)) {
-//     if (fieldValue && (fieldValue.includes(fileName) || fieldValue.endsWith(fileName))) {
-//       return fieldName;
-//     }
-//   }
-//   return null; // Return null if no matching field is found
-// };
 module.exports = {
   registerViaInvite,
   register,
@@ -581,5 +590,8 @@ module.exports = {
   uploadForm,
   updateApplicationStatus,
   checkEmail,
+  removeFile,
+  updateApplication,
+  getAllFiles
 
 };

@@ -15,9 +15,7 @@ var  User =  db.userModel;
 // };
 const register = async (user, callback) => {
   try {
-    console.log("object registration service");
     const newUser = await User.create({ ...user, });
-    console.log("New user created:", newUser);
 newUser.record_id=newUser.id;
  await newUser.save();
     callback(null, { message: "User created successfully!", "NewRecord": newUser.record_id});
@@ -51,7 +49,6 @@ const login = async (email, callback) => {
   }
 };
 const getUser = async (id, callback) => {
-  console.log("id...........",id)
   try {
     let user = await User.findByPk(id);
     if (!user) return callback({ errMessage: "User not found!" });
@@ -77,6 +74,33 @@ const getAllUser = async ( callback) => {
       errMessage: "Something went wrong",
       details: err.message,
     });
+  }
+};
+const getAllFiles = async (userId, callback) => {
+  try {
+    const userId = req.user.id; // Assuming you have authentication middleware setting req.user
+
+    // Fetch user data including uploaded files
+    const user = await userService.getUserWithFiles(userId);
+
+    // Extract and send the list of uploaded files
+    const uploadedFiles = {
+      schedule_pdf: user.schedule_pdf_name,
+      driving_licence: user.driving_licence_name,
+      FormA1099: user.FormA1099_name,
+      FormB1099: user.FormB1099_name,
+      ks22020: user.ks22020_name,
+      ks2020: user.ks2020_name,
+      Tax_Return_2020: user.Tax_Return_2020_name,
+      Tax_Return_2021: user.Tax_Return_2021_name,
+      supplemental_attachment_2020: user.supplemental_attachment_2020_name,
+      supplemental_attachment_2021: user.supplemental_attachment_2021_name,
+    };
+
+    res.status(200).json(uploadedFiles);
+  } catch (error) {
+    console.error("Error getting uploaded files:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 const getUserWithMail = async (email, callback) => {
@@ -193,8 +217,6 @@ const uploadForm = async (id, updateData) => {
         user[key] = updateData[key];
       }
     }
-    user.applicationStatus = true;
-
     // Save the changes to the database
     await user.save();
     return { status: 200, message: "Application  Submiited  succesfully", user: user.toJSON() };
@@ -295,38 +317,22 @@ const deleteUser = async (userId, callback) => {
   }
 };
 // Inside userService.js
-const updateApplicationStatus = async (userId, applicationStatus) => {
+const updateApplication = async (userId) => {
+  console.log("mmmmmmmmmmmmmmmmmmmmmm")
   try {
+    console.log("uuuuuuuuuuu");
     const user = await User.findByPk(userId);
     if (!user) {
       return { error: 'User not found' };
     }
     // Update the application status
-    user.applicationStatus = applicationStatus;
+    user.applicationStatus = true;
     // Save the updated user
     await user.save();
     return { success: true };
   } catch (err) {
     console.error(err);
     return { error: 'Internal Server Error' };
-  }
-};
-const removeFileFromUser = async (userId) => {
-  try {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return { error: 'User not found' };
-    }
-    // Remove the file name  and  file  path   from the user's files array
-    user.files = user.files.filter(file => file !== fileName);
-
-    // Save the changes to the database
-    await user.save();
-    
-    return { status: 200, message: 'File reference removed from user successfully', user: user.toJSON() };
-  } catch (error) {
-    console.error("Error removing file reference from user:", error);
-    return { status: 500, error: 'Internal Server Error' };
   }
 };
 
@@ -341,6 +347,6 @@ module.exports = {
   submitOtp ,
   deleteUser,
   uploadForm,
-  updateApplicationStatus,
-  removeFileFromUser
+ updateApplication,getAllFiles
+ 
 };

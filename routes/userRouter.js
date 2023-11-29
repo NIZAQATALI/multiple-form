@@ -10,5 +10,7 @@ router.post("/verify", userController.submitotp);
 router.get("/getUser",auth.verifyToken, userController.getUser);
 router.put("/:stepNumber/updateuser", auth.verifyToken,  userController.updateUser);
 router.put("/upload-form-data", userController.upload, auth.verifyToken,userController.uploadForm);
-// router.delete("/:userId/:fileName",auth.verifyToken ,userController.removeFile);
+ router.delete("/remove-file",auth.verifyToken ,userController.removeFile);
+ router.put("/updateApplication",auth.verifyToken ,userController.updateApplication);
+ router.get("/get-all-uploaded-files",auth.verifyToken ,userController.getAllFiles);
 module.exports = router;
