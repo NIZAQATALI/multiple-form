@@ -54,12 +54,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     state: {
       type: DataTypes.STRING,
-     
     },
-    
     zip: {
       type: DataTypes.STRING,
-     
     },
     otp: {
       type: DataTypes.STRING,
@@ -162,11 +159,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     minor_startdate2021: {
       type: DataTypes.TEXT,
-     
     },
     minor_enddate2021: {
       type: DataTypes.TEXT,
-     
     },
     employed_as_W2:{
       type: DataTypes.TEXT,
@@ -240,8 +235,6 @@ module.exports = (sequelize, DataTypes) => {
     Tax_Return_2020_name: {
       type: DataTypes.TEXT,
     },
-    
-   
     Tax_Return_2021: {
       type: DataTypes.TEXT,
     },

@@ -6,6 +6,7 @@ const userModel = require("../modals/userModel");
 const auth = require("../MiddleWares/auth");
 const jwt = require("jsonwebtoken");
 var db = require('../modals/index.js');
+const fs = require('fs');
 // var db = require('../Images');
 // image Upload
 const multer = require('multer')
@@ -208,11 +209,11 @@ const uploadForm = async (req, res) => {
   try {
 const id=req.params.userId;
 const updatedUserFiles = {};
-// Add files to the updatedUserFiles object only if they are present in the request
-// if (req.files.schedule_pdf) {
-//   updatedUserFiles.schedule_pdf_name = req.files.schedule_pdf[0].originalname;
-//   updatedUserFiles.schedule_pdf = req.files.schedule_pdf[0].path
-// }
+//Add files to the updatedUserFiles object only if they are present in the request
+if (req.files.schedule_pdf) {
+  updatedUserFiles.schedule_pdf_name = req.files.schedule_pdf[0].originalname;
+  updatedUserFiles.schedule_pdf = req.files.schedule_pdf[0].path
+}
 console.log("UpdatedUserFiles",req.files.schedule_pdf);
   if (req.files.schedule_pdf) {   
 console.log("UpdatedUserFiles 7777",updatedUserFiles);
@@ -277,7 +278,7 @@ const checkEmail = async (req, res) => {
       return res.status(400).json({ error: 'User with this email already exists.' });
     } else {
       // If the user doesn't exist, send a success message
-      return res.status(400).json({ message: 'Email is available.' });
+      return res.status(200).json({ message: 'Email is available.' });
     }
   } catch (error) {
     console.error('Error checking email:', error);
@@ -326,7 +327,6 @@ await User.update(
   },
   {
     where: {
-
       id: user.id, 
     },
   }
@@ -461,11 +461,11 @@ const{ email} = req.body
 // 8. Upload Image Controller
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const destinationPath = path.join(__dirname, '../Images');
+    
     cb(null, 'Images');
   },
   filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname))
+      cb(null, Date.now()+path.extname(file.originalname))
   }
 })
 const upload = multer({
@@ -520,13 +520,36 @@ const upload = multer({
 const updateApplicationStatus = async (req, res) => {
   try {
     const userId = req.user.id;
-
     // Assuming you have a service method for updating application status
     const updatedStatus = await userService.updateApplicationStatus(userId, req.body.applicationStatus);
-
     res.status(200).json(updatedStatus);
   } catch (err) {
     console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+// Define the removeFile controller function
+const removeFile = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const fileName = req.params.fileName;
+    // Construct the file path
+    const filePath = path.join(__dirname, '../Images', fileName); // Adjust the path based on your project structure
+    // Check if the file exists
+    if (fs.existsSync(filePath)) {
+      // Remove the file
+      fs.unlinkSync(filePath);
+
+      // You may also want to update your database to remove the file reference
+      // Example: await userService.removeFileFromUser(userId, fileName);
+
+      res.status(200).json({ message: 'File removed successfully.' });
+    } else {
+      res.status(404).json({ error: 'File not found.' });
+    }
+  } catch (err) {
+    console.error('Error removing file:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -544,5 +567,6 @@ module.exports = {
   upload,
   uploadForm,
   updateApplicationStatus,
-  checkEmail
+  checkEmail,
+  removeFile
 };
