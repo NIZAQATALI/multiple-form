@@ -78,8 +78,8 @@ const getAllUser = async ( callback) => {
 };
 const getAllFiles = async (userId, callback) => {
   try {
-    const userId = req.user.id; // Assuming you have authentication middleware setting req.user
-
+    const userId = userId; // Assuming you have authentication middleware setting req.user
+console.log(userId,"klkkkklklklklklklklklklklklkl");
     // Fetch user data including uploaded files
     const user = await userService.getUserWithFiles(userId);
 
@@ -118,45 +118,7 @@ const getUserWithMail = async (email, callback) => {
     });
   }
 };
-//  try {
-//             const user = await User.findByPk(userId);
-//             if (!user) {
-//               return res.status(404).json({ error: 'User not found' });
-//             }
-//             // Update the user's properties
-//             user.name = name;
-//             user.surame = surname;
-//             console.log("nn",user.surname);
-//             // Save the changes to the database
-//             await user.save();
-//             return res.status(200).json(user);
-//           } catch (error) {
-//             return res.status(500).json({ error: 'Error updating user' });
-//           }
-//         });
-// const updateUser = async (id, updateData) => {
-//   try {
-//     console.log("updateUser function called with id:", id);
-//     const user = await User.findByPk(id);
-//     // const [numOfUpdatedRows, updatedUsers] = await userModel.update(updateData, {
-//     //   where: { id },
-//     //   returning: true,
-//     // });
 
-//     if (!user) {
-//         return res.status(404).json({ error: 'User not found' });
-//                   }
-//                   // Update the user's properties
-//                   user.userType = updateData.userType;
-//                   console.log("nn",user.userType);
-//                   // Save the changes to the database
-//                   await user.save();
-//                   console.log("oooooooooooooooo",user)
-//                   return (user);
-//   } catch (error) {
-//     return res.status(500).json(error);
-//   }
-// };
 const updateUser = async (id, updateData) => {
   try {
     console.log("updateUser function called with id:", id);
@@ -329,6 +291,24 @@ const updateApplication = async (userId) => {
     user.applicationStatus = true;
     // Save the updated user
     await user.save();
+    return {user: user};
+  } catch (err) {
+    console.error(err);
+    return { error: 'Internal Server Error' };
+  }
+};
+const updateDocumentStatus = async (userId) => {
+  console.log("mmmmmmmmmmmmmmmmmmmmmm")
+  try {
+    console.log("uuuuuuuuuuu");
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return { error: 'User not found' };
+    }
+    // Update the application status
+    user.applicationWithDocument = true;
+    // Save the updated user
+    await user.save();
     return { success: true };
   } catch (err) {
     console.error(err);
@@ -347,6 +327,8 @@ module.exports = {
   submitOtp ,
   deleteUser,
   uploadForm,
- updateApplication,getAllFiles
+ updateApplication,
+ getAllFiles,
+ updateDocumentStatus
  
 };

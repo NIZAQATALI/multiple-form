@@ -476,7 +476,11 @@ process_2_file_reminder:{
     },
     applicationStatus: {
       type: DataTypes.BOOLEAN,
-      default: false,
+      defaultValue: false,
+    },
+    applicationWithDocument: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     companies: {
       type: DataTypes.STRING, // Use STRING instead of ARRAY

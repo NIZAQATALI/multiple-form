@@ -12,5 +12,6 @@ router.put("/:stepNumber/updateuser", auth.verifyToken,  userController.updateUs
 router.put("/upload-form-data", userController.upload, auth.verifyToken,userController.uploadForm);
  router.delete("/remove-file",auth.verifyToken ,userController.removeFile);
  router.put("/updateApplication",auth.verifyToken ,userController.updateApplication);
+ router.put("/updateDocumentStatus",auth.verifyToken ,userController.updateDocumentStaus);
  router.get("/get-all-uploaded-files",auth.verifyToken ,userController.getAllFiles);
 module.exports = router;

@@ -154,7 +154,7 @@ const getUser = async (req, res) => {
 };
 const getAllFiles = async (req, res) => {
   const userId =   req.user.id;
-  console.log("userId......",userId);
+
   await userService.getAllFiles(userId, (err, result) => {
     if (err) return res.status(404).send(err);
     result.password = undefined;
@@ -223,6 +223,39 @@ const updateApplication = async (req, res) => {
       }
    const id  = req.user.id;
       const updatedUser = await userService.updateApplication(id);
+      // Now it should be defined
+      res.status(200).json(updatedUser);
+  } catch (err) {
+      res.status(500).json(err);
+  }
+};
+const updateDocumentStaus = async (req, res) => {
+  try {
+      // Check if user.applicationStatus is true
+      if (req.user.applicationWithDocument) {
+          return res.status(400).json({ error: 'You have already submitted documents. Data cannot be updated.' });
+      }
+     
+   const id  = req.user.id;
+   console.log("iddddddddddddd",id)
+      const updatedUser = await userService.updateDocumentStatus(id);
+      
+      // Now it should be defined
+      res.status(200).json(updatedUser);
+  } catch (err) {
+      res.status(500).json(err);
+  }
+};
+
+const updateDocumentStatus = async (req, res) => {
+  try {
+      // Check if user.applicationStatus is true
+      if (req.user.applicationWithDocument) {
+          return res.status(400).json({ error: 'You have already submitted documents' });
+      }
+   const id  = req.user.id;
+   console.log(id,"iddddddd")
+      const updatedUser = await userService.updateDocumentStaus(id);
       // Now it should be defined
       res.status(200).json(updatedUser);
   } catch (err) {
@@ -592,6 +625,8 @@ module.exports = {
   checkEmail,
   removeFile,
   updateApplication,
-  getAllFiles
+  getAllFiles,
+updateDocumentStaus 
+
 
 };
