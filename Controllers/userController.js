@@ -235,11 +235,8 @@ const updateDocumentStaus = async (req, res) => {
       if (req.user.applicationWithDocument) {
           return res.status(400).json({ error: 'You have already submitted documents. Data cannot be updated.' });
       }
-     
    const id  = req.user.id;
-   console.log("iddddddddddddd",id)
       const updatedUser = await userService.updateDocumentStatus(id);
-      
       // Now it should be defined
       res.status(200).json(updatedUser);
   } catch (err) {
@@ -254,7 +251,6 @@ const updateDocumentStatus = async (req, res) => {
           return res.status(400).json({ error: 'You have already submitted documents' });
       }
    const id  = req.user.id;
-   console.log(id,"iddddddd")
       const updatedUser = await userService.updateDocumentStaus(id);
       // Now it should be defined
       res.status(200).json(updatedUser);
@@ -318,6 +314,26 @@ if (req.files.supplemental_attachment_2021) {
 console.log("updated user files:",updatedUserFiles)
     const updatedUser = await userService.uploadForm(id,{...req.body,...updatedUserFiles,} );
 // Now it should be defined
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+const uploadFormMOre = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const updatedUserFiles = {};
+    // Process each field to handle multiple files
+    Object.keys(req.files).forEach((field) => {
+      const files = req.files[field];
+      if (files) {
+        updatedUserFiles[`${field}_name`] = files.map((file) => file.originalname);
+        updatedUserFiles[field] = files.map((file) => file.path);
+      }
+    });
+    console.log(updatedUserFiles,"updatedUserFiles",updatedUserFiles);
+
+    const updatedUser = await userService.uploadForm(id, { ...req.body, ...updatedUserFiles });
     res.status(200).json(updatedUser);
   } catch (err) {
     res.status(500).json(err);
@@ -535,16 +551,16 @@ const upload = multer({
       cb('Give proper files formate to upload')
   }
 }).fields([
-  { name: 'schedule_pdf', maxCount: 1 },
-  { name: 'driving_licence', maxCount: 1 },
-  { name: 'FormA1099', maxCount: 1 },
-  { name: 'FormB1099', maxCount: 1 },
-  { name: 'ks22020', maxCount: 1 },
-  { name: 'ks2020', maxCount: 1 },
-  { name: 'Tax_Return_2020', maxCount: 1 },
-  { name: 'Tax_Return_2021', maxCount: 1 },
-  { name: 'supplemental_attachment_2020', maxCount: 1 },
-  { name: 'supplemental_attachment_2021', maxCount: 1 },
+  { name: 'schedule_pdf', maxCount: 10 },
+  { name: 'driving_licence', maxCount: 10 },
+  { name: 'FormA1099', maxCount: 10 },
+  { name: 'FormB1099', maxCount: 10 },
+  { name: 'ks22020', maxCount: 10 },
+  { name: 'ks2020', maxCount: 10 },
+  { name: 'Tax_Return_2020', maxCount: 10 },
+  { name: 'Tax_Return_2021', maxCount: 10 },
+  { name: 'supplemental_attachment_2020', maxCount: 10 },
+  { name: 'supplemental_attachment_2021', maxCount: 10 },
   // Add more fields as needed
 ])
 // const storage = multer.diskStorage({
@@ -582,25 +598,87 @@ const updateApplicationStatus = async (req, res) => {
   }
 };
 // Define the removeFile controller function
+// const removeFile = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+//     console.log("objectnjnjjjjnjjjnjn",userId)
+//     const {schedule_pdf,driving_licence} = req.body
+//     if(schedule_pdf){
+//  req.user.schedule_pdf=null
+//  req.user.schedule_pdf_name=null
+
+//     }
+//     console.log("schedule_pdf",schedule_pdf,"driving_licence",driving_licence)
+   
+//     let fileName;
+//     if(driving_licence){
+   
+//      fileName = path.basename(schedule_pdf);
+//     }
+//     // Construct the file path
+//     const filePath = path.join(__dirname, '../Images', fileName); // Adjust the path based on your project structure
+//     // Check if the file exists
+//     console.log(filePath)
+//     if (fs.existsSync(filePath)) {
+//      console.log("File Path....",filePath);
+//      // Extract the file name from the full path
+// const fileName = path.basename(filePath);
+// console.log("filenamee",fileName)
+//       // Remove the file
+//       fs.unlinkSync(filePath);
+//        // Update your database to remove the file reference
+//       res.status(200).json({ message: 'File removed successfully.' });
+//     } else {
+//       res.status(404).json({ error: 'File not found.' });
+//     }
+//   } catch (err) {
+//     console.error('Error removing file:', err);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// };
 const removeFile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const {key} = req.body
-    console.log(key,"lllllllllllllllllllllllllllllllllllll");
-    // Construct the file path
-    const filePath = path.join(__dirname, '../Images', fileName); // Adjust the path based on your project structure
-    // Check if the file exists
-    if (fs.existsSync(filePath)) {
-     console.log("File Path....",filePath);
-     // Extract the file name from the full path
-const fileName = path.basename(filePath);
-console.log("filenameeeeeeeeeeeeee",fileName)
-      // Remove the file
-      fs.unlinkSync(filePath);
-       // Update your database to remove the file reference
-      res.status(200).json({ message: 'File removed successfully.' });
+    const { fieldToDelete } = req.body;
+    
+console.log(fieldToDelete,"field to delete")
+    if (!fieldToDelete) {
+      return res.status(400).json({ error: 'Field to delete is required.' });
+    }
+
+    // Assuming you are using some kind of database model (e.g., Mongoose)
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    // Check if the specified field exists in the user's document
+    console.log("user[fieldToDelete]",user[fieldToDelete])
+    if (user[fieldToDelete]) {
+      // Extract the file name from the full path
+      const fileName = path.basename(user[fieldToDelete]);
+
+      // Construct the file path
+      const filePath = path.join(__dirname, '../Images', fileName);
+
+      // Check if the file exists
+      if (fs.existsSync(filePath)) {
+        // Remove the file
+        fs.unlinkSync(filePath);
+
+        // Update the database field
+        user[fieldToDelete] = null;
+        // Assuming you have a field named schedule_pdf_name in your model
+        user[`${fieldToDelete}_name`] = null;
+        await user.save(); // Save the changes to the database
+
+        res.status(200).json({ message: 'File removed successfully.' });
+      } else {
+        res.status(404).json({ error: 'File not found.' });
+      }
     } else {
-      res.status(404).json({ error: 'File not found.' });
+      res.status(400).json({ error: `Field ${fieldToDelete} is  Already deleted or  empty.` });
     }
   } catch (err) {
     console.error('Error removing file:', err);
@@ -626,7 +704,6 @@ module.exports = {
   removeFile,
   updateApplication,
   getAllFiles,
-updateDocumentStaus 
-
-
+updateDocumentStaus,
+uploadFormMOre
 };

@@ -117,8 +117,7 @@ const getUserWithMail = async (email, callback) => {
       details: error.message,
     });
   }
-};
-
+}; 
 const updateUser = async (id, updateData) => {
   try {
     console.log("updateUser function called with id:", id);
@@ -199,7 +198,6 @@ const uploadForm = async (id, updateData) => {
 //     if (!user) {
 //       return { error: 'User not found' };
 //     }
-
 //     // Define the list of required file fields
 //     const requiredFiles = [
 //       'schedule_pdf_name',
@@ -298,7 +296,6 @@ const updateApplication = async (userId) => {
   }
 };
 const updateDocumentStatus = async (userId) => {
-  console.log("mmmmmmmmmmmmmmmmmmmmmm")
   try {
     console.log("uuuuuuuuuuu");
     const user = await User.findByPk(userId);
@@ -315,8 +312,6 @@ const updateDocumentStatus = async (userId) => {
     return { error: 'Internal Server Error' };
   }
 };
-
-
 module.exports = {
   register,
   login,
@@ -330,5 +325,4 @@ module.exports = {
  updateApplication,
  getAllFiles,
  updateDocumentStatus
- 
 };

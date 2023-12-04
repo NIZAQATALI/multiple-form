@@ -21,11 +21,11 @@ const sequelize = new Sequelize('myAppform', 'root', '12345', {
   }
   db.userModel = require('./userModel')(sequelize,DataTypes, Op);
   db.companyModel =  require('./companyModel')(sequelize,DataTypes,Op);
-  db.sequelize.sync({alter: false})
+  db.sequelize.sync({alter:false})
   .then(() => {
     console.log('Table .... are syncronized');
   })
   .catch((err) => {
     console.error('Error creating table:', err);
-  });
+  });     
     module.exports = db;
