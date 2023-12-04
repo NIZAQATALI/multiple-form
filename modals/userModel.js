@@ -173,19 +173,270 @@ module.exports = (sequelize, DataTypes) => {
     amount:{
       type:  DataTypes.DECIMAL,
     },
-    driving_licence:{
-      type:  DataTypes.TEXT,
+  
+    driving_licence: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('driving_licence');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('driving_licence', JSON.stringify(value));
+      },
     },
-    driving_licence_name:{
-      type:  DataTypes.TEXT,
+    driving_licence_name: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('driving_licence_name');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('driving_licence_name', JSON.stringify(value));
+      },
     },
-    schedule_pdf_name:{
-      type: DataTypes.TEXT
-    },
-    schedule_pdf:{
-      type: DataTypes.TEXT
+  schedule_pdf_name: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('schedule_pdf_name');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('schedule_pdf_name', JSON.stringify(value));
+      },
     },
     
+
+     schedule_pdf: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('schedule_pdf');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('schedule_pdf', JSON.stringify(value));
+      },
+    },
+    FormA1099: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('FormA1099');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('FormA1099', JSON.stringify(value));
+      },
+    },
+    FormA1099_name: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('FormA1099_name');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('FormA1099_name', JSON.stringify(value));
+      },
+    },
+    FormB1099_name: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('FormB1099_name');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('FormB1099_name', JSON.stringify(value));
+      },
+    },
+    FormB1099: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('FormB1099');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('FormB1099', JSON.stringify(value));
+      },
+    },
+    ks22020_name: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('ks22020_name');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('ks22020_name', JSON.stringify(value));
+      },
+    },
+    ks22020: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('ks22020');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('ks22020', JSON.stringify(value));
+      },
+    },
+    ks2020_name: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('ks2020_name');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('ks2020_name', JSON.stringify(value));
+      },
+    },
+    ks2020: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('ks2020');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('ks2020', JSON.stringify(value));
+      },
+    },
+    Tax_Return_2020_name: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('Tax_Return_2020_name');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('Tax_Return_2020_name', JSON.stringify(value));
+      },
+    },
+    Tax_Return_2020: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('Tax_Return_2020');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('Tax_Return_2020', JSON.stringify(value));
+      },
+    },
+    Tax_Return_2021_name: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('Tax_Return_2021_name');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('Tax_Return_2021_name', JSON.stringify(value));
+      },
+    },
+    Tax_Return_2021: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('Tax_Return_2021');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('Tax_Return_2021', JSON.stringify(value));
+      },
+    },
+    supplemental_attachment_2020: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('supplemental_attachment_2020');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('supplemental_attachment_2020', JSON.stringify(value));
+      },
+    },
+    supplemental_attachment_2020_name: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('supplemental_attachment_2020_name');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('supplemental_attachment_2020_name', JSON.stringify(value));
+      },
+    },
+
+    supplemental_attachment_2021_name: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('supplemental_attachment_2021_name');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('supplemental_attachment_2021_name', JSON.stringify(value));
+      },
+    },
+    supplemental_attachment_2021: {
+      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      defaultValue: '[]',    // Set default value as a string representation of an empty array
+      get() {
+        // Deserialize the JSON string when retrieving the value
+        const rawValue = this.getDataValue('supplemental_attachment_2021');
+        return JSON.parse(rawValue || '[]');
+      },
+      set(value) {
+        // Serialize the array as a JSON string when setting the value
+        this.setDataValue('supplemental_attachment_2021', JSON.stringify(value));
+      },
+    },
     personal_enddate2020_days:{
       type: DataTypes.TEXT
     },
@@ -209,7 +460,7 @@ module.exports = (sequelize, DataTypes) => {
     threedays: {
       type: DataTypes.TEXT,
       field: '3days'
-     
+
     },
     twodays: {
       type: DataTypes.TEXT,
@@ -229,66 +480,28 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
      
     },
-    Tax_Return_2020: {
-      type: DataTypes.TEXT,
-    },
-    Tax_Return_2020_name: {
-      type: DataTypes.TEXT,
-    },
-    Tax_Return_2021: {
-      type: DataTypes.TEXT,
-    },
-    Tax_Return_2021_name: {
-      type: DataTypes.TEXT,
-    },
-    supplemental_attachment_2020: {
-      type: DataTypes.TEXT,
-    },
-    supplemental_attachment_name_2020: {
-      type: DataTypes.TEXT,
-    },
+    // supplemental_attachment_2020: {
+    //   type: DataTypes.TEXT,
+    // },
+    // supplemental_attachment_name_2020: {
+    //   type: DataTypes.TEXT,
+    // },
    
-    supplemental_attachment_2021: {
-      type: DataTypes.TEXT,
-    },
-    supplemental_attachment_name_2021: {
-      type: DataTypes.TEXT,
-    },
+    // supplemental_attachment_2021: {
+    //   type: DataTypes.TEXT,
+    // },
+    // supplemental_attachment_name_2021: {
+    //   type: DataTypes.TEXT,
+    // },
    
-    supplemental_attachment_2020_name: {
-      type: DataTypes.TEXT,
+    // supplemental_attachment_2020_name: {
+    //   type: DataTypes.TEXT,
      
-    },
-    supplemental_attachment_2021_name: {
-      type: DataTypes.TEXT,
+    // },
+    // supplemental_attachment_2021_name: {
+    //   type: DataTypes.TEXT,
      
-    },
-    FormA1099_name: {
-      type: DataTypes.TEXT,
-     
-    },
-    FormB1099_name: {
-      type: DataTypes.TEXT,
-     
-    },
-    FormB1099: {
-      type: DataTypes.TEXT,
-    },
-    FormA1099: {
-      type: DataTypes.TEXT,
-    },
-    ks22020_name: {
-      type: DataTypes.TEXT,
-    },
-    ks2020_name: {
-      type: DataTypes.TEXT,
-    },
-    ks22020: {
-      type: DataTypes.TEXT,
-    },
-    ks2020: {
-      type: DataTypes.TEXT,
-    }, 
+    // },
     net_income_threshold_step_1: {
       type: DataTypes.TEXT,
     },
@@ -296,11 +509,9 @@ module.exports = (sequelize, DataTypes) => {
     greater_amount_2020_step_1: {
       type: DataTypes.TEXT,
     },
-   
     greater_amount_2021_step_1: {
       type: DataTypes.TEXT,
     },
-  
     remaining_net_income_2020_step_1: {
       type: DataTypes.TEXT,
     },
