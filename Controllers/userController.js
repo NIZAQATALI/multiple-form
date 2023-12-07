@@ -332,7 +332,6 @@ const uploadFormMOre = async (req, res) => {
       }
     });
     console.log(updatedUserFiles,"updatedUserFiles",updatedUserFiles);
-
     const updatedUser = await userService.uploadForm(id, { ...req.body, ...updatedUserFiles });
     res.status(200).json(updatedUser);
   } catch (err) {
@@ -686,6 +685,77 @@ console.log(fieldToDelete,"field to delete")
   }
 };
 
+
+// const deleteFileHandler = async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+//     const fieldName = req.params.fieldName;
+//     const fileName = req.params.fileName;
+
+//     const user = await User.findByPk(userId);
+//     if (!user) {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
+
+//     // Check if the field exists and is an array
+//     if (Array.isArray(user[fieldName]) && user[fieldName].length > 0) {
+//       // Find the index of the file in the array
+//       const fileIndex = user[fieldName].indexOf(fileName);
+
+//       // If the file is found, remove it from the array
+//       if (fileIndex !== -1) {
+//         user[fieldName].splice(fileIndex, 1);
+//         await user.save();
+//         return res.status(200).json({ message: 'File deleted successfully' });
+//       }
+//     }
+
+//     // If the file or field is not found, return an error
+//     return res.status(404).json({ error: 'File not found or field is not an array' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// };
+// const deleteFileHandler = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+//     const fieldName = req.body.fieldName;
+//     const fileName = req.body.fileName;
+//     console.log(userId,"...2...",fieldName,"..3....",fieldName)
+
+//     const user = await User.findByPk(userId);
+//     if (!user) {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
+
+//     // Check if the field exists and is an array
+//     if (Array.isArray(user[fieldName]) && user[fieldName].length > 0) {
+//       // Find the index of the file in the array
+//       const fileIndex = user[fieldName].indexOf(fileName);
+//       // If the file is found, remove it from the array
+//       if (fileIndex !== -1) {
+//         const filePath = user[fieldName][fileIndex]; // Get the file path
+//         // Remove the file from the file system
+//         await fs.unlink(filePath);
+
+//         // Remove the file reference from the array
+//         user[fieldName].splice(fileIndex, 1);
+        
+//         // Save the updated user
+//         await user.save();
+
+//         return res.status(200).json({ message: 'File deleted successfully' });
+//       }
+//     }
+
+//     // If the file or field is not found, return an error
+//     return res.status(404).json({ error: 'File not found or field is not an array' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// };
 module.exports = {
   registerViaInvite,
   register,
@@ -705,5 +775,6 @@ module.exports = {
   updateApplication,
   getAllFiles,
 updateDocumentStaus,
-uploadFormMOre
+uploadFormMOre,
+// deleteFileHandler
 };

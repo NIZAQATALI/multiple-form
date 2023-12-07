@@ -79,7 +79,7 @@ const getAllUser = async ( callback) => {
 const getAllFiles = async (userId, callback) => {
   try {
     const userId = userId; // Assuming you have authentication middleware setting req.user
-console.log(userId,"klkkkklklklklklklklklklklklkl");
+console.log(userId,"klkkkkl");
     // Fetch user data including uploaded files
     const user = await userService.getUserWithFiles(userId);
 
@@ -172,12 +172,25 @@ const uploadForm = async (id, updateData) => {
     if (!user) {
       return { error: 'User not found' };
     }
-    // Dynamically update user properties based on updateData
-    for (const key in updateData) {
-      if (updateData.hasOwnProperty(key)) {
-        user[key] = updateData[key];
+    // // Dynamically update user properties based on updateData
+    // for (const key in updateData) {
+    //   if (updateData.hasOwnProperty(key)) {
+    //     user[key] = updateData[key];
+    //   }
+    // }
+      // Dynamically update user properties based on updateData
+      for (const key in updateData) {
+        if (updateData.hasOwnProperty(key)) {
+          // Check if the field is an array and already exists
+          if (Array.isArray(user[key]) && Array.isArray(updateData[key]) && user[key].length > 0) {
+            // If yes, append new values to the existing array
+            user[key] = user[key].concat(updateData[key]);
+          } else {
+            // Otherwise, update the field with the new value
+            user[key] = updateData[key];
+          }
+        }
       }
-    }
     // Save the changes to the database
     await user.save();
     return { status: 200, message: "Application  Submiited  succesfully", user: user.toJSON() };
@@ -211,7 +224,6 @@ const uploadForm = async (id, updateData) => {
 //       'supplemental_attachment_2020',
 //       'supplemental_attachment_2021',
 //     ];
-
 //     // Update user properties based on updateData
 //     for (const key in updateData) {
 //       if (updateData.hasOwnProperty(key)) {
@@ -228,10 +240,8 @@ const uploadForm = async (id, updateData) => {
 //     } else {
 //       user.documentStatus = 'Documents Required';
 //     }
-
 //     // Save the updated user
 //     await user.save();
-
 //     return user;
 //   } catch (err) {
 //     console.error(err);

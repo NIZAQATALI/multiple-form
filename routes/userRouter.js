@@ -15,4 +15,7 @@ router.delete("/remove-file",auth.verifyToken ,userController.removeFile);
 router.put("/updateApplication",auth.verifyToken ,userController.updateApplication);
 router.put("/updateDocumentStatus",auth.verifyToken ,userController.updateDocumentStaus);
 router.get("/get-all-uploaded-files",auth.verifyToken ,userController.getAllFiles);
+// Define a route for deleting a file
+//router.delete('/deleteFile',auth.verifyToken, userController.deleteFileHandler);
+
 module.exports = router;
