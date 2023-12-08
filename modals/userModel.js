@@ -175,7 +175,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   
     driving_licence: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -187,8 +187,9 @@ module.exports = (sequelize, DataTypes) => {
         this.setDataValue('driving_licence', JSON.stringify(value));
       },
     },
+   
     driving_licence_name: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -214,6 +215,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     
+
 
      schedule_pdf: {
       type: DataTypes.STRING, // Use STRING instead of ARRAY

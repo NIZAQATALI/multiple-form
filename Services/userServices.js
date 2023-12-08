@@ -179,18 +179,44 @@ const uploadForm = async (id, updateData) => {
     //   }
     // }
       // Dynamically update user properties based on updateData
+      // for (const key in updateData) {
+      //   if (updateData.hasOwnProperty(key)) {
+      //     // Check if the field is an array and already exists
+      //     if (Array.isArray(user[key]) && Array.isArray(updateData[key]) && user[key].length > 0) {
+      //       // If yes, append new values to the existing array
+      //       user[key] = user[key].concat(updateData[key]);
+      //     } else {
+      //       // Otherwise, update the field with the new value
+      //       user[key] = updateData[key];
+      //     }
+      //   }
+      // }
       for (const key in updateData) {
         if (updateData.hasOwnProperty(key)) {
           // Check if the field is an array and already exists
           if (Array.isArray(user[key]) && Array.isArray(updateData[key]) && user[key].length > 0) {
+            // Append a digit to the new file names to make them unique
+            const uniqueNames = updateData[key].map((newName) => {
+              let index = 1;
+              let tempName = newName;
+              // Iterate until a unique name is found
+              while (user[key].includes(tempName)) {
+                index += 1;
+                const nameParts = newName.split('.');
+                // Insert the index before the file extension
+                tempName = `${nameParts[0]}_${index}.${nameParts[1]}`;
+              }
+              return tempName;
+            });
             // If yes, append new values to the existing array
-            user[key] = user[key].concat(updateData[key]);
+            user[key] = user[key].concat(uniqueNames);
           } else {
             // Otherwise, update the field with the new value
             user[key] = updateData[key];
           }
         }
       }
+  
     // Save the changes to the database
     await user.save();
     return { status: 200, message: "Application  Submiited  succesfully", user: user.toJSON() };

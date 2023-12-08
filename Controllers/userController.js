@@ -6,7 +6,8 @@ const userModel = require("../modals/userModel");
 const auth = require("../MiddleWares/auth");
 const jwt = require("jsonwebtoken");
 var db = require('../modals/index.js');
-const fs = require('fs');
+//const fs = require('fs');
+const fs = require('fs').promises;
 // var db = require('../Images');
 // image Upload
 const multer = require('multer')
@@ -95,7 +96,6 @@ const register = async (req, res) => {
     });
   }
 };
-
 const registerViaInvite = async  (req, res) => {
   const token = req.query.token;
   const invitationToken = jwt.decode(token);
@@ -148,7 +148,6 @@ const getUser = async (req, res) => {
   await userService.getUser(userId, (err, result) => {
     if (err) return res.status(404).send(err);
     result.password = undefined;
-  
     return res.status(200).send(result);
   });
 };
@@ -243,7 +242,6 @@ const updateDocumentStaus = async (req, res) => {
       res.status(500).json(err);
   }
 };
-
 const updateDocumentStatus = async (req, res) => {
   try {
       // Check if user.applicationStatus is true
@@ -530,7 +528,6 @@ const{ email} = req.body
 // 8. Upload Image Controller
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    
     cb(null, 'Images');
   },
   filename: (req, file, cb) => {
@@ -550,16 +547,16 @@ const upload = multer({
       cb('Give proper files formate to upload')
   }
 }).fields([
-  { name: 'schedule_pdf', maxCount: 10 },
-  { name: 'driving_licence', maxCount: 10 },
-  { name: 'FormA1099', maxCount: 10 },
-  { name: 'FormB1099', maxCount: 10 },
-  { name: 'ks22020', maxCount: 10 },
-  { name: 'ks2020', maxCount: 10 },
-  { name: 'Tax_Return_2020', maxCount: 10 },
-  { name: 'Tax_Return_2021', maxCount: 10 },
-  { name: 'supplemental_attachment_2020', maxCount: 10 },
-  { name: 'supplemental_attachment_2021', maxCount: 10 },
+  { name: 'schedule_pdf',maxCount:100000},
+  { name: 'driving_licence',maxCount:100000},
+  { name: 'FormA1099',maxCount:100000},
+  { name: 'FormB1099',maxCount:100000},
+  { name: 'ks22020',maxCount:100000},
+  { name: 'ks2020',maxCount:100000},
+  { name: 'Tax_Return_2020',maxCount:100000},
+  { name: 'Tax_Return_2021',maxCount:100000},
+  { name: 'supplemental_attachment_2020',maxCount:100000},
+  { name: 'supplemental_attachment_2021',maxCount:100000},
   // Add more fields as needed
 ])
 // const storage = multer.diskStorage({
@@ -639,39 +636,31 @@ const removeFile = async (req, res) => {
   try {
     const userId = req.user.id;
     const { fieldToDelete } = req.body;
-    
 console.log(fieldToDelete,"field to delete")
     if (!fieldToDelete) {
       return res.status(400).json({ error: 'Field to delete is required.' });
     }
-
     // Assuming you are using some kind of database model (e.g., Mongoose)
     const user = await User.findByPk(userId);
-
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
     }
-
     // Check if the specified field exists in the user's document
     console.log("user[fieldToDelete]",user[fieldToDelete])
     if (user[fieldToDelete]) {
       // Extract the file name from the full path
       const fileName = path.basename(user[fieldToDelete]);
-
       // Construct the file path
       const filePath = path.join(__dirname, '../Images', fileName);
-
       // Check if the file exists
       if (fs.existsSync(filePath)) {
         // Remove the file
         fs.unlinkSync(filePath);
-
         // Update the database field
         user[fieldToDelete] = null;
         // Assuming you have a field named schedule_pdf_name in your model
         user[`${fieldToDelete}_name`] = null;
         await user.save(); // Save the changes to the database
-
         res.status(200).json({ message: 'File removed successfully.' });
       } else {
         res.status(404).json({ error: 'File not found.' });
@@ -684,8 +673,6 @@ console.log(fieldToDelete,"field to delete")
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
-
 // const deleteFileHandler = async (req, res) => {
 //   try {
 //     const userId = req.params.userId;
@@ -717,45 +704,99 @@ console.log(fieldToDelete,"field to delete")
 //     res.status(500).json({ error: 'Internal server error' });
 //   }
 // };
-// const deleteFileHandler = async (req, res) => {
-//   try {
-//     const userId = req.user.id;
-//     const fieldName = req.body.fieldName;
-//     const fileName = req.body.fileName;
-//     console.log(userId,"...2...",fieldName,"..3....",fieldName)
+const deleteFileHandler = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const fieldName = req.body.fieldName;
+    const fileName = req.body.fileName;
+    const originalFieldName = req.body.originalFieldName;
+    const originalName=req.body.originalName
+    console.log(userId,"...2...",originalName,"..3....",originalFieldName)
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    // Check if the field exists and is an array
+    if (Array.isArray(user[fieldName]) && user[fieldName].length > 0) {
+      // Find the index of the file in the array
+      const fileIndex = user[fieldName].indexOf(fileName);
+      // If the file is found, remove it from the array
+      if (fileIndex !== -1) {
+        console.log("fileIndex.......................",fileIndex)
+        const filePath = user[fieldName][fileIndex]; // Get the file path
+        console.log(filePath,"fileIndexPath")
+        // Remove the file from the file system
+        await fs.unlink(filePath);
+        // Remove the file reference from the array
+        //user[fieldName].splice(fileIndex, 1);
+        user[fieldName] = user[fieldName].filter((file) => file !== filePath); // Remove the file from the array
+               // Assuming you have a field named schedule_pdf_name in your model
+        user[originalFieldName] = user[originalFieldName].filter((file) => file !== originalName);
+        // Save the changes to the database
+        await user.save({ fields: [fieldName, originalFieldName] });
+        return res.status(200).json({ message: 'File deleted successfully' });
+      }
+    }
+    // If the file or field is not found, return an error
+    return res.status(404).json({ error: 'File not found or field is not an array' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+const setCFormData = async (req, res) => {
+  try {
+    const formData = req.body;
+    const { id } = req.params;
+    // Finding greater amounts
+    const greaterAmount2020 = findGreaterAmount(formData.net_income_2019, formData.net_income_2020);
+    const greaterAmount2021 = findGreaterAmount(formData.net_income_2019, formData.net_income_2020, formData.net_income_2021);
 
-//     const user = await User.findByPk(userId);
-//     if (!user) {
-//       return res.status(404).json({ error: 'User not found' });
-//     }
+    // Start Step 1 Calculation Process
+    const netIncomeThresholdStep1 = 132886;
+    const maxSickLeaves = 10; // 10 days
+    const adwThresholdStep1 = 511.10;
+    const maxCreditAmountThresholdStep1 = 5111;
 
-//     // Check if the field exists and is an array
-//     if (Array.isArray(user[fieldName]) && user[fieldName].length > 0) {
-//       // Find the index of the file in the array
-//       const fileIndex = user[fieldName].indexOf(fileName);
-//       // If the file is found, remove it from the array
-//       if (fileIndex !== -1) {
-//         const filePath = user[fieldName][fileIndex]; // Get the file path
-//         // Remove the file from the file system
-//         await fs.unlink(filePath);
+    const remainingNetIncome2020Step1 = (greaterAmount2020 > netIncomeThresholdStep1) ? (greaterAmount2020 - netIncomeThresholdStep1) : 0;
+    const remainingNetIncome2021Step1 = (greaterAmount2021 > netIncomeThresholdStep1) ? (greaterAmount2021 - netIncomeThresholdStep1) : 0;
 
-//         // Remove the file reference from the array
-//         user[fieldName].splice(fileIndex, 1);
-        
-//         // Save the updated user
-//         await user.save();
+    const leaveDays2020Step1 = Math.min(maxSickLeaves, formData['1days']);
+    const leaveDays2021Step1 = Math.min(maxSickLeaves, formData['2days']);
 
-//         return res.status(200).json({ message: 'File deleted successfully' });
-//       }
-//     }
+    const adw2020Step1 = (greaterAmount2020 > netIncomeThresholdStep1) ? netIncomeThresholdStep1 / 260 : 0;
+    const adw2021Step1 = (greaterAmount2021 > netIncomeThresholdStep1) ? netIncomeThresholdStep1 / 260 : 0;
 
-//     // If the file or field is not found, return an error
-//     return res.status(404).json({ error: 'File not found or field is not an array' });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-// };
+    const creditAmount2020Step1 = parseFloat((adw2020Step1 * leaveDays2020Step1).toFixed(1));
+    const creditAmountRemaining2020Step1 = (creditAmount2020Step1 > maxCreditAmountThresholdStep1) ? creditAmount2020Step1 - maxCreditAmountThresholdStep1 : 0;
+    const creditAmount2020Step1Final = (creditAmount2020Step1 > maxCreditAmountThresholdStep1) ? maxCreditAmountThresholdStep1 : creditAmount2020Step1;
+
+    const creditAmount2021Step1 = parseFloat((adw2021Step1 * leaveDays2021Step1).toFixed(1));
+    const creditAmountRemaining2021Step1 = (creditAmount2021Step1 > maxCreditAmountThresholdStep1) ? creditAmount2021Step1 - maxCreditAmountThresholdStep1 : 0;
+    const creditAmount2021Step1Final = (creditAmount2021Step1 > maxCreditAmountThresholdStep1) ? maxCreditAmountThresholdStep1 : creditAmount2021Step1;
+
+    // ... Continue with the rest of your calculations
+
+    // Assuming you have an AppSetczones model defined
+    const updateableData = {
+      // ... Populate the data based on your PHP code
+    };
+return
+    await AppSetczones.findByIdAndUpdate(id, updateableData);
+
+    res.status(200).json({
+      status: 200,
+      data: { /* Your response data here */ },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 500,
+      data: { error: 'Internal server error' },
+    });
+  }
+};
+
 module.exports = {
   registerViaInvite,
   register,
@@ -776,5 +817,6 @@ module.exports = {
   getAllFiles,
 updateDocumentStaus,
 uploadFormMOre,
-// deleteFileHandler
+ deleteFileHandler,
+ setCFormData
 };
