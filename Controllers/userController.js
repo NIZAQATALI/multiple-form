@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs");
 const userService = require("../Services/userServices");
-const { formatCurrency } = require("../Services/helperMethods.js");
 const companyService = require('../Services/companyService.js');
 const nodemailer = require('nodemailer');
 const userModel = require("../modals/userModel");
@@ -794,26 +793,26 @@ let remaining_leave_days_2021_step_1 = (leaveDays2021Step1 > maxSickLeaves) ? le
 // console.log("creditAmount2020Step1Final",creditAmount2020Step1Final)
 // console.log("creditAmountRemaining2021Step1",creditAmountRemaining2021Step1)
 // console.log("creditAmount2021Step1Final",creditAmount2021Step1Final)
-// console.log("Data of  step  1  ")
-// console.log("net_income_2019:", formData.net_income_2019);
-// console.log("net_income_2020:", formData.net_income_2020);
-// console.log("net_income_2021:", formData.net_income_2021);
-// console.log("net_income_threshold_step_1:",netIncomeThresholdStep1);
-// console.log("greater_amount_2020:", greaterAmount2020);
-// console.log("greater_amount_2021:", greaterAmount2021);
-// console.log("remaining_net_income_2020_step_1:", creditAmountRemaining2020Step1);
-// console.log("remaining_net_income_2021_step_1:", creditAmountRemaining2021Step1);
-// console.log("credit_amount_2020_step_1:", creditAmount2020Step1);
-// console.log("credit_amount_2021_step_1:", creditAmount2021Step1);
-// console.log("credit_amount_remaining_2020_step_1:", creditAmountRemaining2020Step1);
-// console.log("credit_amount_remaining_2021_step_1:", creditAmountRemaining2021Step1);
-// console.log("adw_2020_step_1:", adw2020Step1);
-// console.log("adw_2021_step_1:", adw2021Step1);
-// console.log("max_credit_amount_threshold_step_1:", maxCreditAmountThresholdStep1);
-// console.log("applied_leave_days_2020_step_1:", formData['1days']);
-// console.log("applied_leave_days_2021_step_1:", formData['2days']);
-// console.log("leave_days_2020_step_1:", leaveDays2020Step1);
-// console.log("leave_days_2021_step_1:", leaveDays2021Step1);
+console.log("Data of  step  1  ")
+console.log("net_income_2019:", formData.net_income_2019);
+console.log("net_income_2020:", formData.net_income_2020);
+console.log("net_income_2021:", formData.net_income_2021);
+console.log("net_income_threshold_step_1:",netIncomeThresholdStep1);
+console.log("greater_amount_2020:", greaterAmount2020);
+console.log("greater_amount_2021:", greaterAmount2021);
+console.log("remaining_net_income_2020_step_1:", creditAmountRemaining2020Step1);
+console.log("remaining_net_income_2021_step_1:", creditAmountRemaining2021Step1);
+console.log("credit_amount_2020_step_1:", creditAmount2020Step1);
+console.log("credit_amount_2021_step_1:", creditAmount2021Step1);
+console.log("credit_amount_remaining_2020_step_1:", creditAmountRemaining2020Step1);
+console.log("credit_amount_remaining_2021_step_1:", creditAmountRemaining2021Step1);
+console.log("adw_2020_step_1:", adw2020Step1);
+console.log("adw_2021_step_1:", adw2021Step1);
+console.log("max_credit_amount_threshold_step_1:", maxCreditAmountThresholdStep1);
+console.log("applied_leave_days_2020_step_1:", formData['1days']);
+console.log("applied_leave_days_2021_step_1:", formData['2days']);
+console.log("leave_days_2020_step_1:", leaveDays2020Step1);
+console.log("leave_days_2021_step_1:", leaveDays2021Step1);
 
 //  //end  of  step1 calculation
  // Start Step 2 Calculation Process
@@ -856,55 +855,58 @@ const credit_amount_step_1_and_step_2 = credit_amount_2020_step_1_and_step_2 + c
 // console.log("credit_amount_2020_step_1_and_step_2",credit_amount_2020_step_1_and_step_2)
 // console.log("credit_amount_2021_step_1_and_step_2",credit_amount_2021_step_1_and_step_2)
 // console.log(" credit_amount_step_1_and_step_2", credit_amount_step_1_and_step_2)
-// console.log("Data of  step  2  ")
-// console.log("net_income_threshold_step_2:", net_income_threshold_step_2);
-// console.log("greater_amount_2020:", greaterAmount2020);
-// console.log("greater_amount_2021:", greaterAmount2021);
-// console.log("remaining_net_income_2020_step_2:", remaining_net_income_2020_step_2);
-// console.log("remaining_net_income_2021_step_2:", remaining_net_income_2021_step_2);
-// console.log(" credit_amount_2020_step_2:", credit_amount_2020_step_2);
-// console.log(" credit_amount_2021_step_2:",  credit_amount_2021_step_2);
-// console.log("credit_amount_remaining_2021_step_1:", creditAmountRemaining2021Step1);
-// console.log("adw_2020_step_2:", adw_2020_step_2);
-// console.log("adw_2021_step_2:", adw_2021_step_2);
-// console.log("max_credit_amount_threshold_step_1:", max_credit_amount_threshold_step_2);
-// console.log("applied_leave_days_2020_step_2:", formData['3days']);
-// console.log("applied_leave_days_2021_step_2:", formData['4days']);
-// console.log("step_2_leave_calculate_2020:", step_2_leave_calculate_2020);
-// console.log("lstep_2_leave_calculate_2021:", step_2_leave_calculate_2021);
-// console.log(" credit_amount_2020_step_1_and_step_2",credit_amount_2020_step_1_and_step_2)
-// console.log(" credit_amount_2021_step_1_and_step_2",credit_amount_2021_step_1_and_step_2)
-// console.log(" credit_amount_step_1_and_step_2",credit_amount_step_1_and_step_2)
+console.log("Data of  step  2  ")
+console.log("net_income_threshold_step_2:", net_income_threshold_step_2);
+console.log("greater_amount_2020:", greaterAmount2020);
+console.log("greater_amount_2021:", greaterAmount2021);
+console.log("remaining_net_income_2020_step_2:", remaining_net_income_2020_step_2);
+console.log("remaining_net_income_2021_step_2:", remaining_net_income_2021_step_2);
+console.log(" credit_amount_2020_step_2:", credit_amount_2020_step_2);
+console.log(" credit_amount_2021_step_2:",  credit_amount_2021_step_2);
+console.log("credit_amount_remaining_2021_step_1:", creditAmountRemaining2021Step1);
+console.log("adw_2020_step_2:", adw_2020_step_2);
+console.log("adw_2021_step_2:", adw_2021_step_2);
+console.log("max_credit_amount_threshold_step_1:", max_credit_amount_threshold_step_2);
+console.log("applied_leave_days_2020_step_2:", formData['3days']);
+console.log("applied_leave_days_2021_step_2:", formData['4days']);
+console.log("step_2_leave_calculate_2020:", step_2_leave_calculate_2020);
+console.log("lstep_2_leave_calculate_2021:", step_2_leave_calculate_2021);
+console.log(" credit_amount_2020_step_1_and_step_2",credit_amount_2020_step_1_and_step_2)
+console.log(" credit_amount_2021_step_1_and_step_2",credit_amount_2021_step_1_and_step_2)
+console.log(" credit_amount_step_1_and_step_2",credit_amount_step_1_and_step_2)
 
-// // End Step 2 Calculation Process
-// // Start Step 3 Calculation Process
-// const net_income_threshold_step_3 = net_income_threshold_step_2;
-// const adw_threshold_step_3 = adw_threshold_step_2;
-// const school_leaves_2020_threshold_step_3 = 50;
-// const school_leaves_2021_threshold_step_3 = 60;
-// const max_credit_amount_threshold_step_3 = 10000;
+// End Step 2 Calculation Process
+// Start Step 3 Calculation Process
+const net_income_threshold_step_3 = net_income_threshold_step_2;
+const adw_threshold_step_3 = adw_threshold_step_2;
+const school_leaves_2020_threshold_step_3 = 50;
+const school_leaves_2021_threshold_step_3 = 60;
+const max_credit_amount_threshold_step_3 = 10000;
 
-// const remaining_net_income_2020_step_3 = (greaterAmount2020 > net_income_threshold_step_3) ? (greaterAmount2020 - net_income_threshold_step_3) : 0;
-// const remaining_net_income_2021_step_3 = (greaterAmount2021 > net_income_threshold_step_3) ? (greaterAmount2021 - net_income_threshold_step_3) : 0;
-// const leave_days_2020_step_3 = parseInt(formData['5days']);
-// const leave_days_2021_step_3 = parseInt(formData['6days']);
+const remaining_net_income_2020_step_3 = (greaterAmount2020 > net_income_threshold_step_3) ? (greaterAmount2020 - net_income_threshold_step_3) : 0;
+const remaining_net_income_2021_step_3 = (greaterAmount2021 > net_income_threshold_step_3) ? (greaterAmount2021 - net_income_threshold_step_3) : 0;
 
-// const step_3_leave_calculate_2020 = (leave_days_2020_step_3 >= school_leaves_2020_threshold_step_3) ? school_leaves_2020_threshold_step_3 : leave_days_2020_step_3;
-// const step_3_leave_calculate_2021 = (leave_days_2021_step_3 >= school_leaves_2021_threshold_step_3) ? school_leaves_2021_threshold_step_3 : leave_days_2021_step_3;
-// const adw_2020_step_3 = ((greaterAmount2020 > net_income_threshold_step_3) ? net_income_threshold_step_3 : greaterAmount2020) / 260;
-// const adw_2021_step_3 = ((greaterAmount2021 > net_income_threshold_step_3) ? net_income_threshold_step_3 : greaterAmount2021) / 260;
+const leave_days_2020_step_3 = parseInt(formData['5days']);
+const leave_days_2021_step_3 = parseInt(formData['6days']);
 
-// const credit_amount_2020_step_3 = Math.min(max_credit_amount_threshold_step_3, parseFloat((0.67 * (adw_2020_step_3 * step_3_leave_calculate_2020)).toFixed(1)));
+const step_3_leave_calculate_2020 = (leave_days_2020_step_3 >= school_leaves_2020_threshold_step_3) ? school_leaves_2020_threshold_step_3 : leave_days_2020_step_3;
+const step_3_leave_calculate_2021 = (leave_days_2021_step_3 >= school_leaves_2021_threshold_step_3) ? school_leaves_2021_threshold_step_3 : leave_days_2021_step_3;
 
-// const credit_amount_2021_step_3 = Math.min(max_credit_amount_threshold_step_3, parseFloat((0.67 * (adw_2021_step_3 * step_3_leave_calculate_2021)).toFixed(1)));
-// console.log(step_3_leave_calculate_2021,"uoggggggg")
-// // Assuming credit_amount_step_1_and_step_2 is defined from previous calculations
-// const total_credit_amount_step_3 = credit_amount_2020_step_3 + credit_amount_2021_step_3;
-// const final_credit_amount = total_credit_amount_step_3 + credit_amount_step_1_and_step_2;
-// console.log("Data  of  step  3")
-// console.log("credit_amount_2020_step_3",credit_amount_2020_step_3)
-// console.log("credit_amount_2021_step_3",credit_amount_2021_step_3)
-// console.log("total_credit_amount_step_3",total_credit_amount_step_3,"final_credit_amount",final_credit_amount)
+
+const adw_2020_step_3 = ((greaterAmount2020 > net_income_threshold_step_3) ? net_income_threshold_step_3 : greaterAmount2020) / 260;
+const adw_2021_step_3 = ((greaterAmount2021 > net_income_threshold_step_3) ? net_income_threshold_step_3 : greaterAmount2021) / 260;
+
+const credit_amount_2020_step_3 = Math.min(max_credit_amount_threshold_step_3, parseFloat((0.67 * (adw_2020_step_3 * step_3_leave_calculate_2020)).toFixed(1)));
+
+const credit_amount_2021_step_3 = Math.min(max_credit_amount_threshold_step_3, parseFloat((0.67 * (adw_2021_step_3 * step_3_leave_calculate_2021)).toFixed(1)));
+console.log(step_3_leave_calculate_2021,"uoggggggg")
+// Assuming credit_amount_step_1_and_step_2 is defined from previous calculations
+const total_credit_amount_step_3 = credit_amount_2020_step_3 + credit_amount_2021_step_3;
+const final_credit_amount = total_credit_amount_step_3 + credit_amount_step_1_and_step_2;
+console.log("Data  of  step  3")
+console.log("credit_amount_2020_step_3",credit_amount_2020_step_3)
+console.log("credit_amount_2021_step_3",credit_amount_2021_step_3)
+console.log("total_credit_amount_step_3",total_credit_amount_step_3,"final_credit_amount",final_credit_amount)
 // End Step 3 Calculation Process
 
     // ... Continue with the rest of your calculations
