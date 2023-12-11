@@ -29,8 +29,14 @@ const validateCardOwners = async (card = null, list, board,workspace, isCreate =
 	console.log("validate3");
 	return validate && validate2 && validate3;
 };
+// Helper function to format currency
+function formatCurrency(value) {
+	const inputValue = value.replace(/\D/g, ''); // Remove non-digit characters
+	return inputValue ? '$' + Number(inputValue).toLocaleString() : '$'; // Format as currency with dollar sign
+  }
 module.exports = {
 	labelsSeed,
 	createRandomHexColor,
-	validateCardOwners
+	validateCardOwners,
+	formatCurrency
 };

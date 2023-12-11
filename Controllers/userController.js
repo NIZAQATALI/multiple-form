@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const userService = require("../Services/userServices");
+const { formatCurrency } = require("../Services/helperMethods.js");
 const companyService = require('../Services/companyService.js');
 const nodemailer = require('nodemailer');
 const userModel = require("../modals/userModel");
@@ -749,10 +750,15 @@ const setCFormData = async (req, res) => {
     const formData = req.body;
     const { id } = req.params;
     // Finding greater amounts
+    
+    function findGreaterAmount(...netIncomes) {
+      return Math.max(...netIncomes);
+    }
     const greaterAmount2020 = findGreaterAmount(formData.net_income_2019, formData.net_income_2020);
     const greaterAmount2021 = findGreaterAmount(formData.net_income_2019, formData.net_income_2020, formData.net_income_2021);
-
+    console.log("greaterAmount2020",greaterAmount2020,"creditAmoungreaterAmount2021",greaterAmount2021)
     // Start Step 1 Calculation Process
+
     const netIncomeThresholdStep1 = 132886;
     const maxSickLeaves = 10; // 10 days
     const adwThresholdStep1 = 511.10;
@@ -760,13 +766,21 @@ const setCFormData = async (req, res) => {
 
     const remainingNetIncome2020Step1 = (greaterAmount2020 > netIncomeThresholdStep1) ? (greaterAmount2020 - netIncomeThresholdStep1) : 0;
     const remainingNetIncome2021Step1 = (greaterAmount2021 > netIncomeThresholdStep1) ? (greaterAmount2021 - netIncomeThresholdStep1) : 0;
+    console.log("remainingNetIncome2020Step1",remainingNetIncome2020Step1,"remainingNetIncome2021Step1",remainingNetIncome2021Step1);
+    console.log("1days",formData['1days'])
+       console.log("2days",formData['2days'])
 
     const leaveDays2020Step1 = Math.min(maxSickLeaves, formData['1days']);
     const leaveDays2021Step1 = Math.min(maxSickLeaves, formData['2days']);
+       // Assuming you have the values defined for leave_days_2020_step_1, leave_days_2021_step_1, and max_sick_leaves
 
-    const adw2020Step1 = (greaterAmount2020 > netIncomeThresholdStep1) ? netIncomeThresholdStep1 / 260 : 0;
-    const adw2021Step1 = (greaterAmount2021 > netIncomeThresholdStep1) ? netIncomeThresholdStep1 / 260 : 0;
+let remaining_leave_days_2020_step_1 = (leaveDays2020Step1 > maxSickLeaves) ? leaveDays2020Step1 - maxSickLeaves : null;
+let remaining_leave_days_2021_step_1 = (leaveDays2021Step1 > maxSickLeaves) ? leaveDays2021Step1 - maxSickLeaves : null;
 
+    const adw2020Step1 = (greaterAmount2020 > netIncomeThresholdStep1) ? netIncomeThresholdStep1 / 260 : greaterAmount2020 / 260 ;
+    const adw2021Step1 = (greaterAmount2021 > netIncomeThresholdStep1) ? netIncomeThresholdStep1 / 260 : greaterAmount2021/260;
+   console.log("adw2020Step1",adw2020Step1)
+    console.log("adw2020Step1",adw2021Step1)
     const creditAmount2020Step1 = parseFloat((adw2020Step1 * leaveDays2020Step1).toFixed(1));
     const creditAmountRemaining2020Step1 = (creditAmount2020Step1 > maxCreditAmountThresholdStep1) ? creditAmount2020Step1 - maxCreditAmountThresholdStep1 : 0;
     const creditAmount2020Step1Final = (creditAmount2020Step1 > maxCreditAmountThresholdStep1) ? maxCreditAmountThresholdStep1 : creditAmount2020Step1;
@@ -774,26 +788,196 @@ const setCFormData = async (req, res) => {
     const creditAmount2021Step1 = parseFloat((adw2021Step1 * leaveDays2021Step1).toFixed(1));
     const creditAmountRemaining2021Step1 = (creditAmount2021Step1 > maxCreditAmountThresholdStep1) ? creditAmount2021Step1 - maxCreditAmountThresholdStep1 : 0;
     const creditAmount2021Step1Final = (creditAmount2021Step1 > maxCreditAmountThresholdStep1) ? maxCreditAmountThresholdStep1 : creditAmount2021Step1;
+// console.log("creditAmount2020Step1",creditAmount2020Step1)
+// console.log("creditAmountRemaining2020Step1",creditAmountRemaining2020Step1)
+// console.log("creditAmount2021Step1",creditAmount2021Step1)
+// console.log("creditAmount2020Step1Final",creditAmount2020Step1Final)
+// console.log("creditAmountRemaining2021Step1",creditAmountRemaining2021Step1)
+// console.log("creditAmount2021Step1Final",creditAmount2021Step1Final)
+// console.log("Data of  step  1  ")
+// console.log("net_income_2019:", formData.net_income_2019);
+// console.log("net_income_2020:", formData.net_income_2020);
+// console.log("net_income_2021:", formData.net_income_2021);
+// console.log("net_income_threshold_step_1:",netIncomeThresholdStep1);
+// console.log("greater_amount_2020:", greaterAmount2020);
+// console.log("greater_amount_2021:", greaterAmount2021);
+// console.log("remaining_net_income_2020_step_1:", creditAmountRemaining2020Step1);
+// console.log("remaining_net_income_2021_step_1:", creditAmountRemaining2021Step1);
+// console.log("credit_amount_2020_step_1:", creditAmount2020Step1);
+// console.log("credit_amount_2021_step_1:", creditAmount2021Step1);
+// console.log("credit_amount_remaining_2020_step_1:", creditAmountRemaining2020Step1);
+// console.log("credit_amount_remaining_2021_step_1:", creditAmountRemaining2021Step1);
+// console.log("adw_2020_step_1:", adw2020Step1);
+// console.log("adw_2021_step_1:", adw2021Step1);
+// console.log("max_credit_amount_threshold_step_1:", maxCreditAmountThresholdStep1);
+// console.log("applied_leave_days_2020_step_1:", formData['1days']);
+// console.log("applied_leave_days_2021_step_1:", formData['2days']);
+// console.log("leave_days_2020_step_1:", leaveDays2020Step1);
+// console.log("leave_days_2021_step_1:", leaveDays2021Step1);
+
+//  //end  of  step1 calculation
+ // Start Step 2 Calculation Process
+const net_income_threshold_step_2 = 77480;
+const adw_threshold_step_2 = 298;
+const max_credit_amount_threshold_step_2 = 2000;
+const remaining_net_income_2020_step_2 = (greaterAmount2020 > net_income_threshold_step_2) ? (greaterAmount2020 - net_income_threshold_step_2) : 0;
+const remaining_net_income_2021_step_2 = (greaterAmount2021 > net_income_threshold_step_2) ? (greaterAmount2021 - net_income_threshold_step_2) : 0;
+const leave_days_2020_step_2 = parseInt(formData['3days']);
+const leave_days_2021_step_2 = parseInt(formData['4days']);
+let step_2_leave_calculate_2020;
+if (leaveDays2020Step1 < maxSickLeaves) {
+    step_2_leave_calculate_2020 = (leaveDays2020Step1 + leave_days_2020_step_2 >= maxSickLeaves) ?
+        maxSickLeaves - leaveDays2020Step1 :
+         leave_days_2020_step_2;
+} else {
+    step_2_leave_calculate_2020 = 0;
+}
+let step_2_leave_calculate_2021;
+if (leaveDays2020Step1 < maxSickLeaves) {
+    step_2_leave_calculate_2021 = (leaveDays2021Step1 + leave_days_2021_step_2 >= maxSickLeaves) ?
+        maxSickLeaves - leaveDays2021Step1 :
+         leave_days_2021_step_2;
+} else {
+    step_2_leave_calculate_2021 = 0;
+}
+const adw_2020_step_2 = ((greaterAmount2020 > net_income_threshold_step_2) ? net_income_threshold_step_2 : greaterAmount2020) / 260;
+const adw_2021_step_2 = ((greaterAmount2021 > net_income_threshold_step_2) ? net_income_threshold_step_2 : greaterAmount2021) / 260;
+const credit_amount_2020_step_2 = Math.min(max_credit_amount_threshold_step_2, parseFloat((0.67 * (adw_2020_step_2 * step_2_leave_calculate_2020)).toFixed(1)));
+console.log(credit_amount_2020_step_2,"credit_amount_2020_step_2.........................................")
+const credit_amount_2021_step_2 = Math.min(max_credit_amount_threshold_step_2, parseFloat((0.67 * (adw_2021_step_2 * step_2_leave_calculate_2021)).toFixed(1)));
+console.log(credit_amount_2021_step_2,"credit_amount_2021_step_2.........................................")
+const credit_amount_2020_step_1_and_step_2 = creditAmount2020Step1 + credit_amount_2020_step_2;
+const credit_amount_2021_step_1_and_step_2 = creditAmount2021Step1 + credit_amount_2021_step_2;
+const credit_amount_step_1_and_step_2 = credit_amount_2020_step_1_and_step_2 + credit_amount_2021_step_1_and_step_2;
+// console.log("adw_2020_step_2",adw_2020_step_2)
+// console.log("adw_2021_step_2",adw_2021_step_2)
+// console.log("credit_amount_2020_step_2",credit_amount_2020_step_2)
+// console.log("credit_amount_2021_step_2",credit_amount_2021_step_2)
+// console.log("credit_amount_2020_step_1_and_step_2",credit_amount_2020_step_1_and_step_2)
+// console.log("credit_amount_2021_step_1_and_step_2",credit_amount_2021_step_1_and_step_2)
+// console.log(" credit_amount_step_1_and_step_2", credit_amount_step_1_and_step_2)
+// console.log("Data of  step  2  ")
+// console.log("net_income_threshold_step_2:", net_income_threshold_step_2);
+// console.log("greater_amount_2020:", greaterAmount2020);
+// console.log("greater_amount_2021:", greaterAmount2021);
+// console.log("remaining_net_income_2020_step_2:", remaining_net_income_2020_step_2);
+// console.log("remaining_net_income_2021_step_2:", remaining_net_income_2021_step_2);
+// console.log(" credit_amount_2020_step_2:", credit_amount_2020_step_2);
+// console.log(" credit_amount_2021_step_2:",  credit_amount_2021_step_2);
+// console.log("credit_amount_remaining_2021_step_1:", creditAmountRemaining2021Step1);
+// console.log("adw_2020_step_2:", adw_2020_step_2);
+// console.log("adw_2021_step_2:", adw_2021_step_2);
+// console.log("max_credit_amount_threshold_step_1:", max_credit_amount_threshold_step_2);
+// console.log("applied_leave_days_2020_step_2:", formData['3days']);
+// console.log("applied_leave_days_2021_step_2:", formData['4days']);
+// console.log("step_2_leave_calculate_2020:", step_2_leave_calculate_2020);
+// console.log("lstep_2_leave_calculate_2021:", step_2_leave_calculate_2021);
+// console.log(" credit_amount_2020_step_1_and_step_2",credit_amount_2020_step_1_and_step_2)
+// console.log(" credit_amount_2021_step_1_and_step_2",credit_amount_2021_step_1_and_step_2)
+// console.log(" credit_amount_step_1_and_step_2",credit_amount_step_1_and_step_2)
+
+// // End Step 2 Calculation Process
+// // Start Step 3 Calculation Process
+// const net_income_threshold_step_3 = net_income_threshold_step_2;
+// const adw_threshold_step_3 = adw_threshold_step_2;
+// const school_leaves_2020_threshold_step_3 = 50;
+// const school_leaves_2021_threshold_step_3 = 60;
+// const max_credit_amount_threshold_step_3 = 10000;
+
+// const remaining_net_income_2020_step_3 = (greaterAmount2020 > net_income_threshold_step_3) ? (greaterAmount2020 - net_income_threshold_step_3) : 0;
+// const remaining_net_income_2021_step_3 = (greaterAmount2021 > net_income_threshold_step_3) ? (greaterAmount2021 - net_income_threshold_step_3) : 0;
+// const leave_days_2020_step_3 = parseInt(formData['5days']);
+// const leave_days_2021_step_3 = parseInt(formData['6days']);
+
+// const step_3_leave_calculate_2020 = (leave_days_2020_step_3 >= school_leaves_2020_threshold_step_3) ? school_leaves_2020_threshold_step_3 : leave_days_2020_step_3;
+// const step_3_leave_calculate_2021 = (leave_days_2021_step_3 >= school_leaves_2021_threshold_step_3) ? school_leaves_2021_threshold_step_3 : leave_days_2021_step_3;
+// const adw_2020_step_3 = ((greaterAmount2020 > net_income_threshold_step_3) ? net_income_threshold_step_3 : greaterAmount2020) / 260;
+// const adw_2021_step_3 = ((greaterAmount2021 > net_income_threshold_step_3) ? net_income_threshold_step_3 : greaterAmount2021) / 260;
+
+// const credit_amount_2020_step_3 = Math.min(max_credit_amount_threshold_step_3, parseFloat((0.67 * (adw_2020_step_3 * step_3_leave_calculate_2020)).toFixed(1)));
+
+// const credit_amount_2021_step_3 = Math.min(max_credit_amount_threshold_step_3, parseFloat((0.67 * (adw_2021_step_3 * step_3_leave_calculate_2021)).toFixed(1)));
+// console.log(step_3_leave_calculate_2021,"uoggggggg")
+// // Assuming credit_amount_step_1_and_step_2 is defined from previous calculations
+// const total_credit_amount_step_3 = credit_amount_2020_step_3 + credit_amount_2021_step_3;
+// const final_credit_amount = total_credit_amount_step_3 + credit_amount_step_1_and_step_2;
+// console.log("Data  of  step  3")
+// console.log("credit_amount_2020_step_3",credit_amount_2020_step_3)
+// console.log("credit_amount_2021_step_3",credit_amount_2021_step_3)
+// console.log("total_credit_amount_step_3",total_credit_amount_step_3,"final_credit_amount",final_credit_amount)
+// End Step 3 Calculation Process
 
     // ... Continue with the rest of your calculations
-
     // Assuming you have an AppSetczones model defined
     const updateableData = {
-      // ... Populate the data based on your PHP code
+      net_income_2019: parseFloat(formData.net_income_2019),
+      net_income_2020: parseFloat(formData.net_income_2020),
+      net_income_2021: parseInt(formData.net_income_2021),
+      net_income_threshold_step_1: netIncomeThresholdStep1,
+      greater_amount_2020_step_1: parseFloat(greaterAmount2020),
+      greater_amount_2021_step_1: parseFloat(greaterAmount2021),
+      remaining_net_income_2020_step_1: remainingNetIncome2020Step1,
+      remaining_net_income_2021_step_1: remainingNetIncome2021Step1,
+      credit_amount_2020_step_1: creditAmount2020Step1,
+      credit_amount_2021_step_1: creditAmount2021Step1,
+      credit_amount_remaining_2020_step_1: creditAmountRemaining2020Step1,
+      credit_amount_remaining_2021_step_1: creditAmountRemaining2021Step1,
+      adw_2020_step_1: adw2020Step1,
+      adw_2021_step_1: adw2021Step1,
+      max_credit_amount_threshold_step_1: maxCreditAmountThresholdStep1,
+      applied_leave_days_2020_step_1: parseInt(formData['1days']),
+      applied_leave_days_2021_step_1: parseInt(formData['2days']),
+      leave_days_2020_step_1: leaveDays2020Step1,
+      leave_days_2021_step_1: leaveDays2021Step1,
+      net_income_threshold_step_2: net_income_threshold_step_2,
+      greater_amount_2020_step_2: parseFloat(greaterAmount2020),
+      greater_amount_2021_step_2: parseFloat(greaterAmount2021),
+      remaining_net_income_2020_step_2: remaining_net_income_2020_step_2,
+      remaining_net_income_2021_step_2: remaining_net_income_2021_step_2,
+      credit_amount_2020_step_2: credit_amount_2020_step_2,
+      credit_amount_2021_step_2: credit_amount_2021_step_2,
+      adw_2020_step_2: adw_2020_step_2,
+      adw_2021_step_2: adw_2021_step_2,
+      applied_leave_days_2020_step_2: parseInt(formData['3days']),
+      applied_leave_days_2021_step_2: parseInt(formData['4days']),
+      leave_days_2020_step_2: leave_days_2020_step_2,
+      leave_days_2021_step_2: leave_days_2021_step_2,
+      step_2_leave_calculate_2020: step_2_leave_calculate_2020,
+      step_2_leave_calculate_2021: step_2_leave_calculate_2021,
+      max_credit_amount_threshold_step_2: max_credit_amount_threshold_step_2,
+      credit_amount_2020_step_2:credit_amount_2020_step_2,
+      credit_amount_2021_step_2:credit_amount_2021_step_2,
+      credit_amount_2020_step_1_and_step_2: credit_amount_2020_step_1_and_step_2,
+      credit_amount_2021_step_1_and_step_2: credit_amount_2021_step_1_and_step_2,
+      credit_amount_step_1_and_step_2: credit_amount_step_1_and_step_2,
+      net_income_threshold_step_3: net_income_threshold_step_3,
+      greater_amount_2020_step_3: parseFloat(greaterAmount2020),
+      greater_amount_2021_step_3: parseFloat(greaterAmount2021),
+      remaining_net_income_2020_step_3: remaining_net_income_2020_step_3,
+      remaining_net_income_2021_step_3: remaining_net_income_2021_step_3,
+      credit_amount_2020_step_3: credit_amount_2020_step_3,
+      credit_amount_2021_step_3: credit_amount_2021_step_3,
+      adw_2020_step_3: adw_2020_step_3,
+      adw_2021_step_3: adw_2021_step_3,
+      applied_leave_days_2020_step_3: parseInt(formData['5days']),
+      applied_leave_days_2021_step_3: parseInt(formData['6days']),
+      leave_days_2020_step_3: leave_days_2020_step_3,
+      leave_days_2021_step_3: leave_days_2021_step_3,
+      step_3_leave_calculate_2020: step_3_leave_calculate_2020,
+      step_3_leave_calculate_2021: step_3_leave_calculate_2021,
+      max_credit_amount_threshold_step_3: max_credit_amount_threshold_step_3,
+      credit_amount_2020_step_3: credit_amount_2020_step_3,
+      credit_amount_2021_step_3: credit_amount_2021_step_3,
+      total_credit_amount_step_3: total_credit_amount_step_3,
+      final_credit_amount: final_credit_amount,
     };
-return
-    await AppSetczones.findByIdAndUpdate(id, updateableData);
+console.log("form__data__all",updateableData)
 
-    res.status(200).json({
-      status: 200,
-      data: { /* Your response data here */ },
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      status: 500,
-      data: { error: 'Internal server error' },
-    });
+const updatedUser = await userService.updateCalculator(req.user.id, updateableData );
+// Now it should be defined
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json(err);
   }
 };
 

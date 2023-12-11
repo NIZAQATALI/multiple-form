@@ -229,6 +229,9 @@ const uploadForm = async (id, updateData) => {
     return { status: 500, error: 'Internal Server Error' };
   }
 };
+
+
+
 // const uploadForm = async (id, updateData) => {
 //   try {
 //     console.log("uploadForm function called with id:", id);
@@ -321,8 +324,7 @@ const updateApplication = async (userId) => {
     if (!user) {
       return { error: 'User not found' };
     }
-    // Update the application status
-    user.applicationStatus = true;
+
     // Save the updated user
     await user.save();
     return {user: user};
@@ -348,6 +350,73 @@ const updateDocumentStatus = async (userId) => {
     return { error: 'Internal Server Error' };
   }
 };
+const updateCalculator = async (id, updateData) => {
+  try {
+    console.log("........................")
+    console.log("updateUser function called with id:", id);
+    const user = await User.findByPk(id);
+    if (!user) {
+      return { error: 'User not found' };
+    }
+    // // Dynamically update user properties based on updateData
+    // for (const key in updateData) {
+    //   if (updateData.hasOwnProperty(key)) {
+    //     user[key] = updateData[key];
+    //   }
+    // }
+      // Dynamically update user properties based on updateData
+      // for (const key in updateData) {
+      //   if (updateData.hasOwnProperty(key)) {
+      //     // Check if the field is an array and already exists
+      //     if (Array.isArray(user[key]) && Array.isArray(updateData[key]) && user[key].length > 0) {
+      //       // If yes, append new values to the existing array
+      //       user[key] = user[key].concat(updateData[key]);
+      //     } else {
+      //       // Otherwise, update the field with the new value
+      //       user[key] = updateData[key];
+      //     }
+      //   }
+      // }
+      for (const key in updateData) {
+        if (updateData.hasOwnProperty(key)) {
+          // Check if the field is an array and already exists
+          if (Array.isArray(user[key]) && Array.isArray(updateData[key]) && user[key].length > 0) {
+            // Append a digit to the new file names to make them unique
+            const uniqueNames = updateData[key].map((newName) => {
+              let index = 1;
+              let tempName = newName;
+              // Iterate until a unique name is found
+              while (user[key].includes(tempName)) {
+                index += 1;
+                const nameParts = newName.split('.');
+                // Insert the index before the file extension
+                tempName = `${nameParts[0]}_${index}.${nameParts[1]}`;
+              }
+              return tempName;
+            });
+            // If yes, append new values to the existing array
+            user[key] = user[key].concat(uniqueNames);
+          } else {
+            // Otherwise, update the field with the new value
+            user[key] = updateData[key];
+          }
+        }
+      }
+  
+    // Save the changes to the database
+    await user.save();
+    return { status: 200, message: "Application  Submiited  succesfully", user: user.toJSON() };
+  } catch (error) {
+    console.error("Error updating user:", error);
+    // Handle specific error cases
+    if (error.message === 'User not found') {
+      return { status: 404, error: 'User not found' };
+    }
+    return { status: 500, error: 'Internal Server Error' };
+  }
+};
+
+
 module.exports = {
   register,
   login,
@@ -360,5 +429,6 @@ module.exports = {
   uploadForm,
  updateApplication,
  getAllFiles,
- updateDocumentStatus
+ updateDocumentStatus,
+ updateCalculator
 };

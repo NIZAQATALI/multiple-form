@@ -106,7 +106,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     net_income_2020: {
       type: DataTypes.DECIMAL(10, 2),
-     
     },
     net_income_2021: {
       type: DataTypes.DECIMAL(10, 2),
@@ -116,7 +115,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
      
     },
-
     personal_startdate2020: {
       type: DataTypes.TEXT,
      
@@ -214,9 +212,6 @@ module.exports = (sequelize, DataTypes) => {
         this.setDataValue('schedule_pdf_name', JSON.stringify(value));
       },
     },
-    
-
-
      schedule_pdf: {
       type: DataTypes.STRING, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
