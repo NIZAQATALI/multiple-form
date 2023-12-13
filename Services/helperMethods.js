@@ -30,13 +30,29 @@ const validateCardOwners = async (card = null, list, board,workspace, isCreate =
 	return validate && validate2 && validate3;
 };
 // Helper function to format currency
+// function formatCurrency(value) {
+// 	const inputValue = value.replace(/\D/g, ''); // Remove non-digit characters
+// 	console.log("formatCurrency")
+// 	return inputValue ? '$' + Number(inputValue).toLocaleString() : '$'; // Format as currency with dollar sign
+//   }
 function formatCurrency(value) {
-	const inputValue = value.replace(/\D/g, ''); // Remove non-digit characters
-	return inputValue ? '$' + Number(inputValue).toLocaleString() : '$'; // Format as currency with dollar sign
+	const cleanedValue = value.replace(/[^\d.]/g, ''); // Remove non-digit characters except for the dot
+	const [beforeDecimal, afterDecimal] = cleanedValue.split('.');
+  
+	let formattedBeforeDecimal = beforeDecimal ? '$' + new Intl.NumberFormat().format(Number(beforeDecimal)) : '$';
+	if (afterDecimal) {
+	  formattedBeforeDecimal += '.' + afterDecimal;
+	}
+  
+	return formattedBeforeDecimal;
+  }
+  function convertToNumeric(value) {
+	return parseFloat(value.replace(/\D/g, ''));
   }
 module.exports = {
 	labelsSeed,
 	createRandomHexColor,
 	validateCardOwners,
-	formatCurrency
+	formatCurrency,
+	convertToNumeric
 };

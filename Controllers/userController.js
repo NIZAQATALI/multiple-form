@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const userService = require("../Services/userServices");
+const {formatCurrency,convertToNumeric} = require("../Services/helperMethods.js");
 const companyService = require('../Services/companyService.js');
 const nodemailer = require('nodemailer');
 const userModel = require("../modals/userModel");
@@ -749,14 +750,19 @@ const setCFormData = async (req, res) => {
     const formData = req.body;
     const { id } = req.params;
     // Finding greater amounts
-    
+    console.log("........................................")
     function findGreaterAmount(...netIncomes) {
       return Math.max(...netIncomes);
     }
-    const greaterAmount2020 = findGreaterAmount(formData.net_income_2019, formData.net_income_2020);
-    const greaterAmount2021 = findGreaterAmount(formData.net_income_2019, formData.net_income_2020, formData.net_income_2021);
-    console.log("greaterAmount2020",greaterAmount2020,"creditAmoungreaterAmount2021",greaterAmount2021)
+   
+    // const greaterAmount2020 = findGreaterAmount(formData.net_income_2019, formData.net_income_2020);
+    const greaterAmount2020 = findGreaterAmount(convertToNumeric(formData.net_income_2019), convertToNumeric(formData.net_income_2020));
+    console.log("yyyyyyyyyyyyyyyyyy",(formData.net_income_2019))
+    
+    // const greaterAmount2021 = findGreaterAmount(formData.net_income_2019, formData.net_income_2020, formData.net_income_2021);
+ const greaterAmount2021 = findGreaterAmount(convertToNumeric(formData.net_income_2019), convertToNumeric(formData.net_income_2020), convertToNumeric(formData.net_income_2021));
     // Start Step 1 Calculation Process
+    console.log("yyyyyyyyyyyyyyyyyy",convertToNumeric(formData.net_income_2019),convertToNumeric(formData.net_income_2020),convertToNumeric(formData.net_income_2021))
 
     const netIncomeThresholdStep1 = 132886;
     const maxSickLeaves = 10; // 10 days
@@ -912,67 +918,68 @@ console.log("total_credit_amount_step_3",total_credit_amount_step_3,"final_credi
     // ... Continue with the rest of your calculations
     // Assuming you have an AppSetczones model defined
     const updateableData = {
-      net_income_2019: parseFloat(formData.net_income_2019),
-      net_income_2020: parseFloat(formData.net_income_2020),
-      net_income_2021: parseInt(formData.net_income_2021),
-      net_income_threshold_step_1: netIncomeThresholdStep1,
-      greater_amount_2020_step_1: parseFloat(greaterAmount2020),
-      greater_amount_2021_step_1: parseFloat(greaterAmount2021),
-      remaining_net_income_2020_step_1: remainingNetIncome2020Step1,
-      remaining_net_income_2021_step_1: remainingNetIncome2021Step1,
-      credit_amount_2020_step_1: creditAmount2020Step1,
-      credit_amount_2021_step_1: creditAmount2021Step1,
-      credit_amount_remaining_2020_step_1: creditAmountRemaining2020Step1,
-      credit_amount_remaining_2021_step_1: creditAmountRemaining2021Step1,
-      adw_2020_step_1: adw2020Step1,
-      adw_2021_step_1: adw2021Step1,
-      max_credit_amount_threshold_step_1: maxCreditAmountThresholdStep1,
+      net_income_2019: formatCurrency(`${formData.net_income_2019}`),
+      net_income_2020: formatCurrency(`${formData.net_income_2020}`),
+      net_income_2021: formatCurrency(`${formData.net_income_2021}`),
+      net_income_threshold_step_1:   formatCurrency(`${netIncomeThresholdStep1}`),
+      greater_amount_2020_step_1: formatCurrency(`${greaterAmount2020}`),
+      greater_amount_2021_step_1: formatCurrency(`${greaterAmount2021}`),
+      remaining_net_income_2020_step_1: formatCurrency(`${remainingNetIncome2020Step1}`),
+      remaining_net_income_2021_step_1: formatCurrency(`${remainingNetIncome2021Step1}`) ,
+      credit_amount_2020_step_1: formatCurrency(`${creditAmount2020Step1}`) ,
+      credit_amount_2021_step_1: formatCurrency(`${creditAmount2021Step1}`),
+      credit_amount_remaining_2020_step_1:formatCurrency(`${creditAmountRemaining2020Step1}`),
+      credit_amount_remaining_2021_step_1:formatCurrency( `${creditAmountRemaining2021Step1}`),
+      adw_2020_step_1:formatCurrency(`${ adw2020Step1}`),
+      adw_2021_step_1: formatCurrency(`${ adw2021Step1}`),
+      max_credit_amount_threshold_step_1:formatCurrency(`${ maxCreditAmountThresholdStep1}`) ,
       applied_leave_days_2020_step_1: parseInt(formData['1days']),
       applied_leave_days_2021_step_1: parseInt(formData['2days']),
       leave_days_2020_step_1: leaveDays2020Step1,
       leave_days_2021_step_1: leaveDays2021Step1,
-      net_income_threshold_step_2: net_income_threshold_step_2,
-      greater_amount_2020_step_2: parseFloat(greaterAmount2020),
-      greater_amount_2021_step_2: parseFloat(greaterAmount2021),
-      remaining_net_income_2020_step_2: remaining_net_income_2020_step_2,
-      remaining_net_income_2021_step_2: remaining_net_income_2021_step_2,
-      credit_amount_2020_step_2: credit_amount_2020_step_2,
-      credit_amount_2021_step_2: credit_amount_2021_step_2,
-      adw_2020_step_2: adw_2020_step_2,
-      adw_2021_step_2: adw_2021_step_2,
+      net_income_threshold_step_2: formatCurrency(`${ net_income_threshold_step_2}`) ,
+      greater_amount_2020_step_2:formatCurrency(`${ greaterAmount2020}` ),
+      greater_amount_2021_step_2: formatCurrency(`${ greaterAmount2021}` ) ,
+      remaining_net_income_2020_step_2: formatCurrency(`${ remaining_net_income_2020_step_2}` ),
+      remaining_net_income_2021_step_2: formatCurrency(`${ remaining_net_income_2021_step_2}` ) ,
+      credit_amount_2020_step_2:formatCurrency(`${ credit_amount_2020_step_2}` ) ,
+      credit_amount_2021_step_2:formatCurrency(`${ credit_amount_2021_step_2}` ),
+      adw_2020_step_2: formatCurrency(`${ adw_2020_step_2}` ) ,
+      adw_2021_step_2:  formatCurrency(`${ adw_2021_step_2}` ),
       applied_leave_days_2020_step_2: parseInt(formData['3days']),
       applied_leave_days_2021_step_2: parseInt(formData['4days']),
       leave_days_2020_step_2: leave_days_2020_step_2,
       leave_days_2021_step_2: leave_days_2021_step_2,
       step_2_leave_calculate_2020: step_2_leave_calculate_2020,
       step_2_leave_calculate_2021: step_2_leave_calculate_2021,
-      max_credit_amount_threshold_step_2: max_credit_amount_threshold_step_2,
-      credit_amount_2020_step_2:credit_amount_2020_step_2,
-      credit_amount_2021_step_2:credit_amount_2021_step_2,
-      credit_amount_2020_step_1_and_step_2: credit_amount_2020_step_1_and_step_2,
-      credit_amount_2021_step_1_and_step_2: credit_amount_2021_step_1_and_step_2,
-      credit_amount_step_1_and_step_2: credit_amount_step_1_and_step_2,
-      net_income_threshold_step_3: net_income_threshold_step_3,
-      greater_amount_2020_step_3: parseFloat(greaterAmount2020),
-      greater_amount_2021_step_3: parseFloat(greaterAmount2021),
-      remaining_net_income_2020_step_3: remaining_net_income_2020_step_3,
-      remaining_net_income_2021_step_3: remaining_net_income_2021_step_3,
-      credit_amount_2020_step_3: credit_amount_2020_step_3,
-      credit_amount_2021_step_3: credit_amount_2021_step_3,
-      adw_2020_step_3: adw_2020_step_3,
-      adw_2021_step_3: adw_2021_step_3,
+      max_credit_amount_threshold_step_2: formatCurrency(`${ max_credit_amount_threshold_step_2}` ),
+      credit_amount_2020_step_2: formatCurrency(`${credit_amount_2020_step_2}` ),
+      credit_amount_2021_step_2: formatCurrency(`${ credit_amount_2021_step_2}` ),
+      credit_amount_2020_step_1_and_step_2: formatCurrency(`${ credit_amount_2020_step_1_and_step_2}` ) ,
+      credit_amount_2021_step_1_and_step_2:  formatCurrency(`${ credit_amount_2021_step_1_and_step_2}` ),
+      credit_amount_step_1_and_step_2: formatCurrency(`${ credit_amount_step_1_and_step_2}` ) ,
+      net_income_threshold_step_3: formatCurrency(`${ net_income_threshold_step_3}` ) ,
+      greater_amount_2020_step_3: formatCurrency(`${ greaterAmount2020}` ) ,
+      greater_amount_2021_step_3:  formatCurrency(`${ greaterAmount2021}` ),
+      remaining_net_income_2020_step_3: formatCurrency(`${ remaining_net_income_2020_step_3}` ) ,
+      remaining_net_income_2021_step_3:  formatCurrency(`${ remaining_net_income_2021_step_3}` ),
+      credit_amount_2020_step_3: formatCurrency(`${ credit_amount_2020_step_3}` ) ,
+      credit_amount_2021_step_3:  formatCurrency(`${ credit_amount_2021_step_3}` ),
+      adw_2020_step_3: formatCurrency(`${adw_2020_step_3}` ) ,
+      adw_2021_step_3:  formatCurrency(`${ adw_2021_step_3}` ),
       applied_leave_days_2020_step_3: parseInt(formData['5days']),
       applied_leave_days_2021_step_3: parseInt(formData['6days']),
       leave_days_2020_step_3: leave_days_2020_step_3,
       leave_days_2021_step_3: leave_days_2021_step_3,
       step_3_leave_calculate_2020: step_3_leave_calculate_2020,
       step_3_leave_calculate_2021: step_3_leave_calculate_2021,
-      max_credit_amount_threshold_step_3: max_credit_amount_threshold_step_3,
-      credit_amount_2020_step_3: credit_amount_2020_step_3,
-      credit_amount_2021_step_3: credit_amount_2021_step_3,
-      total_credit_amount_step_3: total_credit_amount_step_3,
-      final_credit_amount: final_credit_amount,
+      max_credit_amount_threshold_step_3: formatCurrency(`${ max_credit_amount_threshold_step_3}` ) ,
+      credit_amount_2020_step_3:  formatCurrency(`${ credit_amount_2020_step_3}` ),
+      credit_amount_2021_step_3:  formatCurrency(`${ credit_amount_2021_step_3}` ),
+      total_credit_amount_step_3:  formatCurrency(`${ total_credit_amount_step_3}`),
+      final_credit_amount: formatCurrency(`${final_credit_amount}` ),
     };
+  
 console.log("form__data__all",updateableData)
 
 const updatedUser = await userService.updateCalculator(req.user.id, updateableData );

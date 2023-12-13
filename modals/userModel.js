@@ -101,14 +101,14 @@ module.exports = (sequelize, DataTypes) => {
     },
   
     net_income_2019: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.TEXT,
      
     },
     net_income_2020: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.TEXT,
     },
     net_income_2021: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.TEXT,
      
     },
     business_negatively_impacted: {
