@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 const userModel = require("../modals/userModel");
 const auth = require("../MiddleWares/auth");
 const jwt = require("jsonwebtoken");
+const axios = require("axios");
 var db = require('../modals/index.js');
 //const fs = require('fs');
 const fs = require('fs').promises;
@@ -989,7 +990,27 @@ const updatedUser = await userService.updateCalculator(req.user.id, updateableDa
     res.status(500).json(err);
   }
 };
+async function webhook(req,res){
+  console.log(req.body);
+}
+const dataPosttoHubspot = async (req, res) => {
+  try {
+    const apiUrl = 'https://api.hubapi.com/crm/v3/objects/contacts';
+    const accessToken = 'pat-na1-e0698d65-4c2f-4229-9c32-aadb201ed31d';
 
+    const response = await axios.post(apiUrl, req.body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error:', error.response ? error.response.data : error.message);
+    res.status(500).send('Internal Server Error');
+  }
+};
 module.exports = {
   registerViaInvite,
   register,
@@ -1011,5 +1032,7 @@ module.exports = {
 updateDocumentStaus,
 uploadFormMOre,
  deleteFileHandler,
- setCFormData
+ setCFormData,
+ webhook,
+ dataPosttoHubspot
 };

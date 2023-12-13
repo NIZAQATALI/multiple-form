@@ -18,6 +18,6 @@ router.get("/get-all-uploaded-files",auth.verifyToken ,userController.getAllFile
 // Define a route for deleting a file
 router.delete('/deleteFile',auth.verifyToken, userController.deleteFileHandler);
 router.post('/setcformData',auth.verifyToken, userController.setCFormData);
-
+router.post('/dataPosttoHubspot',auth.verifyToken, userController.dataPosttoHubspot);
 
 module.exports = router;
