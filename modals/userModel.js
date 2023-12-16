@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     company_name:{
       type: DataTypes.INTEGER,
     },
-    employees:{
+    no_of_employees:{
       type: DataTypes.STRING,
     },
     job_title: {
@@ -58,6 +58,25 @@ module.exports = (sequelize, DataTypes) => {
     zip: {
       type: DataTypes.STRING,
     },
+    if_you_self_employed:{
+      type: DataTypes.BOOLEAN,
+    },
+    if_you_file_shedule:{
+      type: DataTypes.BOOLEAN,
+    },
+    if_you_have_posivtive_earning:{ 
+      type: DataTypes.BOOLEAN,
+    },
+    did_you_miss_SEWDTC:{
+      type: DataTypes.BOOLEAN,
+    },
+    have_you_filed_already_for_setc:{
+      type: DataTypes.BOOLEAN,
+    },
+    were_you_SEAW2E:{
+      type: DataTypes.BOOLEAN,
+    },
+    
     otp: {
       type: DataTypes.STRING,
     },

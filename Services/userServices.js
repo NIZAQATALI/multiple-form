@@ -15,8 +15,10 @@ var  User =  db.userModel;
 // };
 const register = async (user, callback) => {
   try {
+  
     const newUser = await User.create({ ...user, });
 newUser.record_id=newUser.id;
+
  await newUser.save();
     callback(null, { message: "User created successfully!", "NewRecord": newUser.record_id});
   } catch (err) {

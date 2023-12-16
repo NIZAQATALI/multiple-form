@@ -1,19 +1,24 @@
 const bcrypt = require("bcryptjs");
 const userService = require("../Services/userServices");
 const {formatCurrency,convertToNumeric} = require("../Services/helperMethods.js");
+const FormData = require('form-data');
+const hubspot = require('@hubspot/api-client');
 const companyService = require('../Services/companyService.js');
 const nodemailer = require('nodemailer');
 const userModel = require("../modals/userModel");
 const auth = require("../MiddleWares/auth");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
+const { Readable } = require('stream');
 var db = require('../modals/index.js');
-//const fs = require('fs');
+const PDFDocument = require('pdfkit');
+
 const fs = require('fs').promises;
 // var db = require('../Images');
 // image Upload
 const multer = require('multer')
-const path = require('path')
+const path = require('path');
+const { response } = require("express");
 var  User =  db.userModel;
 //user   registration, updation(on the  bases  of  existing  user ) and  login  
 // const register = async (req, res) => {
@@ -74,8 +79,10 @@ var  User =  db.userModel;
 // }};
 const register = async (req, res) => {
   const { email } = req.body;
+  
   // Check if the user with the provided email already exists
   const existingUser = await User.findOne({ where: { email } });
+ 
   if (existingUser && (existingUser.applicationStatus == null || existingUser.applicationStatus == false)) {
     // User with the email already exists, return an error
     return res.status(400).send({ message: "User with this email already exists and cannot be updated." });
@@ -570,19 +577,19 @@ const upload = multer({
 //       cb(null, Date.now() + path.extname(file.originalname))
 //   }
 // })
-// const upload = multer({
-//   storage: storage,
-//   limits: { fileSize: '5000000' },
-//   fileFilter: (req, file, cb) => {
-//       const fileTypes = /jpeg|jpg|png|gif|pdf/
-//       const mimeType = fileTypes.test(file.mimetype)  
-//       const extname = fileTypes.test(path.extname(file.originalname))
-//       if(mimeType && extname) {
-//           return cb(null, true)
-//       }12qqqq
-//       cb('Give proper files formate to upload')
-//   }
-// }).single('schedule_pdf_name')
+const uploadOne = multer({
+  storage: storage,
+  limits: { fileSize: '5000000' },
+  fileFilter: (req, file, cb) => {
+      const fileTypes = /jpeg|jpg|png|gif|pdf/
+      const mimeType = fileTypes.test(file.mimetype)  
+      const extname = fileTypes.test(path.extname(file.originalname))
+      if(mimeType && extname) {
+          return cb(null, true)
+      }
+      cb('Give proper files formate to upload')
+  }
+}).single('schedule_pdf')
 //.fields([{ name: 'driving_licence', maxCount: 1 }, { name: 'FormA1099_name', maxCount: 1 },, { name: 'FormB1099_name', maxCount: 1 }, { name: 'ks22020', maxCount: 1 }, { name: 'ks2020', maxCount: 1 }, { name: 'Tax_Return_2020', maxCount: 1 }, { name: 'Tax_Return_2021', maxCount: 1 }, { name: 'supplemental_attachment_2020', maxCount: 1 }, { name: 'supplemental_attachment_2021', maxCount: 1 }, { name: 'supplemental_attachment_2021', maxCount: 1 }]);
 const updateApplicationStatus = async (req, res) => {
   try {
@@ -1011,6 +1018,277 @@ const dataPosttoHubspot = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+// const filePosttoHubspot = async (req, res) => {
+//   try {
+//     const hubspot = require('@hubspot/api-client')
+//     const hubspotClient = new hubspot.Client({ accessToken:"pat-na1-e0698d65-4c2f-4229-9c32-aadb201ed31d" })
+//     const id = req.user.id;
+//     const updatedUserFiles = {};
+//     console.log("iiiiiii",req.files)
+//     // Check if 'schedule_pdf' file is present in the request
+//     if (req.files.schedule_pdf) {
+//       const file = req.files.schedule_pdf[0];
+      
+//       // Add file details to the updatedUserFiles object
+//       updatedUserFiles.schedule_pdf_name = file.originalname;
+//       updatedUserFiles.schedule_pdf = file.path;
+//       const hubspotClient = new hubspot.Client({ accessToken: "your-access-token" });
+
+//       const formData = new FormData();
+//       const options = {
+//         // some options
+//       };
+  
+//       formData.append("folderPath", '/');
+//       formData.append("options", JSON.stringify(options));
+//       formData.append("file", await fs.readFile('file path'));  // Use fs.promises.readFile for async read
+  
+//       const response = await hubspotClient.apiRequest({
+//         method: 'POST',
+//         path: '/filemanager/api/v3/files/upload',
+//         body: formData,
+//         defaultJson: false
+//       });
+  
+//       console.log(response);
+// }
+// return
+//     // Call your service function to update the user with the file details
+//    // const updatedUser = await userService.uploadForm(id, { ...req.body, ...updatedUserFiles });
+
+//     // Send the updated user as a JSON response
+//     res.status(200).json(updatedUser);
+//   } catch (err) {
+//     // Handle any errors that may occur during the process
+//     res.status(500).json(err);
+//   }
+// };
+// const filePosttoHubspot = async (req, res) => {
+//   try {
+//     const accessToken = "pat-na1-e0698d65-4c2f-4229-9c32-aadb201ed31d"; // Replace with your actual HubSpot access token
+//     const hubspotClient = new hubspot.Client({ accessToken });
+
+//     const id = req.user.id;
+//     const updatedUserFiles = {};
+//     console.log("iiiiiii", req.files);
+
+//     // Check if 'schedule_pdf' file is present in the request
+//     if (req.files.schedule_pdf) {
+//       const file = req.files.schedule_pdf[0];
+
+//       // Add file details to the updatedUserFiles object
+//       updatedUserFiles.schedule_pdf_name = file.originalname;
+//       updatedUserFiles.schedule_pdf = file.path;
+
+//       const formData = new FormData();
+//       const options = {
+//         // some options
+//       };
+
+//       formData.append("folderPath", '/');
+//       formData.append("options", JSON.stringify(options));
+//       formData.append("file", await fs.readFile(file.path));  // Use fs.promises.readFile for async read
+
+//       const response = await hubspotClient.apiRequest({
+//         method: 'POST',
+//         path: '/filemanager/api/v3/files/upload',
+//         body: formData,
+//         defaultJson: false
+//       });
+
+//       console.log("yyyyyyyyyyyyPPPPPPPPPPPPPPPPPP",response);
+//     }
+
+//     // Call your service function to update the user with the file details
+//     // const updatedUser = await userService.uploadForm(id, { ...req.body, ...updatedUserFiles });
+
+//     // Send the updated user as a JSON response
+  
+//     return res.status(200).json(response);
+//   } catch (err) {
+//     // Handle any errors that may occur during the process
+//     console.error('Error:', err);
+//     return res.status(500).json(err);
+//   }
+// };
+
+
+
+// Assuming you have an Express app instance
+// const app = express();
+
+// // Your file upload controller function  and  have  hapi  key  issue
+// const  uploadFileToHubSpot = async (req, res) => {
+//   const id = req.user.id;
+//       const updatedUserFiles = {};
+//       console.log("iiiiiii", req.files);
+//   let file;
+//       // Check if 'schedule_pdf' file is present in the request
+//       if (req.files.schedule_pdf) {
+//          file = req.files.schedule_pdf[0];
+  
+//         // Add file details to the updatedUserFiles object
+//         updatedUserFiles.schedule_pdf_name = file.originalname;
+//         updatedUserFiles.schedule_pdf = file.path;
+//       }
+//   //.........................................................................
+//     const postUrl = 'https://api.hubapi.com/filemanager/api/v3/files/upload?hapikey=demo';
+  
+
+//     const fileOptions = {
+//         access: 'PUBLIC_INDEXABLE',
+//         ttl: 'P3M',
+//         overwrite: false,
+//         duplicateValidationStrategy: 'NONE',
+//         duplicateValidationScope: 'ENTIRE_PORTAL'
+//     };
+
+//     // const formData = {
+//     //     file: fs.createReadStream(file.originalname),
+//     //     options: JSON.stringify(fileOptions),
+//     //     folderPath: 'docs'
+//     // };
+//      // Read the file into a buffer
+//      console.log(file,"file is  here")
+//      const fileBuffer = await fs.readFile(file.path);
+
+//      // Create a readable stream from the buffer
+//      const fileStream = Readable.from(fileBuffer);
+//      console.log(fileBuffer,"buffer  data")
+//       // Create a FormData object
+//       const formData = new FormData();
+//       formData.append('file', fileBuffer, { filename: file.fileName });
+//       formData.append('options', JSON.stringify(fileOptions));
+//       formData.append('folderPath', 'docs');
+
+//       const response = await axios.post(postUrl, formData, {
+//         headers: {
+//             ...formData.getHeaders(),
+//         },
+//     });
+  
+// };
+// Function to upload a file to HubSpot File Manager
+// async function uploadFileToHubSpot(filePath, accessToken) {
+//   try {
+//     const fileData = fs.readFileSync(filePath);
+
+//     const formData = new FormData();
+//     formData.append('file', fileData, {
+//       filename: 'file.pdf', // Change the filename accordingly
+//       contentType: 'application/pdf' // Change the content type based on your file type
+//     });
+
+//     const response = await axios.post('https://api.hubspot.com/filemanager/api/v3/files/upload', formData, {
+//       headers: {
+//         'Authorization': Bearer `${accessToken}`,
+//         ...formData.getHeaders() // Include necessary form data headers
+//       }
+//     });
+
+//     // Handle the response here
+//     console.log('File upload successful:', response.data);
+
+//     // Return the uploaded file information
+//     return response.data.objects[0];
+//   } catch (error) {
+//     console.error('Error uploading file:', error.response ? error.response.data : error.message);
+//     throw error;
+//   }
+// }
+// // Usage example:
+// const accessToken = 'pat-na1-e0698d65-4c2f-4229-9c32-aadb201ed31d'; // Replace with your HubSpot access token
+// const filePath = '/'; // Replace with the path to your file
+
+// uploadFileToHubSpot(filePath, accessToken)
+//   .then(fileInfo => {
+//     // Handle the uploaded file info
+//     console.log('File Info:', fileInfo);
+//   })
+//   .catch(error => {
+//     // Handle errors
+//     console.error('Error:', error);
+//   });
+
+
+
+// async function generatePDF(req, res) {
+//   const data = req.body
+//   console.log(data)
+ 
+//   const doc = new PDFDocument();
+//   const stream = fs.createWriteStream('receipt.pdf');
+//   doc.pipe(stream);
+
+//   doc.fontSize(14).text(`Receipt for ${data.name}`, { align: 'center' });
+//   doc.moveDown();
+//   doc.fontSize(12).text(`Product: ${data.productName}`);
+//   doc.text(`Price: $${data.price}`);
+//   doc.moveDown();
+//   doc.text('Paid', { align: 'center', bold: true });
+
+//   doc.end();
+
+//   return new Promise((resolve, reject) => {
+//     stream.on('finish', () => {
+//       console.log('PDF saved successfully.');
+//       resolve('receipt.pdf');
+//     });
+
+//     stream.on('error', (error) => {
+//       console.error('Error saving PDF:', error);
+//       reject(error);
+//     });
+//   });
+// }
+async function generatePDF(req, res) {
+  const data = req.body;
+
+  try {
+    console.log(data);
+
+    const pdfPath = await createPDF(data);
+    console.log('PDF saved successfully:', pdfPath);
+
+    res.status(200).send('PDF generated successfully.');
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+
+    res.status(500).send('Internal Server Error');
+  }
+}
+
+function createPDF(data) {
+  return new Promise((resolve, reject) => {
+    try {
+      const doc = new PDFDocument();
+      const stream = fs.createWriteStream('receipt.pdf');
+      doc.pipe(stream);
+
+      doc.fontSize(14).text(`Receipt for ${data.name}`, { align: 'center' });
+      doc.moveDown();
+      doc.fontSize(12).text(`Product: ${data.productName}`);
+      doc.text(`Price: $${data.price}`);
+      doc.moveDown();
+      doc.text('Paid', { align: 'center', bold: true });
+
+      doc.end();
+
+      stream.on('finish', () => {
+        console.log('PDF saved successfully.');
+        resolve('receipt.pdf');
+      });
+
+      stream.on('error', (error) => {
+        console.error('Error saving PDF:', error);
+        reject(error);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 module.exports = {
   registerViaInvite,
   register,
@@ -1023,6 +1301,7 @@ module.exports = {
   submitotp,
   sendInvitation,
   upload,
+  uploadOne,
   uploadForm,
   updateApplicationStatus,
   checkEmail,
@@ -1034,5 +1313,8 @@ uploadFormMOre,
  deleteFileHandler,
  setCFormData,
  webhook,
- dataPosttoHubspot
+ dataPosttoHubspot,
+ generatePDF
+//  uploadFileToHubSpot
+
 };

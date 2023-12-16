@@ -1,5 +1,7 @@
 const express = require("express");
 const userController = require("../Controllers/userController");
+const sController = require("../Controllers/stripeController");
+const dakuController = require("../Controllers/docusignController");
 const router = express.Router();
  const auth = require("../MiddleWares/auth");
 router.post("/create", userController.register);
@@ -19,5 +21,9 @@ router.get("/get-all-uploaded-files",auth.verifyToken ,userController.getAllFile
 router.delete('/deleteFile',auth.verifyToken, userController.deleteFileHandler);
 router.post('/setcformData',auth.verifyToken, userController.setCFormData);
 router.post('/dataPosttoHubspot',auth.verifyToken, userController.dataPosttoHubspot);
-
+//router.post('/filePosttoHubspot',auth.verifyToken, userController.upload, userController.uploadFileToHubSpot);
+router.post("/sessions", sController.sessionStripe);
+router.post("/webhook", sController.webhook);
+router.post("/form", dakuController.form);
+router.post("/pdf", userController.generatePDF);
 module.exports = router;
