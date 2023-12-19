@@ -121,13 +121,16 @@ module.exports = (sequelize, DataTypes) => {
   
     net_income_2019: {
       type: DataTypes.TEXT,
+      defaultValue: '0'
      
     },
     net_income_2020: {
       type: DataTypes.TEXT,
+      defaultValue: '0'
     },
     net_income_2021: {
       type: DataTypes.TEXT,
+      defaultValue: '0'
      
     },
     business_negatively_impacted: {
@@ -665,7 +668,12 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.TEXT
     },
     final_credit_amount:{
-      type:DataTypes.TEXT
+      type:DataTypes.TEXT,
+      defaultValue: '0'
+    },
+    final_roundedValue:{
+      type:DataTypes.TEXT,
+      defaultValue: '0'
     },
     website_id:{
       type:DataTypes.STRING

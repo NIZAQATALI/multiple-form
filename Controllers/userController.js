@@ -13,7 +13,7 @@ const { Readable } = require('stream');
 var db = require('../modals/index.js');
 const PDFDocument = require('pdfkit');
 
-const fs = require('fs').promises;
+const fs = require('fs');
 // var db = require('../Images');
 // image Upload
 const multer = require('multer')
@@ -922,7 +922,15 @@ console.log("credit_amount_2020_step_3",credit_amount_2020_step_3)
 console.log("credit_amount_2021_step_3",credit_amount_2021_step_3)
 console.log("total_credit_amount_step_3",total_credit_amount_step_3,"final_credit_amount",final_credit_amount)
 // End Step 3 Calculation Process
+function roundToNearestDownThousand(value) {
+  return Math.floor(value / 1000) * 1000;
+}
 
+// Example usage:
+const inputValue = final_credit_amount;
+const roundedValue = roundToNearestDownThousand(inputValue);
+
+console.log("rounded  value    ....................",roundedValue); 
     // ... Continue with the rest of your calculations
     // Assuming you have an AppSetczones model defined
     const updateableData = {
@@ -986,6 +994,7 @@ console.log("total_credit_amount_step_3",total_credit_amount_step_3,"final_credi
       credit_amount_2021_step_3:  formatCurrency(`${ credit_amount_2021_step_3}` ),
       total_credit_amount_step_3:  formatCurrency(`${ total_credit_amount_step_3}`),
       final_credit_amount: formatCurrency(`${final_credit_amount}` ),
+      final_roundedValue: formatCurrency(`${roundedValue}`),
     };
   
 console.log("form__data__all",updateableData)
@@ -1242,7 +1251,55 @@ const dataPosttoHubspot = async (req, res) => {
 //     });
 //   });
 // }
+// async function generatePDF(req, res) {
+//   const data = req.body;
+
+//   try {
+//     console.log(data);
+
+//     const pdfPath = await createPDF(data);
+//     console.log('PDF saved successfully:', pdfPath);
+
+//     res.status(200).send('PDF generated successfully.');
+//   } catch (error) {
+//     console.error('Error generating PDF:', error);
+
+//     res.status(500).send('Internal Server Error');
+//   }
+// }
+
+// function createPDF(data) {
+//   return new Promise((resolve, reject) => {
+//     try {
+//       const doc = new PDFDocument();
+//       const stream = fs.createWriteStream('receipt.pdf');
+//       doc.pipe(stream);
+
+//       doc.fontSize(14).text(`Receipt for ${data.name}`, { align: 'center' });
+//       doc.moveDown();
+//       doc.fontSize(12).text(`Product: ${data.productName}`);
+//       doc.text(`Price: $${data.price}`);
+//       doc.moveDown();
+//       doc.text('Paid', { align: 'center', bold: true });
+
+//       doc.end();
+
+//       stream.on('finish', () => {
+//         console.log('PDF saved successfully.');
+//         resolve('receipt.pdf');
+//       });
+
+//       stream.on('error', (error) => {
+//         console.error('Error saving PDF:', error);
+//         reject(error);
+//       });
+//     } catch (error) {
+//       reject(error);
+//     }
+//   });
+// }
 async function generatePDF(req, res) {
+  console.log(".............................")
   const data = req.body;
 
   try {

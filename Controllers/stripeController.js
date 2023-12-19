@@ -67,9 +67,8 @@ async function sessionStripe(req, res) {
   const sigHeader = req.headers['stripe-signature'];
   console.log(req.body);
   const eventString = req.body.toString('utf-8');
-
-    const event = JSON.parse(eventString);
-console.log("in the ..................",event.data.object,"WEBHOOK  EVENT")
+  console.log(req.body.data.object.id,"invoice  id")
+  //const invoice = await stripe.invoices.retrieve(data.object.id);
 //   try {
 //     const eventString = req.body.toString('utf-8');
 //     const event = JSON.parse(eventString);
