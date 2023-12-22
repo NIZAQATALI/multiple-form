@@ -764,34 +764,27 @@ const setCFormData = async (req, res) => {
     function findGreaterAmount(...netIncomes) {
       return Math.max(...netIncomes);
     }
-   
     // const greaterAmount2020 = findGreaterAmount(formData.net_income_2019, formData.net_income_2020);
     const greaterAmount2020 = findGreaterAmount(convertToNumeric(formData.net_income_2019), convertToNumeric(formData.net_income_2020));
     console.log("yyyyyyyyyyyyyyyyyy",(formData.net_income_2019))
-    
     // const greaterAmount2021 = findGreaterAmount(formData.net_income_2019, formData.net_income_2020, formData.net_income_2021);
  const greaterAmount2021 = findGreaterAmount(convertToNumeric(formData.net_income_2019), convertToNumeric(formData.net_income_2020), convertToNumeric(formData.net_income_2021));
     // Start Step 1 Calculation Process
     console.log("yyyyyyyyyyyyyyyyyy",convertToNumeric(formData.net_income_2019),convertToNumeric(formData.net_income_2020),convertToNumeric(formData.net_income_2021))
-
     const netIncomeThresholdStep1 = 132886;
     const maxSickLeaves = 10; // 10 days
     const adwThresholdStep1 = 511.10;
     const maxCreditAmountThresholdStep1 = 5111;
-
     const remainingNetIncome2020Step1 = (greaterAmount2020 > netIncomeThresholdStep1) ? (greaterAmount2020 - netIncomeThresholdStep1) : 0;
     const remainingNetIncome2021Step1 = (greaterAmount2021 > netIncomeThresholdStep1) ? (greaterAmount2021 - netIncomeThresholdStep1) : 0;
     console.log("remainingNetIncome2020Step1",remainingNetIncome2020Step1,"remainingNetIncome2021Step1",remainingNetIncome2021Step1);
     console.log("1days",formData['1days'])
        console.log("2days",formData['2days'])
-
     const leaveDays2020Step1 = Math.min(maxSickLeaves, formData['1days']);
     const leaveDays2021Step1 = Math.min(maxSickLeaves, formData['2days']);
        // Assuming you have the values defined for leave_days_2020_step_1, leave_days_2021_step_1, and max_sick_leaves
-
 let remaining_leave_days_2020_step_1 = (leaveDays2020Step1 > maxSickLeaves) ? leaveDays2020Step1 - maxSickLeaves : null;
 let remaining_leave_days_2021_step_1 = (leaveDays2021Step1 > maxSickLeaves) ? leaveDays2021Step1 - maxSickLeaves : null;
-
     const adw2020Step1 = (greaterAmount2020 > netIncomeThresholdStep1) ? netIncomeThresholdStep1 / 260 : greaterAmount2020 / 260 ;
     const adw2021Step1 = (greaterAmount2021 > netIncomeThresholdStep1) ? netIncomeThresholdStep1 / 260 : greaterAmount2021/260;
    console.log("adw2020Step1",adw2020Step1)
@@ -799,7 +792,6 @@ let remaining_leave_days_2021_step_1 = (leaveDays2021Step1 > maxSickLeaves) ? le
     const creditAmount2020Step1 = parseFloat((adw2020Step1 * leaveDays2020Step1).toFixed(1));
     const creditAmountRemaining2020Step1 = (creditAmount2020Step1 > maxCreditAmountThresholdStep1) ? creditAmount2020Step1 - maxCreditAmountThresholdStep1 : 0;
     const creditAmount2020Step1Final = (creditAmount2020Step1 > maxCreditAmountThresholdStep1) ? maxCreditAmountThresholdStep1 : creditAmount2020Step1;
-
     const creditAmount2021Step1 = parseFloat((adw2021Step1 * leaveDays2021Step1).toFixed(1));
     const creditAmountRemaining2021Step1 = (creditAmount2021Step1 > maxCreditAmountThresholdStep1) ? creditAmount2021Step1 - maxCreditAmountThresholdStep1 : 0;
     const creditAmount2021Step1Final = (creditAmount2021Step1 > maxCreditAmountThresholdStep1) ? maxCreditAmountThresholdStep1 : creditAmount2021Step1;
@@ -890,7 +882,6 @@ console.log("lstep_2_leave_calculate_2021:", step_2_leave_calculate_2021);
 console.log(" credit_amount_2020_step_1_and_step_2",credit_amount_2020_step_1_and_step_2)
 console.log(" credit_amount_2021_step_1_and_step_2",credit_amount_2021_step_1_and_step_2)
 console.log(" credit_amount_step_1_and_step_2",credit_amount_step_1_and_step_2)
-
 // End Step 2 Calculation Process
 // Start Step 3 Calculation Process
 const net_income_threshold_step_3 = net_income_threshold_step_2;
@@ -898,22 +889,15 @@ const adw_threshold_step_3 = adw_threshold_step_2;
 const school_leaves_2020_threshold_step_3 = 50;
 const school_leaves_2021_threshold_step_3 = 60;
 const max_credit_amount_threshold_step_3 = 10000;
-
 const remaining_net_income_2020_step_3 = (greaterAmount2020 > net_income_threshold_step_3) ? (greaterAmount2020 - net_income_threshold_step_3) : 0;
 const remaining_net_income_2021_step_3 = (greaterAmount2021 > net_income_threshold_step_3) ? (greaterAmount2021 - net_income_threshold_step_3) : 0;
-
 const leave_days_2020_step_3 = parseInt(formData['5days']);
 const leave_days_2021_step_3 = parseInt(formData['6days']);
-
 const step_3_leave_calculate_2020 = (leave_days_2020_step_3 >= school_leaves_2020_threshold_step_3) ? school_leaves_2020_threshold_step_3 : leave_days_2020_step_3;
 const step_3_leave_calculate_2021 = (leave_days_2021_step_3 >= school_leaves_2021_threshold_step_3) ? school_leaves_2021_threshold_step_3 : leave_days_2021_step_3;
-
-
 const adw_2020_step_3 = ((greaterAmount2020 > net_income_threshold_step_3) ? net_income_threshold_step_3 : greaterAmount2020) / 260;
 const adw_2021_step_3 = ((greaterAmount2021 > net_income_threshold_step_3) ? net_income_threshold_step_3 : greaterAmount2021) / 260;
-
 const credit_amount_2020_step_3 = Math.min(max_credit_amount_threshold_step_3, parseFloat((0.67 * (adw_2020_step_3 * step_3_leave_calculate_2020)).toFixed(1)));
-
 const credit_amount_2021_step_3 = Math.min(max_credit_amount_threshold_step_3, parseFloat((0.67 * (adw_2021_step_3 * step_3_leave_calculate_2021)).toFixed(1)));
 console.log(step_3_leave_calculate_2021,"uoggggggg")
 // Assuming credit_amount_step_1_and_step_2 is defined from previous calculations
@@ -1123,9 +1107,6 @@ const dataPosttoHubspot = async (req, res) => {
 //     return res.status(500).json(err);
 //   }
 // };
-
-
-
 // Assuming you have an Express app instance
 // const app = express();
 
@@ -1163,7 +1144,6 @@ const dataPosttoHubspot = async (req, res) => {
 //      // Read the file into a buffer
 //      console.log(file,"file is  here")
 //      const fileBuffer = await fs.readFile(file.path);
-
 //      // Create a readable stream from the buffer
 //      const fileStream = Readable.from(fileBuffer);
 //      console.log(fileBuffer,"buffer  data")
@@ -1178,26 +1158,22 @@ const dataPosttoHubspot = async (req, res) => {
 //             ...formData.getHeaders(),
 //         },
 //     });
-  
 // };
 // Function to upload a file to HubSpot File Manager
 // async function uploadFileToHubSpot(filePath, accessToken) {
 //   try {
 //     const fileData = fs.readFileSync(filePath);
-
 //     const formData = new FormData();
 //     formData.append('file', fileData, {
 //       filename: 'file.pdf', // Change the filename accordingly
 //       contentType: 'application/pdf' // Change the content type based on your file type
 //     });
-
 //     const response = await axios.post('https://api.hubspot.com/filemanager/api/v3/files/upload', formData, {
 //       headers: {
 //         'Authorization': Bearer `${accessToken}`,
 //         ...formData.getHeaders() // Include necessary form data headers
 //       }
 //     });
-
 //     // Handle the response here
 //     console.log('File upload successful:', response.data);
 
@@ -1221,13 +1197,9 @@ const dataPosttoHubspot = async (req, res) => {
 //     // Handle errors
 //     console.error('Error:', error);
 //   });
-
-
-
 // async function generatePDF(req, res) {
 //   const data = req.body
 //   console.log(data)
- 
 //   const doc = new PDFDocument();
 //   const stream = fs.createWriteStream('receipt.pdf');
 //   doc.pipe(stream);
@@ -1306,14 +1278,11 @@ async function generatePDF(req, res) {
 
   try {
     console.log(data);
-
     const pdfPath = await createPDF(data);
     console.log('PDF saved successfully:', pdfPath);
-
     res.status(200).send('PDF generated successfully.');
   } catch (error) {
     console.error('Error generating PDF:', error);
-
     res.status(500).send('Internal Server Error');
   }
 }
@@ -1331,14 +1300,11 @@ function createPDF(data) {
       doc.text(`Price: $${data.price}`);
       doc.moveDown();
       doc.text('Paid', { align: 'center', bold: true });
-
       doc.end();
-
       stream.on('finish', () => {
         console.log('PDF saved successfully.');
         resolve('receipt.pdf');
       });
-
       stream.on('error', (error) => {
         console.error('Error saving PDF:', error);
         reject(error);
@@ -1383,12 +1349,11 @@ function createPDF(data) {
 const createFolder = async (req, res) => {
   try {
     const folderData = {  
-      Name: "wiki228@gamil.com",
+      Name: "myemail22@gamil.com",
       Parent: {
         Id: 'root',
       },
     };
-
     const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTaGFyZUZpbGUiLCJzdWIiOiI1MDI1ZmMzOC04MTI4LTQxZGQtOTY2OC1kMjVmMzAzNzk0N2EiLCJpYXQiOjE3MDMyMjExODMsImV4cCI6MTcwMzI0OTk4MywiYXVkIjoicEc5QmZteUpGbXcyeWQ1RE5mU0MzRXIxY25LUW50c0wiLCJzaGFyZWZpbGU6dG9rZW5pZCI6Ik4zNVh0Q25saVVoRHVleWRYQmZIaWFxT29DRmljdXBEJCRsblVnSzBuaGVhdVEwb3FrcElnUDBITHJlcndsOHhSRiIsInNjb3BlIjoidjMgdjMtaW50ZXJuYWwiLCJzaGFyZWZpbGU6c3ViZG9tYWluIjoiY2hvdWRocnljb20iLCJzaGFyZWZpbGU6YWNjb3VudGlkIjoiYThlZTQyYzYtZWVlOC04ZTI2LTQxYTQtOWE0YTIzMzVkZTRiIn0.59f0UQv6l4UkvXbdZ8fC_-tRHIfQipipLBkvyCHDbVg"; // Replace with your access token
     // Make a request to ShareFile API to create a folder
     const createFolderResponse = await axios.post('https://choudhrycom.sf-api.com/sf/v3/Items(root)/Folder', folderData, {
@@ -1396,28 +1361,21 @@ const createFolder = async (req, res) => {
         Authorization: 'Bearer ' + accessToken,
       },
     });
-
     // You can handle the response from ShareFile as needed
     console.log('Folder created:', createFolderResponse.data.Id);
-
     // Check if the folder creation was successful before proceeding to upload the file
     if (createFolderResponse.data.Id) {
-      console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")
       // Call the upload file function with the created folder I
       const uploadFileResponse = await uploadFile({
         accessToken:  accessToken ,
         body: { folderId: createFolderResponse.data.Id }, // Assuming the folder ID is present in the response
-       
       });
-
       // You can handle the response from the upload file function as needed
       console.log('File uploaded:');
-
       // Return a combined response if needed
       return res.status(200).send({
         message: 'Folder created and file uploaded successfully',
         folderId: createFolderResponse.data.Id,
-     
       });
     } else {
       return res.status(500).send('Folder creation failed');
@@ -1431,11 +1389,8 @@ const createFolder = async (req, res) => {
 const uploadFile = async (req, res) => {
   try {
     const folderId = req.body.folderId; // Assuming the folder ID is provided in the request body
-   
-    
     // Assuming you're using multer or similar for file uploads
-
-console.log("ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",req.accessToken,folderId)
+console.log("tttttttttttttttttttttttttttt",req.accessToken,folderId)
     // Make a request to ShareFile API to upload a file
     // const initialResponse = await axios.post(`https://choudhrycom.sf-api.com/sf/v3/Items(${folderId})/Upload`,{
     //   headers: {
@@ -1455,25 +1410,12 @@ console.log("ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
         },
       }
     );
-
-
-
-
-
-
-
-
-
-
-
-
     // Check if the initial upload was successful
     if (initialResponse) {
       // Assuming initialResponse.data.ChunkUri contains the Chunk URI
       const chunkUri = initialResponse.data.ChunkUri;
-      console.log(chunkUri,"uuurrrrrrrrrrrrrriiiiii")
+      console.log(chunkUri,"uuurrriiiii")
       // Make a second call to the Chunk URI
-    
       // const chunkResponse = await axios.post(chunkUri, formData,
       //   {
       //     headers: {
@@ -1483,24 +1425,18 @@ console.log("ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
       //   });
       const token =req.accessToken;
       console.log(token,"accressToken")
-   
 // Create a FormData object
 const formData = new FormData();
-
 // Append the folderId
-
 // Download the file and append it to FormData
-const filePath = 'E:/Bhutto’s Reforms.docx (1).pdf'; 
-const fileName ="Bhutto’s Reforms.docx (1).pdf"
-const filefs=fs.readFileSync(filePath);
-console.log(filefs,'.....................fs');
-
+const fileUrl = '../Images/1701167991709.png';
+const fileName ="1701232864187.pdf"
+const filefs=fs.readFileSync(fileUrl);
+console.log(filefs,'.................fs');
 // const response = await axios.get(fileUrl, { responseType: 'arraybuffer' });
-// const fileBuffer = Buffer.from(response.data);
+ //const fileBuffer = Buffer.from(response.data);
 // console.log("object..........................................",fileBuffer)
-
-formData.append(folderId, filefs, { filename: fileName });
-
+formData.append(folderId,filefs, { filename: fileName });
       const chunkResponse = await axios.post(
         chunkUri,
         formData,
@@ -1558,5 +1494,4 @@ uploadFormMOre,
  generatePDF,
  createFolder
 //  uploadFileToHubSpot
-
 };

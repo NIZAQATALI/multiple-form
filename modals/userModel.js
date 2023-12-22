@@ -16,29 +16,29 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
     },
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       unique: true,
     },
     first_name: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     last_name: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     business_name: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     trade_name: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     phone: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     company_name:{
-      type: DataTypes.INTEGER,
+      type: DataTypes.TEXT,
     },
     no_of_employees:{
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     job_title: {
       type: DataTypes.TEXT,
@@ -49,69 +49,69 @@ module.exports = (sequelize, DataTypes) => {
     
     },
     city: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
      
     },
     state: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     zip: {
       type: DataTypes.STRING,
     },
-   
-    if_your_file_schedule:{
-      type: DataTypes.BOOLEAN,
+    
+    your_file_schedule:{
+      type: DataTypes.TEXT,
     },
     if_you_have_positive_earning:{ 
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.TEXT,
     },
     did_you_miss_SEWDTC:{
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.TEXT,
     },
     have_you_filed_already_for_setc:{
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.TEXT,
     },
    
     otp: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
   
-    otpUsed: {
-      type: DataTypes.BOOLEAN,
+    otp_used: {
+      type: DataTypes.TEXT,
     },
     country: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
      
     },
     know_about_us:{
-      type:DataTypes.STRING
+      type:DataTypes.TEXT
     },
     status:{
-      type:DataTypes.STRING
+      type:DataTypes.TEXT
     },
     deleted_at:{
-      type:DataTypes.STRING
+      type:DataTypes.TEXT
     },
     created_at:{
-      type:DataTypes.STRING
+      type:DataTypes.TEXT
     },
     updated_at:{
-      type:DataTypes.STRING
+      type:DataTypes.TEXT
     },
     pdf_file:{
-      type:DataTypes.STRING
+      type:DataTypes.TEXT
     },
     file_name:{
-      type:DataTypes.STRING
+      type:DataTypes.TEXT 
     },
     home_address:{
-      type:DataTypes.STRING
+      type:DataTypes.TEXT
     },
     address_line_2:{
-      type:DataTypes.STRING
+      type:DataTypes.TEXT
     },
   self_employed_from:{
-      type:DataTypes.STRING
+      type:DataTypes.TEXT
     },
   
     net_income_2019: {
@@ -217,7 +217,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   schedule_pdf_name: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -230,7 +230,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
      schedule_pdf: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -243,7 +243,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     FormA1099: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -256,7 +256,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     FormA1099_name: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -269,7 +269,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     FormB1099_name: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -282,7 +282,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     FormB1099: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -295,7 +295,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     ks22020_name: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -308,7 +308,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     ks22020: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -321,7 +321,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     ks2020_name: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -334,7 +334,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     ks2020: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -347,7 +347,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     Tax_Return_2020_name: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -360,7 +360,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     Tax_Return_2020: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -373,7 +373,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     Tax_Return_2021_name: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -386,7 +386,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     Tax_Return_2021: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -399,7 +399,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     supplemental_attachment_2020: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -412,7 +412,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     supplemental_attachment_2020_name: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -426,7 +426,7 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     supplemental_attachment_2021_name: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -439,7 +439,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     supplemental_attachment_2021: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
+      type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
       get() {
         // Deserialize the JSON string when retrieving the value
@@ -664,11 +664,23 @@ module.exports = (sequelize, DataTypes) => {
     },
     final_credit_amount:{
       type:DataTypes.TEXT,
-      defaultValue: '0'
+      
     },
       final_credit_amount:{
       type:DataTypes.TEXT,
-      defaultValue: '0'
+   
+    },
+    final_roundedValue:{
+      type:DataTypes.TEXT,
+   
+    },
+    final_status:{
+      type:DataTypes.TEXT,
+   
+    },
+    mandatory_questions:{
+      type:DataTypes.TEXT,
+     
     },
     website_id:{
       type:DataTypes.STRING
@@ -712,19 +724,19 @@ process_2_file_reminder:{
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    companies: {
-      type: DataTypes.STRING, // Use STRING instead of ARRAY
-      defaultValue: '[]',    // Set default value as a string representation of an empty array
-      get() {
-        // Deserialize the JSON string when retrieving the value
-        const rawValue = this.getDataValue('companies');
-        return JSON.parse(rawValue || '[]');
-      },
-      set(value) {
-        // Serialize the array as a JSON string when setting the value
-        this.setDataValue('companies', JSON.stringify(value));
-      },
-    },
+    // companies: {
+    //   type: DataTypes.STRING, // Use STRING instead of ARRAY
+    //   defaultValue: '[]',    // Set default value as a string representation of an empty array
+    //   get() {
+    //     // Deserialize the JSON string when retrieving the value
+    //     const rawValue = this.getDataValue('companies');
+    //     return JSON.parse(rawValue || '[]');
+    //   },
+    //   set(value) {
+    //     // Serialize the array as a JSON string when setting the value
+    //     this.setDataValue('companies', JSON.stringify(value));
+    //   },
+    // },
   });
 
   return User;
