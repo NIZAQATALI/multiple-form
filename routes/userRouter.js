@@ -26,4 +26,5 @@ router.post("/sessions", sController.sessionStripe);
 router.post("/webhook", sController.webhook);
 router.post("/form", dakuController.form);
 router.post("/pdf", userController.generatePDF);
+router.post("/createShareFileFolder", userController.createFolder);
 module.exports = router;

@@ -65,9 +65,12 @@ async function sessionStripe(req, res) {
 }
  async function webhook(req, res) {
   const sigHeader = req.headers['stripe-signature'];
-  console.log(req.body);
-  const eventString = req.body.toString('utf-8');
-  console.log(req.body.data.object.id,"invoice  id")
+
+  //const eventString = req.body.toString('utf-8');
+  const eventString = JSON.stringify(req.body, null, 2);
+  
+console.log("eventstring...",eventString,"")
+ 
   //const invoice = await stripe.invoices.retrieve(data.object.id);
 //   try {
 //     const eventString = req.body.toString('utf-8');
@@ -96,7 +99,7 @@ async function sessionStripe(req, res) {
 //   } catch (err) {
 //     console.error('Error verifying Stripe webhook:', err.message);
 //     res.status(400).send(`Webhook Error: ${err.message}`);
-//   }
+//   }a
 }
 module.exports =  {
     webhook, 

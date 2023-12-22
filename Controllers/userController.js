@@ -19,6 +19,8 @@ const fs = require('fs');
 const multer = require('multer')
 const path = require('path');
 const { response } = require("express");
+const { json } = require("body-parser");
+const e = require("express");
 var  User =  db.userModel;
 //user   registration, updation(on the  bases  of  existing  user ) and  login  
 // const register = async (req, res) => {
@@ -1346,6 +1348,188 @@ function createPDF(data) {
     }
   });
 }
+
+// // Create folder API
+// const createFolder = async (req, res) => {
+//   try {
+//     const folderData = {
+//       Name: req.body.folderName, // Assuming the folder name is provided in the request body
+//       Parent: {
+//         Id: 'root', // Change this if you want to create the folder inside another folder
+//       },
+//     };
+//     //const folderName = req.body.folderName;
+//     const  accessToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTaGFyZUZpbGUiLCJzdWIiOiI1MDI1ZmMzOC04MTI4LTQxZGQtOTY2OC1kMjVmMzAzNzk0N2EiLCJpYXQiOjE3MDMxMzMxMzAsImV4cCI6MTcwMzE2MTkzMCwiYXVkIjoicEc5QmZteUpGbXcyeWQ1RE5mU0MzRXIxY25LUW50c0wiLCJzaGFyZWZpbGU6dG9rZW5pZCI6IllXc2FtWlNpdFN0WnMxdzFrcFBMVVlaMWZqS1pmT3EzJCRwR2txdkZ3QzdabFozTnNTVkIxb1UyRGp0aVpkaFdnYiIsInNjb3BlIjoidjMgdjMtaW50ZXJuYWwiLCJzaGFyZWZpbGU6c3ViZG9tYWluIjoiY2hvdWRocnljb20iLCJzaGFyZWZpbGU6YWNjb3VudGlkIjoiYThlZTQyYzYtZWVlOC04ZTI2LTQxYTQtOWE0YTIzMzVkZTRiIn0.Q2br2gntK5M2PaHjQYIkaMs-rCnckCEj1sLfYW1F8eI"
+    
+//      // Assuming the folder name is provided in the request body
+
+//     // Make a request to ShareFile API to create a folder
+//     const response = await axios.post('https://choudhrycom.sf-api.com/sf/v3/Items(root)/Folder', req.body, {
+//       headers: {
+//         Authorization: 'Bearer ' + accessToken, // Assuming you have the user's access token in req.user.accessToken
+//       },
+//     });
+
+//     // You can handle the response from ShareFile as needed
+//     console.log('Folder created:', response.data);
+
+//     return res.status(200).send('Folder created successfully');
+//   } catch (error) {
+//     console.error('Error creating folder:', error.message);
+//     return res.status(500).send('Internal Server Error');
+//   }
+// };
+
+const createFolder = async (req, res) => {
+  try {
+    const folderData = {  
+      Name: "wiki228@gamil.com",
+      Parent: {
+        Id: 'root',
+      },
+    };
+
+    const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTaGFyZUZpbGUiLCJzdWIiOiI1MDI1ZmMzOC04MTI4LTQxZGQtOTY2OC1kMjVmMzAzNzk0N2EiLCJpYXQiOjE3MDMyMjExODMsImV4cCI6MTcwMzI0OTk4MywiYXVkIjoicEc5QmZteUpGbXcyeWQ1RE5mU0MzRXIxY25LUW50c0wiLCJzaGFyZWZpbGU6dG9rZW5pZCI6Ik4zNVh0Q25saVVoRHVleWRYQmZIaWFxT29DRmljdXBEJCRsblVnSzBuaGVhdVEwb3FrcElnUDBITHJlcndsOHhSRiIsInNjb3BlIjoidjMgdjMtaW50ZXJuYWwiLCJzaGFyZWZpbGU6c3ViZG9tYWluIjoiY2hvdWRocnljb20iLCJzaGFyZWZpbGU6YWNjb3VudGlkIjoiYThlZTQyYzYtZWVlOC04ZTI2LTQxYTQtOWE0YTIzMzVkZTRiIn0.59f0UQv6l4UkvXbdZ8fC_-tRHIfQipipLBkvyCHDbVg"; // Replace with your access token
+    // Make a request to ShareFile API to create a folder
+    const createFolderResponse = await axios.post('https://choudhrycom.sf-api.com/sf/v3/Items(root)/Folder', folderData, {
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+    });
+
+    // You can handle the response from ShareFile as needed
+    console.log('Folder created:', createFolderResponse.data.Id);
+
+    // Check if the folder creation was successful before proceeding to upload the file
+    if (createFolderResponse.data.Id) {
+      console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")
+      // Call the upload file function with the created folder I
+      const uploadFileResponse = await uploadFile({
+        accessToken:  accessToken ,
+        body: { folderId: createFolderResponse.data.Id }, // Assuming the folder ID is present in the response
+       
+      });
+
+      // You can handle the response from the upload file function as needed
+      console.log('File uploaded:');
+
+      // Return a combined response if needed
+      return res.status(200).send({
+        message: 'Folder created and file uploaded successfully',
+        folderId: createFolderResponse.data.Id,
+     
+      });
+    } else {
+      return res.status(500).send('Folder creation failed');
+    }
+  } catch (error) {
+    console.error('Error creating folder:', error.message);
+    return res.status(500).send('Internal Server Error');
+  }
+};
+// Upload file API
+const uploadFile = async (req, res) => {
+  try {
+    const folderId = req.body.folderId; // Assuming the folder ID is provided in the request body
+   
+    
+    // Assuming you're using multer or similar for file uploads
+
+console.log("ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",req.accessToken,folderId)
+    // Make a request to ShareFile API to upload a file
+    // const initialResponse = await axios.post(`https://choudhrycom.sf-api.com/sf/v3/Items(${folderId})/Upload`,{
+    //   headers: {
+    //     Authorization: 'Bearer ' + req.accessToken, // Assuming you have the user's access token in req.user.accessToken
+      
+    //   },
+    // });
+    const initialResponse = await axios.post(
+      `https://choudhrycom.sf-api.com/sf/v3/Items(${folderId})/Upload`,
+      {
+        // Your request body if needed
+      },
+      {
+        headers: {
+          Authorization: 'Bearer ' + req.accessToken, // Assuming you have the user's access token in req.accessToken
+          'Content-Type': 'application/json', // Adjust content type as needed
+        },
+      }
+    );
+
+
+
+
+
+
+
+
+
+
+
+
+    // Check if the initial upload was successful
+    if (initialResponse) {
+      // Assuming initialResponse.data.ChunkUri contains the Chunk URI
+      const chunkUri = initialResponse.data.ChunkUri;
+      console.log(chunkUri,"uuurrrrrrrrrrrrrriiiiii")
+      // Make a second call to the Chunk URI
+    
+      // const chunkResponse = await axios.post(chunkUri, formData,
+      //   {
+      //     headers: {
+      //       Authorization: 'Bearer ' + req.accessToken,
+      //       'Content-Type': 'multipart/form-data',
+      //     },
+      //   });
+      const token =req.accessToken;
+      console.log(token,"accressToken")
+   
+// Create a FormData object
+const formData = new FormData();
+
+// Append the folderId
+
+// Download the file and append it to FormData
+const filePath = 'E:/Bhutto’s Reforms.docx (1).pdf'; 
+const fileName ="Bhutto’s Reforms.docx (1).pdf"
+const filefs=fs.readFileSync(filePath);
+console.log(filefs,'.....................fs');
+
+// const response = await axios.get(fileUrl, { responseType: 'arraybuffer' });
+// const fileBuffer = Buffer.from(response.data);
+// console.log("object..........................................",fileBuffer)
+
+formData.append(folderId, filefs, { filename: fileName });
+
+      const chunkResponse = await axios.post(
+        chunkUri,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${req.accessToken}`, // Assuming you have the user's access token in req.accessToken
+            // ...formData.getHeaders(), // Include FormData headers
+            "Content-Type": "multipart/form-data"
+          },
+        }
+      );
+        console.log("chunkResponse->",chunkResponse)
+      // Check if the chunk upload was successful
+      if (chunkResponse) {
+        console.log('File uploaded successfully');
+        return res.status(200).send('File uploaded successfully');
+      } else {
+        console.error('Error uploading chunk:', chunkResponse.data);
+        return res.status(500).send('Error uploading chunk');
+      }
+    } else {
+      console.error('Error uploading file:', initialResponse.data);
+      return res.status(500).send('Error uploading file');
+    }
+  } catch (error) {
+    console.error('Error uploading file:', error.message);
+    return res.status(500).send('Internal Server Error');
+  }
+};
 module.exports = {
   registerViaInvite,
   register,
@@ -1371,7 +1555,8 @@ uploadFormMOre,
  setCFormData,
  webhook,
  dataPosttoHubspot,
- generatePDF
+ generatePDF,
+ createFolder
 //  uploadFileToHubSpot
 
 };

@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     address_line_1: {
       type: DataTypes.TEXT,
-     
+    
     },
     city: {
       type: DataTypes.STRING,
@@ -58,13 +58,11 @@ module.exports = (sequelize, DataTypes) => {
     zip: {
       type: DataTypes.STRING,
     },
-    if_you_self_employed:{
+   
+    if_your_file_schedule:{
       type: DataTypes.BOOLEAN,
     },
-    if_you_file_shedule:{
-      type: DataTypes.BOOLEAN,
-    },
-    if_you_have_posivtive_earning:{ 
+    if_you_have_positive_earning:{ 
       type: DataTypes.BOOLEAN,
     },
     did_you_miss_SEWDTC:{
@@ -73,10 +71,7 @@ module.exports = (sequelize, DataTypes) => {
     have_you_filed_already_for_setc:{
       type: DataTypes.BOOLEAN,
     },
-    were_you_SEAW2E:{
-      type: DataTypes.BOOLEAN,
-    },
-    
+   
     otp: {
       type: DataTypes.STRING,
     },
@@ -671,7 +666,7 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.TEXT,
       defaultValue: '0'
     },
-    final_roundedValue:{
+      final_credit_amount:{
       type:DataTypes.TEXT,
       defaultValue: '0'
     },
