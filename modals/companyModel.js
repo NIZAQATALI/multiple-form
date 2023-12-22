@@ -3,12 +3,7 @@
 // const Board = require('./boardModel'); // Assuming you have a 'Board' model
 module.exports = ( sequelize, DataTypes)=>{
 const Company = sequelize.define('Company', {
-  business_name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-    
-  },
+
   trade_name: {
     type: DataTypes.STRING,
    

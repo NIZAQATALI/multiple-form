@@ -1,10 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
+  const User = sequelize.define('appsetczones', {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
       autoIncrement: true,
-      allowNull: false,
     },
     user_id:{
       type: DataTypes.INTEGER,
@@ -16,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
     },
     email: {
-      type: DataTypes.TEXT,
-      unique: true,
+      type: DataTypes.STRING,
+    
     },
     first_name: {
       type: DataTypes.TEXT,
@@ -37,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     company_name:{
       type: DataTypes.TEXT,
     },
-    no_of_employees:{
+    employees:{
       type: DataTypes.TEXT,
     },
     job_title: {
@@ -50,7 +49,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     city: {
       type: DataTypes.TEXT,
-     
     },
     state: {
       type: DataTypes.TEXT,
@@ -58,7 +56,6 @@ module.exports = (sequelize, DataTypes) => {
     zip: {
       type: DataTypes.STRING,
     },
-    
     your_file_schedule:{
       type: DataTypes.TEXT,
     },
@@ -71,17 +68,15 @@ module.exports = (sequelize, DataTypes) => {
     have_you_filed_already_for_setc:{
       type: DataTypes.TEXT,
     },
-   
+  
     otp: {
       type: DataTypes.TEXT,
     },
-  
     otp_used: {
       type: DataTypes.TEXT,
     },
     country: {
       type: DataTypes.TEXT,
-     
     },
     know_about_us:{
       type:DataTypes.TEXT
@@ -113,11 +108,9 @@ module.exports = (sequelize, DataTypes) => {
   self_employed_from:{
       type:DataTypes.TEXT
     },
-  
     net_income_2019: {
       type: DataTypes.TEXT,
       defaultValue: '0'
-     
     },
     net_income_2020: {
       type: DataTypes.TEXT,
@@ -158,19 +151,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     cared_startdate2021: {
       type: DataTypes.TEXT,
-     
     },
     cared_enddate2021: {
       type: DataTypes.TEXT,
-     
     },
     minor_startdate2020: {
       type: DataTypes.TEXT,
-     
     },
     minor_enddate2020: {
       type: DataTypes.TEXT,
-     
     },
     minor_startdate2021: {
       type: DataTypes.TEXT,
@@ -180,15 +169,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     employed_as_W2:{
       type: DataTypes.TEXT,
-
     },
     Family_Sick_Leave:{
       type: DataTypes.TEXT,
     },
     amount:{
-      type:  DataTypes.DECIMAL,
+      type:  DataTypes.DECIMAL(10,2),
     },
-  
     driving_licence: {
       type: DataTypes.TEXT, // Use STRING instead of ARRAY
       defaultValue: '[]',    // Set default value as a string representation of an empty array
@@ -670,10 +657,10 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.TEXT,
    
     },
-    final_roundedValue:{
-      type:DataTypes.TEXT,
+    // final_roundedValue:{
+    //   type:DataTypes.TEXT,
    
-    },
+    // },
     final_status:{
       type:DataTypes.TEXT,
    
@@ -712,18 +699,18 @@ process_2_email_status:{
 process_2_file_reminder:{
   type:DataTypes.BOOLEAN
 },
-    documentStatus:{
-    type:DataTypes.BOOLEAN,
-    default:false
-    },
-    applicationStatus: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    applicationWithDocument: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
+    // documentStatus:{
+    // type:DataTypes.BOOLEAN,
+    // default:false
+    // },
+    // applicationStatus: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: false,
+    // },
+    // applicationWithDocument: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: false,
+    // },
     // companies: {
     //   type: DataTypes.STRING, // Use STRING instead of ARRAY
     //   defaultValue: '[]',    // Set default value as a string representation of an empty array
@@ -737,7 +724,7 @@ process_2_file_reminder:{
     //     this.setDataValue('companies', JSON.stringify(value));
     //   },
     // },
-  });
-
+  }
+  );
   return User;
 };

@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes, Op } = require('sequelize');
   // Passing parameters separately (other dialects)
-const sequelize = new Sequelize('myAppform', 'root', '12345', {
+const sequelize = new Sequelize('sys', 'root', '12345', {
     host: 'localhost',
     dialect: 'mysql',
     operationsAliases: false,
