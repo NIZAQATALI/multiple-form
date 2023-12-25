@@ -10,7 +10,6 @@ const axios = require("axios");
 const cors = require("cors");
 const express = require('express');
 const app = express();
-
 const { JSDOM } = require('jsdom');
 app.use(cors()); 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -24,11 +23,9 @@ app.use(
 );
 const endpointSecret = 'we_1OMAsFKQiLOn1OUqeZtUV1mA';
 const stripe = require('stripe')('sk_test_51OM74KKQiLOn1OUqIdhVJX1BEOyXzN3kfQqMyKA25kK03j4obBm7cvIqQLOLzsKHlI2V8wSl4IfXRHg1DxO3ab2i00dKsunEpB');
-
 // Handle preflight requests for the /initiate-docusign route
 let docusignInstance = null;
 let url;
-
 // // app.post("/form", 
 // async function form (request, response) {
 //   request.body={
@@ -94,19 +91,15 @@ async function form(request, response) {
       request.body.email,
       request.body.company
     );
-
     let results = await envelopesApi.createEnvelope(process.env.ACCOUNT_ID, {
       envelopeDefinition: envelope,
     });
-
     let viewRequest = await makeRecipientViewRequest(
       request.body.name,
       request.body.email
     );
-
     console.log(viewRequest, "viewRequest");
     console.log(results.envelopeId, 'envelope Id');
-
     results = await envelopesApi.createRecipientView(
       process.env.ACCOUNT_ID,
       results.envelopeId,
@@ -127,10 +120,8 @@ async function form(request, response) {
         },
       }
     );
-
     console.log(results.url);
     const url = results.url;
-
     // Sending the URL in the response
     response.status(200).json({ url });
   } catch (error) {

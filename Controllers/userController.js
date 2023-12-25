@@ -12,7 +12,6 @@ const axios = require("axios");
 const { Readable } = require('stream');
 var db = require('../modals/index.js');
 const PDFDocument = require('pdfkit');
-
 const fs = require('fs');
 // var db = require('../Images');
 // image Upload
@@ -738,8 +737,8 @@ const deleteFileHandler = async (req, res) => {
         console.log(filePath,"fileIndexPath")
         // Remove the file from the file system
         await fs.unlink(filePath);
-        // Remove the file reference from the array
-        //user[fieldName].splice(fileIndex, 1);
+       //  Remove the file reference from the array
+        user[fieldName].splice(fileIndex, 1);
         user[fieldName] = user[fieldName].filter((file) => file !== filePath); // Remove the file from the array
                // Assuming you have a field named schedule_pdf_name in your model
         user[originalFieldName] = user[originalFieldName].filter((file) => file !== originalName);
@@ -980,6 +979,7 @@ console.log("rounded  value    ....................",roundedValue);
       credit_amount_2021_step_3:  formatCurrency(`${ credit_amount_2021_step_3}` ),
       total_credit_amount_step_3:  formatCurrency(`${ total_credit_amount_step_3}`),
       final_credit_amount: formatCurrency(`${final_credit_amount}` ),
+ 
       final_roundedValue: formatCurrency(`${roundedValue}`),
     };
   

@@ -7,6 +7,7 @@ const router = express.Router();
 router.post("/create", userController.register);
 router.post("/checkMail", userController.checkEmail);
 router.post("/login", userController.login);
+router.get("/getAllUser", userController.getAllUser);
 router.post("/send-invitation", userController.sendotp);
 router.post("/verify", userController.submitotp);
 router.get("/getUser",auth.verifyToken, userController.getUser);
