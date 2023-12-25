@@ -161,13 +161,20 @@ const getUser = async (req, res) => {
     return res.status(200).send(result);
   });
 };
+const getById = async (req, res) => {
+  const userId =   req.body.userId;
+  console.log("userId......",userId);
+  await userService.getById(userId, (err, result) => {
+    if (err) return res.status(404).send(err);
+    result.password = undefined;
+    return res.status(200).send(result);
+  });
+};
 const getAllFiles = async (req, res) => {
   const userId =   req.user.id;
-
   await userService.getAllFiles(userId, (err, result) => {
     if (err) return res.status(404).send(err);
     result.password = undefined;
-  
     return res.status(200).send(result);
   });
 };
@@ -982,9 +989,7 @@ console.log("rounded  value    ....................",roundedValue);
  
       final_roundedValue: formatCurrency(`${roundedValue}`),
     };
-  
 console.log("form__data__all",updateableData)
-
 const updatedUser = await userService.updateCalculator(req.user.id, updateableData );
 // Now it should be defined
     res.status(200).json(updatedUser);
@@ -1013,7 +1018,6 @@ const dataPosttoHubspot = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
 // const filePosttoHubspot = async (req, res) => {
 //   try {
 //     const hubspot = require('@hubspot/api-client')
@@ -1345,7 +1349,6 @@ function createPDF(data) {
 //     return res.status(500).send('Internal Server Error');
 //   }
 // };
-
 const createFolder = async (req, res) => {
   try {
     const folderData = {  
@@ -1390,7 +1393,7 @@ const uploadFile = async (req, res) => {
   try {
     const folderId = req.body.folderId; // Assuming the folder ID is provided in the request body
     // Assuming you're using multer or similar for file uploads
-console.log("tttttttttttttttttttttttttttt",req.accessToken,folderId)
+console.log("ttttttttttt",req.accessToken,folderId)
     // Make a request to ShareFile API to upload a file
     // const initialResponse = await axios.post(`https://choudhrycom.sf-api.com/sf/v3/Items(${folderId})/Upload`,{
     //   headers: {
@@ -1492,6 +1495,7 @@ uploadFormMOre,
  webhook,
  dataPosttoHubspot,
  generatePDF,
- createFolder
+ createFolder,
+ getById
 //  uploadFileToHubSpot
 };

@@ -62,6 +62,18 @@ const getUser = async (id, callback) => {
     });
   }
 };
+const getById = async (id, callback) => {
+  try {
+    let user = await User.findByPk(id);
+    if (!user) return callback({ errMessage: "User not found!" });
+    return callback(false, { ...user.toJSON() });
+  } catch (err) {
+    return callback({
+      errMessage: "Something went wrong",
+      details: err.message,
+    });
+  }
+};
 const getAllUser = async ( callback) => {
   try {
     console.log("Get All users")
@@ -354,7 +366,6 @@ const updateDocumentStatus = async (userId) => {
 };
 const updateCalculator = async (id, updateData) => {
   try {
-    console.log("........................")
     console.log("updateUser function called with id:", id);
     const user = await User.findByPk(id);
     if (!user) {
@@ -432,5 +443,6 @@ module.exports = {
  updateApplication,
  getAllFiles,
  updateDocumentStatus,
- updateCalculator
+ updateCalculator,
+ getById
 };
