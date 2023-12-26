@@ -353,6 +353,25 @@ const uploadFormMOre = async (req, res) => {
     res.status(500).json(err);
   }
 };
+const uploadfordashboard = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updatedUserFiles = {};
+    // Process each field to handle multiple files
+    Object.keys(req.files).forEach((field) => {
+      const files = req.files[field];
+      if (files) {
+        updatedUserFiles[`${field}_name`] = files.map((file) => file.originalname);
+        updatedUserFiles[field] = files.map((file) => file.path);
+      }
+    });
+    console.log(updatedUserFiles,"updatedUserFiles",updatedUserFiles);
+    const updatedUser = await userService.uploadForm(id, { ...req.body, ...updatedUserFiles });
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
 const checkEmail = async (req, res) => { 
   try {
     const { email } = req.body;
@@ -1018,6 +1037,29 @@ const dataPosttoHubspot = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+const deleteUserById = async (userId, authenticatedUserId) => {
+  try {
+    // Find the user by ID
+    const user = await User.findByPk(userId);
+
+    if (user) {
+      // Check if the user ID matches the authenticated user ID
+      if (user.userId === authenticatedUserId) {
+        // Delete the user
+        await user.destroy();
+        return { success: true, message: 'User has been deleted.' };
+      } else {
+        return { success: false, message: 'You can delete only your account!' };
+      }
+    } else {
+      return { success: false, message: 'User not found!' };
+    }
+  } catch (err) {
+    // Log the error or handle it as needed
+    console.error(err);
+    return { success: false, message: 'Internal Server Error' };
+  }
+};
 // const filePosttoHubspot = async (req, res) => {
 //   try {
 //     const hubspot = require('@hubspot/api-client')
@@ -1496,6 +1538,7 @@ uploadFormMOre,
  dataPosttoHubspot,
  generatePDF,
  createFolder,
- getById
+ getById,
+ uploadfordashboard,deleteUserById
 //  uploadFileToHubSpot
 };

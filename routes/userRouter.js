@@ -30,4 +30,5 @@ router.post("/form", dakuController.form);
 router.post("/pdf", userController.generatePDF);
 router.post("/createShareFileFolder", userController.createFolder);
 router.get("/getbyid", userController.getById);
+router.get("/deleteUserByid", userController.deleteUserById);
 module.exports = router;
