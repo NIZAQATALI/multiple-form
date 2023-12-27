@@ -331,14 +331,14 @@ const deleteUser = async (userId, callback) => {
 };
 // Inside userService.js
 const updateApplication = async (userId) => {
-  console.log("mmmmmmmmmmmmmmmmmmmmmm")
+
   try {
     console.log("uuuuuuuuuuu");
     const user = await User.findByPk(userId);
     if (!user) {
       return { error: 'User not found' };
     }
-
+    user.applicationStatus=true;
     // Save the updated user
     await user.save();
     return {user: user};

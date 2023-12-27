@@ -699,18 +699,18 @@ process_2_email_status:{
 process_2_file_reminder:{
   type:DataTypes.BOOLEAN
 },
-    // documentStatus:{
-    // type:DataTypes.BOOLEAN,
-    // default:false
-    // },
-    // applicationStatus: {
-    //   type: DataTypes.BOOLEAN,
-    //   defaultValue: false,
-    // },
-    // applicationWithDocument: {
-    //   type: DataTypes.BOOLEAN,
-    //   defaultValue: false,
-    // },
+    documentStatus:{
+    type:DataTypes.BOOLEAN,
+    default:false
+    },
+    applicationStatus: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    applicationWithDocument: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     // companies: {
     //   type: DataTypes.STRING, // Use STRING instead of ARRAY
     //   defaultValue: '[]',    // Set default value as a string representation of an empty array

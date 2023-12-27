@@ -762,7 +762,12 @@ const deleteFileHandler = async (req, res) => {
         const filePath = user[fieldName][fileIndex]; // Get the file path
         console.log(filePath,"fileIndexPath")
         // Remove the file from the file system
-        await fs.unlink(filePath);
+       // await fs.unlink(filePath);
+        await fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Error deleting file' });
+          }})
        //  Remove the file reference from the array
         user[fieldName].splice(fileIndex, 1);
         user[fieldName] = user[fieldName].filter((file) => file !== filePath); // Remove the file from the array
@@ -1041,7 +1046,6 @@ const deleteUserById = async (userId, authenticatedUserId) => {
   try {
     // Find the user by ID
     const user = await User.findByPk(userId);
-
     if (user) {
       // Check if the user ID matches the authenticated user ID
       if (user.userId === authenticatedUserId) {
@@ -1075,7 +1079,6 @@ const deleteUserById = async (userId, authenticatedUserId) => {
 //       updatedUserFiles.schedule_pdf_name = file.originalname;
 //       updatedUserFiles.schedule_pdf = file.path;
 //       const hubspotClient = new hubspot.Client({ accessToken: "your-access-token" });
-
 //       const formData = new FormData();
 //       const options = {
 //         // some options
