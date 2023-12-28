@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
-    
     },
     first_name: {
       type: DataTypes.TEXT,
@@ -105,10 +104,10 @@ module.exports = (sequelize, DataTypes) => {
     address_line_2:{
       type:DataTypes.TEXT
     },
-  self_employed_from:{
+     self_employed_from:{
       type:DataTypes.TEXT
     },
-    net_income_2019: {
+     net_income_2019: {
       type: DataTypes.TEXT,
       defaultValue: '0'
     },
@@ -119,31 +118,24 @@ module.exports = (sequelize, DataTypes) => {
     net_income_2021: {
       type: DataTypes.TEXT,
       defaultValue: '0'
-     
     },
     business_negatively_impacted: {
       type: DataTypes.TEXT,
-     
     },
     personal_startdate2020: {
       type: DataTypes.TEXT,
-     
     },
     personal_enddate2020: {
       type: DataTypes.TEXT,
-     
     },
     personal_startdate2021: {
       type: DataTypes.TEXT,
-     
     },
     personal_enddate2021: {
       type: DataTypes.TEXT,
-     
     },
     cared_startdate2020: {
       type: DataTypes.TEXT,
-     
     },
     cared_enddate2020: {
       type: DataTypes.TEXT,
@@ -651,23 +643,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     final_credit_amount:{
       type:DataTypes.TEXT,
-      
     },
       final_credit_amount:{
       type:DataTypes.TEXT,
-   
     },
-    // final_roundedValue:{
-    //   type:DataTypes.TEXT,
-   
-    // },
+    final_roundedValue:{
+      type:DataTypes.TEXT,
+    },
     final_status:{
       type:DataTypes.TEXT,
-   
     },
     mandatory_questions:{
       type:DataTypes.TEXT,
-     
     },
     website_id:{
       type:DataTypes.STRING
@@ -699,7 +686,7 @@ process_2_email_status:{
 process_2_file_reminder:{
   type:DataTypes.BOOLEAN
 },
-    documentStatus:{
+documentStatus:{
     type:DataTypes.BOOLEAN,
     default:false
     },
@@ -711,6 +698,10 @@ process_2_file_reminder:{
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    is_docs_verify:{
+      type:DataTypes.TEXT,
+      defaultValue:"not verified"
+      },
     // companies: {
     //   type: DataTypes.STRING, // Use STRING instead of ARRAY
     //   defaultValue: '[]',    // Set default value as a string representation of an empty array

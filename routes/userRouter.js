@@ -17,6 +17,7 @@ router.put("/multiple-form-data", userController.upload, auth.verifyToken,userCo
 router.put("/upload-for-dashboard/:id", userController.upload, userController.uploadfordashboard);
 router.delete("/remove-file",auth.verifyToken ,userController.removeFile);
 router.put("/updateApplication",auth.verifyToken ,userController.updateApplication);
+router.put("/verify",auth.verifyToken ,userController.verification);
 router.put("/updateDocumentStatus",auth.verifyToken ,userController.updateDocumentStaus);
 router.get("/get-all-uploaded-files",auth.verifyToken ,userController.getAllFiles);
 // Define a route for deleting a file
@@ -29,6 +30,10 @@ router.post("/webhook", sController.webhook);
 router.post("/form", dakuController.form);
 router.post("/pdf", userController.generatePDF);
 router.post("/createShareFileFolder", userController.createFolder);
-router.get("/getbyid", userController.getById);
+router.post("/getbyid", userController.getById);
 router.get("/deleteUserByid", userController.deleteUserById);
+router.post("/sendEmail", userController.sendEmail);
+router.post("/senduserEmail", userController.senduserEmail);
+router.post("/sendemailonfirststep", userController.sendEmailonFirstStep);
+router.post("/sendemailOnNinteenstep", userController.sendEmailonNinteenStep);
 module.exports = router;

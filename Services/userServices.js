@@ -2,25 +2,97 @@
 const { createRandomHexColor } = require("./helperMethods");
 var db = require('../modals/index.js');
 var  User =  db.userModel;
-// const register = async (user, callback) => {
-//   const newUser = userModel({ ...user, color:createRandomHexColor()});
-//   await newUser
-//     .save()
-//     .then((result) => {
-//       return callback(false, { message: "User created successfuly!" });
-//     })
-//     .catch((err) => {
-//       return callback({ errMessage: "Email already in use!", details: err });
-//     });
-// };
+const axios = require("axios");
+
+
+
+
+
+
+
 const register = async (user, callback) => {
   try {
-  
     const newUser = await User.create({ ...user, });
 newUser.record_id=newUser.id;
+const step = user.step;
+
 
  await newUser.save();
     callback(null, { message: "User created successfully!", "NewRecord": newUser.record_id});
+    console.log("uuwaqasssssssssssssssssuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", user.step)      // Call sendEmail function with user data
+
+  //   if (user.step === '0') {
+  //     console.log("uuwaqasssssssssssssssssuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", user.step)      // Call sendEmail function with user data
+
+  //  await  sendEmail();
+  //   }
+ 
+  // if (user.step === '0') {
+  //   console.log("uuwaqasssssssssssssssssuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", user.step);
+  
+  //   try {
+  //     // Make an HTTP POST request to http://localhost:5000/user/sendEmail
+  //     await axios.post('http://localhost:5000/user/sendEmail', {
+  //       // Include any data you want to send in the request body
+  //       // For example, you might want to send user data
+        
+  //     });
+  
+  //     console.log('HTTP POST request to http://localhost:5000/user/sendEmail successful');
+  //   } catch (error) {
+  //     console.error('Error making HTTP POST request:', error.message);
+  //   }
+  // }
+  if (user.step === '0') {
+    console.log("uuwaqasssssssssssssssssuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", user);
+  
+    try {
+      // Make an HTTP POST request to http://localhost:5000/user/sendEmail
+      const response = await axios.post('http://localhost:5000/user/sendEmail',{
+        // Include any data you want to send in the request body
+        // For example, you might want to send user data
+        user
+      });
+      // Check if the response indicates success (adjust the condition based on your API response)
+      if (response.status === 200) {
+        console.log('HTTP POST request to http://localhost:5000/user/sendEmail successful');
+        // Do something with the response data if needed
+        // For example, you can access it using response.data
+      } else {
+        // Handle unexpected response status
+        console.error('Unexpected HTTP response status:', response.status);
+      }
+    } catch (error) {
+      // Handle network errors, request timeouts, or any other errors
+      console.error('Error making HTTP POST request:', error.message);
+    }
+  }
+
+  if (user.step === '0') {
+    console.log("uuwaqasssssssssssssssssuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", user);
+  
+    try {
+      // Make an HTTP POST request to http://localhost:5000/user/sendEmail
+      const response = await axios.post('http://localhost:5000/user/senduserEmail',{
+        // Include any data you want to send in the request body
+        // For example, you might want to send user data
+        user
+      });
+      // Check if the response indicates success (adjust the condition based on your API response)
+      if (response.status === 200) {
+        console.log('HTTP POST request to http://localhost:5000/user/sendEmail successful');
+        // Do something with the response data if needed
+        // For example, you can access it using response.data
+      } else {
+        // Handle unexpected response status
+        console.error('Unexpected HTTP response status:', response.status);
+      }
+    } catch (error) {
+      // Handle network errors, request timeouts, or any other errors
+      console.error('Error making HTTP POST request:', error.message);
+    }
+  }
+
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       const uniqueViolation = err.errors.find(error => error.type === 'unique violation');
@@ -110,7 +182,6 @@ console.log(userId,"klkkkkl");
       supplemental_attachment_2020: user.supplemental_attachment_2020_name,
       supplemental_attachment_2021: user.supplemental_attachment_2021_name,
     };
-
     res.status(200).json(uploadedFiles);
   } catch (error) {
     console.error("Error getting uploaded files:", error);
@@ -137,6 +208,7 @@ const updateUser = async (id, updateData) => {
     console.log("updateUser function called with id:", id);
     console.log(updateData);
     const user = await User.findByPk(id);
+    console.log(user.step,"user stepppp");
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -148,6 +220,55 @@ const updateUser = async (id, updateData) => {
     }
     // Save the changes to the database
     await user.save();
+   
+        // Check if the 'step' property is being updated and its value is 0
+    if (user.step == 1) {
+      console.log("stepppppppppppppppppppppp")
+      try {
+        // Make an HTTP POST request to http://localhost:5000/user/sendEmail
+        const response = await axios.post('http://localhost:5000/user/sendemailonfirststep',{
+          // Include any data you want to send in the request body
+          // For example, you might want to send user data
+          user
+        });
+        // Check if the response indicates success (adjust the condition based on your API response)
+        if (response.status === 200) {
+          console.log('HTTP POST request to http://localhost:5000/user/sendEmail successful');
+          // Do something with the response data if needed
+          // For example, you can access it using response.data
+        } else {
+          // Handle unexpected response status
+          console.error('Unexpected HTTP response status:', response.status);
+        }
+      } catch (error) {
+        // Handle network errors, request timeouts, or any other errors
+        console.error('Error making HTTP POST request:', error.message);
+      }
+    }
+    if (user.step==19) {
+      try {
+        // Make an HTTP POST request to http://localhost:5000/user/sendEmail
+        const response = await axios.post('http://localhost:5000/user/sendemailOnNinteenstep',{
+          // Include any data you want to send in the request body
+          // For example, you might want to send user data
+          user
+        });
+        // Check if the response indicates success (adjust the condition based on your API response)
+        if (response.status === 200) {
+          console.log('HTTP POST request to http://localhost:5000/user/sendEmail successful');
+          // Do something with the response data if needed
+          // For example, you can access it using response.data
+        } else {
+          // Handle unexpected response status
+          console.error('Unexpected HTTP response status:', response.status);
+        }
+      } catch (error) {
+        // Handle network errors, request timeouts, or any other errors
+        console.error('Error making HTTP POST request:', error.message);
+      }
+    
+
+    }
     return { status: 200, user: user.toJSON() };
   } catch (error) {
     console.error("Error updating user:", error);
@@ -243,14 +364,10 @@ const uploadForm = async (id, updateData) => {
     return { status: 500, error: 'Internal Server Error' };
   }
 };
-
-
-
 // const uploadForm = async (id, updateData) => {
 //   try {
 //     console.log("uploadForm function called with id:", id);
 //     const user = await User.findByPk(id);
-
 //     if (!user) {
 //       return { error: 'User not found' };
 //     }
@@ -347,6 +464,23 @@ const updateApplication = async (userId) => {
     return { error: 'Internal Server Error' };
   }
 };
+const verfication = async (userId) => {
+
+  try {
+    console.log("uuuuuuuuuuu");
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return { error: 'User not found' };
+    }
+    user.is_docs_verify="verified";
+    // Save the updated user
+    await user.save();
+    return {user: user};
+  } catch (err) {
+    console.error(err);
+    return { error: 'Internal Server Error' };
+  }
+};
 const updateDocumentStatus = async (userId) => {
   try {
     console.log("uuuuuuuuuuu");
@@ -429,6 +563,33 @@ const updateCalculator = async (id, updateData) => {
   }
 };
 
+const sendEmail = async (req, res) => {
+  console.log("rizzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwaaaaaaaaaaaaaaaaan")      // Call sendEmail function with user data
+
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.OUR_EMAIL,
+        pass: process.env.EMAIL_PASSWORD 
+      }
+  })
+  let info = await transporter.sendMail({
+      from: 'afaq58681@gmail.com',
+      to: 'hafiznizaqatali@gmail.com', // list of receivers
+      text: 'uogiiiiiiiisssssssssssss',
+  })
+  if (info.messageId) {
+      console.log(info, 84)
+      if (info.messageId) {
+        console.log(info, 84);
+   res.status(200).json({ code: 200, message: 'Email  has  been  sent  successfully'});
+      } else {
+        res.status(500).json({ code: 500, message: 'Server error' });
+      }
+    } 
+}
 
 module.exports = {
   register,
@@ -444,5 +605,6 @@ module.exports = {
  getAllFiles,
  updateDocumentStatus,
  updateCalculator,
- getById
+ getById,
+ verfication
 };

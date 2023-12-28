@@ -80,10 +80,8 @@ var  User =  db.userModel;
 // }};
 const register = async (req, res) => {
   const { email } = req.body;
-  
   // Check if the user with the provided email already exists
   const existingUser = await User.findOne({ where: { email } });
- 
   if (existingUser && (existingUser.applicationStatus == null || existingUser.applicationStatus == false)) {
     // User with the email already exists, return an error
     return res.status(400).send({ message: "User with this email already exists and cannot be updated." });
@@ -213,6 +211,529 @@ const getUserWithMail = async(req,res) => {
 //       res.status(500).json(err);
 //     }
 // };
+const sendEmail = async (req, res) => {
+ 
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.OUR_EMAIL,
+        pass: process.env.EMAIL_PASSWORD 
+      }
+  })
+    // <table>
+    //   <tr>
+    //     <td><b>Name:</b></td>
+    //     <td>${req.body.user.first_name} ${req.body.user.last_name}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Email:</b></td>
+    //     <td>${req.body.user.email}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Phone:</b></td>
+    //     <td>${req.body.user.phone}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Company Name:</b></td>
+    //     <td>${req.body.user.trade_name}</td>
+    //   </tr>
+     
+    // </table>
+  // Create the HTML content dynamically
+  const htmlContent = `
+  
+    <table>
+  <!-- Displaying basic user information -->
+  <tr>
+    <td><b>Name:</b></td>
+    <td>${req.body.user.first_name} ${req.body.user.last_name}</td>
+  </tr>
+  <tr>
+    <td><b>Email:</b></td>
+    <td>${req.body.user.email}</td>
+  </tr>
+  <tr>
+    <td><b>Phone:</b></td>
+    <td>${req.body.user.phone}</td>
+  </tr>
+  <tr>
+    <td><b>Company Name:</b></td>
+    <td>${req.body.user.trade_name}</td>
+  </tr>
+
+  <!-- Displaying additional user properties dynamically -->
+  ${Object.entries(req.body.user).map(([key, value]) => {
+    // Check if the value is null or undefined
+    const displayValue = value != null ? value : ''; 
+
+    // Display only if the property is not one of the known properties
+    if (!['first_name', 'last_name', 'email', 'phone', 'trade_name'].includes(key)) {
+      return `
+        <tr>
+          <td><b>${key.replace(/_/g, ' ')}:</b></td>
+          <td>${displayValue}</td>
+        </tr>
+      `;
+    }
+    return ''; // Skip known properties
+  }).join('')}
+</table>
+
+  `;
+
+  let info = await transporter.sendMail({
+    from: 'afaq58681@gmail.com',
+    to: 'hafiznizaqatali@gmail.com', // list of receivers
+    text: 'uogiiiiiiiisssssssssssss',
+    html: htmlContent,
+  });
+  if (info.messageId) {
+      console.log(info, 84)
+      if (info.messageId) {
+        console.log(info, 84);
+   res.status(200).json({ code: 200, message: 'Email  has  been  sent  successfully'});
+      } else {
+        res.status(500).json({ code: 500, message: 'Server error' });
+      }
+    } 
+}
+const sendEmailonFirstStep = async (req, res) => {
+// console.log(req.body,",,,,,,,,,,,,,,,");
+ //req.body.user=req.body
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.OUR_EMAIL,
+        pass: process.env.EMAIL_PASSWORD 
+      }
+  })
+    // <table>
+    //   <tr>
+    //     <td><b>Name:</b></td>
+    //     <td>${req.body.user.first_name} ${req.body.user.last_name}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Email:</b></td>
+    //     <td>${req.body.user.email}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Phone:</b></td>
+    //     <td>${req.body.user.phone}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Company Name:</b></td>
+    //     <td>${req.body.user.trade_name}</td>
+    //   </tr>
+     
+    // </table>
+  // Create the HTML content dynamically
+  const htmlContent = `
+  
+  <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SETC Zone - Application in Process</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Roboto', sans-serif;
+        line-height: 1.6;
+        font-weight: 400;
+        margin: 20px;
+      }
+      .container {
+        max-width: 550px;
+        margin: 0 auto;
+      }
+      .message {
+        background-color: #f4f4f4;
+        border-top: 4px solid  #5AB5E6; 
+        border-bottom: 4px solid  #5AB5E6;
+        padding: 40px 20px ;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-family: 'Roboto', sans-serif;
+        
+        font-weight: 400;
+      }
+      .message p{
+        font-family: 'Roboto', sans-serif;
+        
+        font-weight:400;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+     
+      <!-- <div class="text-center fw-bold"><h2>Welcome to SETC Zone</h2></div> -->
+      <div class="message">
+           <div style="text-align:center;margin-bottom: 20px;">
+           <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
+      </div>
+            <p>
+                 
+                Dear <strong>${req.body.user.first_name}' '${req.body.user.last_name}</strong> , 
+            </p>
+        <p>
+            We are writing to inform you that your application for the Self-Employment Tax Credit (SETC) is currently being processed. We understand the importance of this credit to you, and we want to assure you that handling your application in a diligent and timely manner is our top priority.
+        </p>
+        
+        <p>
+            Our team of experts is working hard to ensure that your application is processed as soon as possible. A member of our team will be in touch with you soon regarding the status of your application. In the meantime, we encourage you to visit <a href="https://setczone.com">https://setczone.com</a> for answers to frequently asked questions.
+        </p>
+        
+        <p>
+            If you have any further questions or concerns regarding your application, please do not hesitate to contact us at <a href="mailto:support@setczone.com">support@setczone.com</a>. We are always here to help and are committed to providing you with the best possible service.
+        </p>
+    
+        <p>
+            Sincerely,<br>
+            The SETC Team
+        </p>
+<div style="text-align:center;">
+            <a href="https://app.setczone.com/"><button type="button" class="btn btn-primary" style="background-color:#5ab5e6;border:1px #5ab5e6;padding:10px 40px;border-radius:10px" > Login</button></a>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+  </body>
+</html>
+
+  `;
+
+  let info = await transporter.sendMail({
+    from: 'afaq58681@gmail.com',
+    to: 'hafiznizaqatali@gmail.com', // list of receivers
+    text: 'uogiiiiiiiisssssssssssss',
+    html: htmlContent,
+  });
+  if (info.messageId) {
+      console.log(info, 84)
+      if (info.messageId) {
+        console.log(info, 84);
+   res.status(200).json({ code: 200, message: 'Email  has  been  sent  successfully'});
+      } else {
+        res.status(500).json({ code: 500, message: 'Server error' });
+      }
+    } 
+}
+const sendEmailonNinteenStep = async (req, res) => {
+ 
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.OUR_EMAIL,
+        pass: process.env.EMAIL_PASSWORD 
+      }
+  })
+    // <table>
+    //   <tr>
+    //     <td><b>Name:</b></td>
+    //     <td>${req.body.user.first_name} ${req.body.user.last_name}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Email:</b></td>
+    //     <td>${req.body.user.email}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Phone:</b></td>
+    //     <td>${req.body.user.phone}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Company Name:</b></td>
+    //     <td>${req.body.user.trade_name}</td>
+    //   </tr>
+     
+    // </table>
+  // Create the HTML content dynamically
+  const htmlContent = `
+  
+  <!DOCTYPE html>
+  <html lang="en">
+      <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>SETC Zone - Document Uplaoded </title>
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+      <style>
+        body {
+          font-family: 'Roboto', sans-serif;
+          line-height: 1.6;
+          font-weight: 400;
+          margin: 20px;
+        }
+        .container {
+          max-width: 550px;
+          margin: 0 auto;
+        }
+        .message {
+          background-color: #f4f4f4;
+          border-top: 4px solid  #5AB5E6; 
+          border-bottom: 4px solid  #5AB5E6;
+          padding: 40px 20px ;
+          border-radius: 8px;
+          margin-top: 20px;
+          font-family: 'Roboto', sans-serif;
+          
+          font-weight: 400;
+        }
+        .message p{
+          font-family: 'Roboto', sans-serif;
+          
+          font-weight:400;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div style="text-align:center">
+          <!--<img src="logo-set.png" alt="" srcset="" / style="height: 100px;width:-->
+          <!--300;">-->
+          <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
+        </div>
+        <!-- <div class="text-center fw-bold"><h2>Welcome to SETC Zone</h2></div> -->
+        <div class="message">
+              <p>
+                 
+                  Dear <strong>${req.body.user.first_name}' '${req.body.user.last_name}</strong> ,
+              </p>
+          <p>
+              We are writing to confirm that we have received the documentation you uploaded for your application for the Self-employment Tax Credit (SETC). Thank you for submitting all the required materials in a timely manner.
+          </p>
+          
+          <p>
+              We understand how important this credit is for you, and we want to assure you that we are committed to assisting you throughout the application process. Our team of experts is working diligently to ensure that your application is handled promptly and efficiently.
+          </p>
+          
+          <p>
+              Within the next 72 hours, a member of our team will be in contact with you to discuss your application further. If you have any additional questions or concerns, please do not hesitate to reach out to us at <a href="mailto:support@setczone.com">support@setczone.com</a>. We are always here to help.
+          </p>
+          
+          <p>
+              Thank you again for choosing us to assist you with your SETC application. We look forward to working with you.
+          </p>
+      
+          <p>
+              Best regards,<br>
+              SETC Zone
+          </p>
+         <div style="text-align:center;">
+              <a href="https://app.setczone.com/"><button type="button" class="btn btn-primary" style="background-color:#5ab5e6;border:1px #5ab5e6;padding:10px 40px;border-radius:10px" > Login</button></a>
+          </div>
+        </div>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+      <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+    </body>
+  </html>
+
+  `;
+
+  let info = await transporter.sendMail({
+    from: 'afaq58681@gmail.com',
+    to: 'hafiznizaqatali@gmail.com', // list of receivers
+    text: 'uogiiiiiiiisssssssssssss',
+    html: htmlContent,
+  });
+  if (info.messageId) {
+      console.log(info, 84)
+      if (info.messageId) {
+        console.log(info, 84);
+   res.status(200).json({ code: 200, message: 'Email  has  been  sent  successfully'});
+      } else {
+        res.status(500).json({ code: 500, message: 'Server error' });
+      }
+    } 
+}
+const senduserEmail = async (req, res) => {
+  console.log(req.body.user,"kkkk")
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.OUR_EMAIL,
+        pass: process.env.EMAIL_PASSWORD 
+      }
+  })
+
+  
+  // Create the HTML content dynamically
+  const htmlContent = `
+    <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SETC Zone - Welcome</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Roboto', sans-serif;
+        line-height: 1.6;
+        font-weight: 400;
+        margin: 20px;
+      }
+      .container {
+        max-width: 550px;
+        margin: 0 auto;
+      }
+      .message {
+        background-color: #f4f4f4;
+        border-top: 4px solid  #5AB5E6; 
+        border-bottom: 4px solid  #5AB5E6;
+        padding: 40px 20px ;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-family: 'Roboto', sans-serif;
+        
+        font-weight: 400;
+      }
+      .message p{
+        font-family: 'Roboto', sans-serif;
+        
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      
+      <div class="message">
+          <div style="text-align:center">
+        <!--<img src="logo-set.png" alt="" srcset="" / style="height: 100px;width:-->
+        <!--300;">-->
+        <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
+
+       
+      </div>
+      <div  style="text-align:center"><h2>Welcome to SETC Zone</h2></div>
+        <p>
+            
+          <strong>Hi {{ $lead->first_name.' '.$lead->last_name }} ,</strong>
+        </p>
+        <p>
+          Thank you for your interest in the Self-employed Tax Credit, and
+          congratulations on taking the first step towards claiming your credit!
+          This tax credit can be up to $32,220!
+        </p>
+        <p>
+          Our team understands that the process to claim your tax credit can be
+          confusing, but we are here to guide you every step of the way. We have
+          made our application process simple, with 3 steps:
+        </p>
+        <ol>
+          <li>
+            Fill out the online questionnaire at
+            <a href="http://www.setczone.com">www.setczone.com</a>.
+          </li>
+          <li>Upload your documents (Tax returns for 2019, 2020, and 2021).</li>
+          <li>Collect your funds $$$</li>
+        </ol>
+        <p>
+          Within the next 72 hours, one of our team members will be reaching out
+          to you to discuss the details of your application and to answer any
+          questions that you may have.
+        </p>
+        <p>
+          Please do not hesitate to reach out to us at
+          <a href="mailto:support@setczone.com">support@setczone.com</a> if you
+          have any questions or concerns; we are here to assist you.
+        </p>
+        <p>Here to help,<br />SETC Zone</p>
+        <div style="text-align:center;">
+            <a href="https://app.setczone.com/"><button type="button" class="btn btn-primary" style="background-color:#5ab5e6;border:1px #5ab5e6;padding:10px 40px;border-radius:10px" > Login</button></a>
+        </div>
+      </div>
+    </div>
+   
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+  </body>
+</html>
+  `;
+
+  let info = await transporter.sendMail({
+    from: 'afaq58681@gmail.com',
+    to: 'hafiznizaqatali@gmail.com', // list of receivers
+    text: 'uogiiiiiiiisssssssssssss',
+    html: htmlContent,
+  });
+  if (info.messageId) {
+      console.log(info, 84)
+      if (info.messageId) {
+        console.log(info, 84);
+   res.status(200).json({ code: 200, message: 'Email  has  been  sent  successfully'});
+      } else {
+        res.status(500).json({ code: 500, message: 'Server error' });
+      }
+    } 
+}
+// const updateUser = async (id, updateData) => {
+//   try {
+
+//     console.log(updateData);
+//     const user = await User.findByPk(id);
+//     if (!user) {
+//       return { status: 404, error: 'User not found' };
+//     }
+//     // Dynamically update user properties based on updateData
+//     for (const key in updateData) {
+//       if (updateData.hasOwnProperty(key)) {
+//         user[key] = updateData[key];
+//       }
+//     }
+
+//     // Check if the 'step' property is being updated and its value is 0
+//     if (updateData.hasOwnProperty('step') && updateData['step'] === 1  || updateData['step'] ===19) {
+
+
+//       // For simplicity, let's assume there is a function to send an email in your userController
+//     sendEmail();
+    
+//     }
+
+//     // Save the changes to the database
+//     await user.save();
+
+//     return { status: 200, user: user.toJSON() };
+//   } catch (error) {
+//     console.error("Error updating user:", error);
+//     return { status: 500, error };
+//   }
+// };
+
 const updateUser = async (req, res) => {
   try {
       const id = req.user.id;
@@ -239,6 +760,18 @@ const updateApplication = async (req, res) => {
       }
    const id  = req.user.id;
       const updatedUser = await userService.updateApplication(id);
+      // Now it should be defined
+      res.status(200).json(updatedUser);
+  } catch (err) {
+      res.status(500).json(err);
+  }
+};
+const verification = async (req, res) => {
+  try {
+      // Check if user.applicationStatus is true
+     console.log("verification")
+   const id  = req.user.id;
+      const updatedUser = await userService.verfication(id);
       // Now it should be defined
       res.status(200).json(updatedUser);
   } catch (err) {
@@ -939,14 +1472,12 @@ console.log("credit_amount_2021_step_3",credit_amount_2021_step_3)
 console.log("total_credit_amount_step_3",total_credit_amount_step_3,"final_credit_amount",final_credit_amount)
 // End Step 3 Calculation Process
 function roundToNearestDownThousand(value) {
-  return Math.floor(value / 1000) * 1000;
+  return Math.ceil(value / 1000) * 1000;
 }
-
 // Example usage:
 const inputValue = final_credit_amount;
 const roundedValue = roundToNearestDownThousand(inputValue);
-
-console.log("rounded  value    ....................",roundedValue); 
+console.log("rounded  value.",roundedValue); 
     // ... Continue with the rest of your calculations
     // Assuming you have an AppSetczones model defined
     const updateableData = {
@@ -1013,7 +1544,6 @@ console.log("rounded  value    ....................",roundedValue);
  
       final_roundedValue: formatCurrency(`${roundedValue}`),
     };
-console.log("form__data__all",updateableData)
 const updatedUser = await userService.updateCalculator(req.user.id, updateableData );
 // Now it should be defined
     res.status(200).json(updatedUser);
@@ -1514,6 +2044,7 @@ formData.append(folderId,filefs, { filename: fileName });
     return res.status(500).send('Internal Server Error');
   }
 };
+
 module.exports = {
   registerViaInvite,
   register,
@@ -1542,6 +2073,11 @@ uploadFormMOre,
  generatePDF,
  createFolder,
  getById,
- uploadfordashboard,deleteUserById
+ uploadfordashboard,deleteUserById,
+  sendEmail,
+  senduserEmail,
+  sendEmailonFirstStep,
+  sendEmailonNinteenStep,
+  verification
 //  uploadFileToHubSpot
 };
