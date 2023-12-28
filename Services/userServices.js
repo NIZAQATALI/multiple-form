@@ -222,8 +222,8 @@ const updateUser = async (id, updateData) => {
     await user.save();
    
         // Check if the 'step' property is being updated and its value is 0
-    if (user.step == 1) {
-      console.log("stepppppppppppppppppppppp")
+    if (user.step == 8) {
+      console.log("steppppppppppppp")
       try {
         // Make an HTTP POST request to http://localhost:5000/user/sendEmail
         const response = await axios.post('http://localhost:5000/user/sendemailonfirststep',{
@@ -245,30 +245,8 @@ const updateUser = async (id, updateData) => {
         console.error('Error making HTTP POST request:', error.message);
       }
     }
-    if (user.step==19) {
-      try {
-        // Make an HTTP POST request to http://localhost:5000/user/sendEmail
-        const response = await axios.post('http://localhost:5000/user/sendemailOnNinteenstep',{
-          // Include any data you want to send in the request body
-          // For example, you might want to send user data
-          user
-        });
-        // Check if the response indicates success (adjust the condition based on your API response)
-        if (response.status === 200) {
-          console.log('HTTP POST request to http://localhost:5000/user/sendEmail successful');
-          // Do something with the response data if needed
-          // For example, you can access it using response.data
-        } else {
-          // Handle unexpected response status
-          console.error('Unexpected HTTP response status:', response.status);
-        }
-      } catch (error) {
-        // Handle network errors, request timeouts, or any other errors
-        console.error('Error making HTTP POST request:', error.message);
-      }
     
-
-    }
+    
     return { status: 200, user: user.toJSON() };
   } catch (error) {
     console.error("Error updating user:", error);
@@ -458,6 +436,32 @@ const updateApplication = async (userId) => {
     user.applicationStatus=true;
     // Save the updated user
     await user.save();
+   {
+      try {
+        // Make an HTTP POST request to http://localhost:5000/user/sendEmail
+        const response = await axios.post('http://localhost:5000/user/sendemailOnNinteenstep',{
+          // Include any data you want to send in the request body
+          // For example, you might want to send user data
+          user
+        });
+        // Check if the response indicates success (adjust the condition based on your API response)
+        if (response.status === 200) {
+          console.log('HTTP POST request to http://localhost:5000/user/sendEmail19 successful');
+          // Do something with the response data if needed
+          // For example, you can access it using response.data
+        } else {
+          // Handle unexpected response status
+          console.error('Unexpected HTTP response status:', response.status);
+        }
+      } catch (error) {
+        // Handle network errors, request timeouts, or any other errors
+        console.error('Error making HTTP POST request:', error.message);
+      }
+    
+
+    }
+
+
     return {user: user};
   } catch (err) {
     console.error(err);
@@ -492,6 +496,30 @@ const updateDocumentStatus = async (userId) => {
     user.applicationWithDocument = true;
     // Save the updated user
     await user.save();
+    if (user.step==20) {
+      try {
+        // Make an HTTP POST request to http://localhost:5000/user/sendEmail
+        const response = await axios.post('http://localhost:5000/user/sendemailOnNinteenstep2',{
+          // Include any data you want to send in the request body
+          // For example, you might want to send user data
+          user
+        });
+        // Check if the response indicates success (adjust the condition based on your API response)
+        if (response.status === 200) {
+          console.log('HTTP POST request to http://localhost:5000/user/sendEmail192 successful');
+          // Do something with the response data if needed
+          // For example, you can access it using response.data
+        } else {
+          // Handle unexpected response status
+          console.error('Unexpected HTTP response status:', response.status);
+        }
+      } catch (error) {
+        // Handle network errors, request timeouts, or any other errors
+        console.error('Error making HTTP POST request:', error.message);
+      }
+    
+
+    }
     return { success: true };
   } catch (err) {
     console.error(err);

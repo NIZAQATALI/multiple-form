@@ -212,7 +212,7 @@ const getUserWithMail = async(req,res) => {
 //     }
 // };
 const sendEmail = async (req, res) => {
- 
+   req.body.user=req.body
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
       port: 587,
@@ -331,20 +331,102 @@ const sendEmailonFirstStep = async (req, res) => {
      
     // </table>
   // Create the HTML content dynamically
-  const htmlContent = `
+//   const htmlContent = `
   
-  <!DOCTYPE html>
+//   <!DOCTYPE html>
+// <html lang="en">
+//     <head>
+//         <meta charset="utf-8">
+//         <meta name="viewport" content="width=device-width, initial-scale=1">
+//         <title>SETC Zone - Application in Process</title>
+//         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+//         <link rel="preconnect" href="https://fonts.googleapis.com">
+// <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+// <link rel="preconnect" href="https://fonts.googleapis.com">
+// <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+// <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+//     <style>
+//       body {
+//         font-family: 'Roboto', sans-serif;
+//         line-height: 1.6;
+//         font-weight: 400;
+//         margin: 20px;
+//       }
+//       .container {
+//         max-width: 550px;
+//         margin: 0 auto;
+//       }
+//       .message {
+//         background-color: #f4f4f4;
+//         border-top: 4px solid  #5AB5E6; 
+//         border-bottom: 4px solid  #5AB5E6;
+//         padding: 40px 20px ;
+//         border-radius: 8px;
+//         margin-top: 20px;
+//         font-family: 'Roboto', sans-serif;
+        
+//         font-weight: 400;
+//       }
+//       .message p{
+//         font-family: 'Roboto', sans-serif;
+        
+//         font-weight:400;
+//       }
+//     </style>
+//   </head>
+//   <body>
+//     <div class="container">
+     
+//       <!-- <div class="text-center fw-bold"><h2>Welcome to SETC Zone</h2></div> -->
+//       <div class="message">
+//            <div style="text-align:center;margin-bottom: 20px;">
+//            <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
+//       </div>
+//             <p>
+                 
+//                 Dear <strong>${req.body.user.first_name}' '${req.body.user.last_name}</strong> , 
+//             </p>
+//         <p>
+//             We are writing to inform you that your application for the Self-Employment Tax Credit (SETC) is currently being processed. We understand the importance of this credit to you, and we want to assure you that handling your application in a diligent and timely manner is our top priority.
+//         </p>
+        
+//         <p>
+//             Our team of experts is working hard to ensure that your application is processed as soon as possible. A member of our team will be in touch with you soon regarding the status of your application. In the meantime, we encourage you to visit <a href="https://setczone.com">https://setczone.com</a> for answers to frequently asked questions.
+//         </p>
+        
+//         <p>
+//             If you have any further questions or concerns regarding your application, please do not hesitate to contact us at <a href="mailto:support@setczone.com">support@setczone.com</a>. We are always here to help and are committed to providing you with the best possible service.
+//         </p>
+    
+//         <p>
+//             Sincerely,<br>
+//             The SETC Team
+//         </p>
+// <div style="text-align:center;">
+//             <a href="https://app.setczone.com/"><button type="button" class="btn btn-primary" style="background-color:#5ab5e6;border:1px #5ab5e6;padding:10px 40px;border-radius:10px" > Login</button></a>
+//         </div>
+//       </div>
+//     </div>
+//     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+//     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+//     <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+// </body>
+//   </body>
+// </html>
+
+//   `;
+
+const htmlContent = `
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>SETC Zone - Application in Process</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SETC Zone - Prequalification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
       body {
         font-family: 'Roboto', sans-serif;
@@ -358,63 +440,63 @@ const sendEmailonFirstStep = async (req, res) => {
       }
       .message {
         background-color: #f4f4f4;
-        border-top: 4px solid  #5AB5E6; 
-        border-bottom: 4px solid  #5AB5E6;
-        padding: 40px 20px ;
+        border-top: 4px solid #5AB5E6;
+        border-bottom: 4px solid #5AB5E6;
+        padding: 40px 20px;
         border-radius: 8px;
         margin-top: 20px;
         font-family: 'Roboto', sans-serif;
-        
         font-weight: 400;
       }
-      .message p{
+      .message p {
         font-family: 'Roboto', sans-serif;
-        
-        font-weight:400;
+        font-weight: 400;
       }
     </style>
   </head>
   <body>
     <div class="container">
-     
-      <!-- <div class="text-center fw-bold"><h2>Welcome to SETC Zone</h2></div> -->
       <div class="message">
-           <div style="text-align:center;margin-bottom: 20px;">
-           <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
-      </div>
-            <p>
-                 
-                Dear <strong>${req.body.user.first_name}' '${req.body.user.last_name}</strong> , 
-            </p>
-        <p>
-            We are writing to inform you that your application for the Self-Employment Tax Credit (SETC) is currently being processed. We understand the importance of this credit to you, and we want to assure you that handling your application in a diligent and timely manner is our top priority.
-        </p>
-        
-        <p>
-            Our team of experts is working hard to ensure that your application is processed as soon as possible. A member of our team will be in touch with you soon regarding the status of your application. In the meantime, we encourage you to visit <a href="https://setczone.com">https://setczone.com</a> for answers to frequently asked questions.
-        </p>
-        
-        <p>
-            If you have any further questions or concerns regarding your application, please do not hesitate to contact us at <a href="mailto:support@setczone.com">support@setczone.com</a>. We are always here to help and are committed to providing you with the best possible service.
-        </p>
-    
-        <p>
-            Sincerely,<br>
-            The SETC Team
-        </p>
-<div style="text-align:center;">
-            <a href="https://app.setczone.com/"><button type="button" class="btn btn-primary" style="background-color:#5ab5e6;border:1px #5ab5e6;padding:10px 40px;border-radius:10px" > Login</button></a>
+      <div style="text-align:center;margin-bottom: 20px;">
+          <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
         </div>
+        <p>
+        Dear <strong>${req.body.user.first_name} ${req.body.user.last_name}</strong>,
+      </p>
+        <p>
+          Well done on taking the initial step towards getting the Self-Employed Tax Credit. We are pleased to inform you that you have been prequalified for [$Amount]. The next crucial step is to have one of our expert CPAs review your file to confirm your tax credit amount.
+        </p>
+        <p>
+          We understand that the process of claiming your tax credit may be confusing, but don't worry, we will guide you every step of the way. Completing your application is simple, and you only need to follow these three easy steps:
+        </p>
+        <ol>
+          <li>Fill out the online questionnaire on <a href="https://setczone.com">https://setczone.com</a>.</li>
+          <li>Upload your documents, including your tax returns for 2019, 2020, and 2021, along with all schedules.</li>
+          <li>Collect your funds!</li>
+        </ol>
+        <p>
+          Please note that the application deadline is fast approaching. We urge you to complete the above steps as soon as possible. Once you submit your application and documents, one of our team members will reach out to you within 72 hours to discuss your application's specifics and answer any questions you may have.
+        </p>
+        <p>
+          If you have any queries or concerns, please do not hesitate to contact us at <a href="mailto:support@setczone.com">support@setczone.com</a>. We are here to help you.
+        </p>
+        <p>
+          Thank you for trusting SETC Zone.
+        </p>
+        <p>
+          Sincerely,
+          SETC Zone, Here to help.
+        </p>
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-</body>
   </body>
 </html>
+`;
 
-  `;
+// Use the htmlContent variable wherever you need to send or display the HTML content.
 
   let info = await transporter.sendMail({
     from: 'afaq58681@gmail.com',
@@ -463,96 +545,630 @@ const sendEmailonNinteenStep = async (req, res) => {
      
     // </table>
   // Create the HTML content dynamically
-  const htmlContent = `
+  // const htmlContent = `
   
-  <!DOCTYPE html>
-  <html lang="en">
-      <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <title>SETC Zone - Document Uplaoded </title>
-          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-          <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-      <style>
-        body {
-          font-family: 'Roboto', sans-serif;
-          line-height: 1.6;
-          font-weight: 400;
-          margin: 20px;
-        }
-        .container {
-          max-width: 550px;
-          margin: 0 auto;
-        }
-        .message {
-          background-color: #f4f4f4;
-          border-top: 4px solid  #5AB5E6; 
-          border-bottom: 4px solid  #5AB5E6;
-          padding: 40px 20px ;
-          border-radius: 8px;
-          margin-top: 20px;
-          font-family: 'Roboto', sans-serif;
+  // <!DOCTYPE html>
+  // <html lang="en">
+  //     <head>
+  //         <meta charset="utf-8">
+  //         <meta name="viewport" content="width=device-width, initial-scale=1">
+  //         <title>SETC Zone - Document Uplaoded </title>
+  //         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  //         <link rel="preconnect" href="https://fonts.googleapis.com">
+  // <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  // <link rel="preconnect" href="https://fonts.googleapis.com">
+  // <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  // <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  //     <style>
+  //       body {
+  //         font-family: 'Roboto', sans-serif;
+  //         line-height: 1.6;
+  //         font-weight: 400;
+  //         margin: 20px;
+  //       }
+  //       .container {
+  //         max-width: 550px;
+  //         margin: 0 auto;
+  //       }
+  //       .message {
+  //         background-color: #f4f4f4;
+  //         border-top: 4px solid  #5AB5E6; 
+  //         border-bottom: 4px solid  #5AB5E6;
+  //         padding: 40px 20px ;
+  //         border-radius: 8px;
+  //         margin-top: 20px;
+  //         font-family: 'Roboto', sans-serif;
           
-          font-weight: 400;
-        }
-        .message p{
-          font-family: 'Roboto', sans-serif;
+  //         font-weight: 400;
+  //       }
+  //       .message p{
+  //         font-family: 'Roboto', sans-serif;
           
-          font-weight:400;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div style="text-align:center">
-          <!--<img src="logo-set.png" alt="" srcset="" / style="height: 100px;width:-->
-          <!--300;">-->
+  //         font-weight:400;
+  //       }
+  //     </style>
+  //   </head>
+  //   <body>
+  //     <div class="container">
+  //       <div style="text-align:center">
+  //         <!--<img src="logo-set.png" alt="" srcset="" / style="height: 100px;width:-->
+  //         <!--300;">-->
+  //         <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
+  //       </div>
+  //       <!-- <div class="text-center fw-bold"><h2>Welcome to SETC Zone</h2></div> -->
+  //       <div class="message">
+  //             <p>
+                 
+  //                 Dear <strong>${req.body.user.first_name}' '${req.body.user.last_name}</strong> ,
+  //             </p>
+  //         <p>
+  //             We are writing to confirm that we have received the documentation you uploaded for your application for the Self-employment Tax Credit (SETC). Thank you for submitting all the required materials in a timely manner.
+  //         </p>
+          
+  //         <p>
+  //             We understand how important this credit is for you, and we want to assure you that we are committed to assisting you throughout the application process. Our team of experts is working diligently to ensure that your application is handled promptly and efficiently.
+  //         </p>
+          
+  //         <p>
+  //             Within the next 72 hours, a member of our team will be in contact with you to discuss your application further. If you have any additional questions or concerns, please do not hesitate to reach out to us at <a href="mailto:support@setczone.com">support@setczone.com</a>. We are always here to help.
+  //         </p>
+          
+  //         <p>
+  //             Thank you again for choosing us to assist you with your SETC application. We look forward to working with you.
+  //         </p>
+      
+  //         <p>
+  //             Best regards,<br>
+  //             SETC Zone
+  //         </p>
+  //        <div style="text-align:center;">
+  //             <a href="https://app.setczone.com/"><button type="button" class="btn btn-primary" style="background-color:#5ab5e6;border:1px #5ab5e6;padding:10px 40px;border-radius:10px" > Login</button></a>
+  //         </div>
+  //       </div>
+  //     </div>
+  //     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  //     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+  //     <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  // </body>
+  //   </body>
+  // </html>
+
+  // `;
+  // const htmlContent = `
+  // <!DOCTYPE html>
+  // <html lang="en">
+  //   <head>
+  //     <meta charset="utf-8">
+  //     <meta name="viewport" content="width=device-width, initial-scale=1">
+  //     <title>SETC Zone - Prequalification</title>
+  //     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  //     <link rel="preconnect" href="https://fonts.googleapis.com">
+  //     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  //     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  //     <style>
+  //       body {
+  //         font-family: 'Roboto', sans-serif;
+  //         line-height: 1.6;
+  //         font-weight: 400;
+  //         margin: 20px;
+  //       }
+  //       .container {
+  //         max-width: 550px;
+  //         margin: 0 auto;
+  //       }
+  //       .message {
+  //         background-color: #f4f4f4;
+  //         border-top: 4px solid #5AB5E6;
+  //         border-bottom: 4px solid #5AB5E6;
+  //         padding: 40px 20px;
+  //         border-radius: 8px;
+  //         margin-top: 20px;
+  //         font-family: 'Roboto', sans-serif;
+  //         font-weight: 400;
+  //       }
+  //       .message p {
+  //         font-family: 'Roboto', sans-serif;
+  //         font-weight: 400;
+  //       }
+  //     </style>
+  //   </head>
+  //   <body>
+  //     <div class="container">
+  //       <div class="message">
+  //         <p>
+  //           Dear [Client],
+  //         </p>
+  //         <p>
+  //           Well done on taking the initial step towards getting the Self-Employed Tax Credit. We are pleased to inform you that you have been prequalified for [$Amount]. The next crucial step is to have one of our expert CPAs review your file to confirm your tax credit amount.
+  //         </p>
+  //         <p>
+  //           We understand that the process of claiming your tax credit may be confusing, but don't worry, we will guide you every step of the way. Completing your application is simple, and you only need to follow these three easy steps:
+  //         </p>
+  //         <ol>
+  //           <li>Fill out the online questionnaire on <a href="https://setczone.com">https://setczone.com</a>.</li>
+  //           <li>Upload your documents, including your tax returns for 2019, 2020, and 2021, along with all schedules.</li>
+  //           <li>Collect your funds!</li>
+  //         </ol>
+  //         <p>
+  //           Please note that the application deadline is fast approaching. We urge you to complete the above steps as soon as possible. Once you submit your application and documents, one of our team members will reach out to you within 72 hours to discuss your application's specifics and answer any questions you may have.
+  //         </p>
+  //         <p>
+  //           If you have any queries or concerns, please do not hesitate to contact us at <a href="mailto:support@setczone.com">support@setczone.com</a>. We are here to help you.
+  //         </p>
+  //         <p>
+  //           Thank you for trusting SETC Zone.
+  //         </p>
+  //         <p>
+  //           Sincerely,
+  //           SETC Zone, Here to help.
+  //         </p>
+  //       </div>
+  //     </div>
+  //     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  //     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+  //     <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  //   </body>
+  // </html>
+  // `;
+  const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SETC Zone - Congratulations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Roboto', sans-serif;
+        line-height: 1.6;
+        font-weight: 400;
+        margin: 20px;
+      }
+      .container {
+        max-width: 550px;
+        margin: 0 auto;
+      }
+      .message {
+        background-color: #f4f4f4;
+        border-top: 4px solid #5AB5E6;
+        border-bottom: 4px solid #5AB5E6;
+        padding: 40px 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+      }
+      .message p {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="message">
+      <div style="text-align:center;margin-bottom: 20px;">
+      <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
+    </div>
+    <p>
+    Dear <strong>${req.body.user.first_name} ${req.body.user.last_name}</strong>,
+  </p>
+        <p>
+          Congratulations on taking the first steps towards claiming your SETC Credit!
+        </p>
+        <p>
+          With up to $32,200.00 available to self-employed individuals and a deadline for the application soon approaching, now is the time to take action and file yours today!
+        </p>
+        <p>
+          It’s just 3 easy steps to finish your application:
+        </p>
+        <ol>
+          <li>Complete the online questionnaire at <a href="https://setczone.com">https://setczone.com</a>.</li>
+          <li>Upload your 2019, 2020, and 2021 tax returns.</li>
+          <li>Collect your funds.</li>
+        </ol>
+        <p>
+          You can use your email address on our website under the “Login” tab to access your secure uploads portal.
+        </p>
+        <p>
+          Need help navigating the application process or have questions? Book a call with a SETC expert today!
+        </p>
+        <p>
+          Looking forward to assisting you!
+        </p>
+        <p>
+          Sincerely,
+          SETC Zone
+        </p>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>
+`;
+
+// Use the htmlContent variable wherever you need to send or display the HTML content.
+
+  
+  // Use the htmlContent variable wherever you need to send or display the HTML content.
+  
+  let info = await transporter.sendMail({
+    from: 'afaq58681@gmail.com',
+    to: 'hafiznizaqatali@gmail.com', // list of receivers
+    text: 'uogiiiiiiiisssssssssssss',
+    html: htmlContent,
+  });
+  if (info.messageId) {
+      console.log(info, 84)
+      if (info.messageId) {
+        console.log(info, 84);
+   res.status(200).json({ code: 200, message: 'Email  has  been  sent  successfully'});
+      } else {
+        res.status(500).json({ code: 500, message: 'Server error' });
+      }
+    } 
+}
+const sendEmailonNinteenStep2 = async (req, res) => {
+ 
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.OUR_EMAIL,
+        pass: process.env.EMAIL_PASSWORD 
+      }
+  })
+    // <table>
+    //   <tr>
+    //     <td><b>Name:</b></td>
+    //     <td>${req.body.user.first_name} ${req.body.user.last_name}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Email:</b></td>
+    //     <td>${req.body.user.email}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Phone:</b></td>
+    //     <td>${req.body.user.phone}</td>
+    //   </tr>
+    //   <tr>
+    //     <td><b>Company Name:</b></td>
+    //     <td>${req.body.user.trade_name}</td>
+    //   </tr>
+     
+    // </table>
+  // Create the HTML content dynamically
+  // const htmlContent = `
+  
+  // <!DOCTYPE html>
+  // <html lang="en">
+  //     <head>
+  //         <meta charset="utf-8">
+  //         <meta name="viewport" content="width=device-width, initial-scale=1">
+  //         <title>SETC Zone - Document Uplaoded </title>
+  //         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  //         <link rel="preconnect" href="https://fonts.googleapis.com">
+  // <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  // <link rel="preconnect" href="https://fonts.googleapis.com">
+  // <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  // <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  //     <style>
+  //       body {
+  //         font-family: 'Roboto', sans-serif;
+  //         line-height: 1.6;
+  //         font-weight: 400;
+  //         margin: 20px;
+  //       }
+  //       .container {
+  //         max-width: 550px;
+  //         margin: 0 auto;
+  //       }
+  //       .message {
+  //         background-color: #f4f4f4;
+  //         border-top: 4px solid  #5AB5E6; 
+  //         border-bottom: 4px solid  #5AB5E6;
+  //         padding: 40px 20px ;
+  //         border-radius: 8px;
+  //         margin-top: 20px;
+  //         font-family: 'Roboto', sans-serif;
+          
+  //         font-weight: 400;
+  //       }
+  //       .message p{
+  //         font-family: 'Roboto', sans-serif;
+          
+  //         font-weight:400;
+  //       }
+  //     </style>
+  //   </head>
+  //   <body>
+  //     <div class="container">
+  //       <div style="text-align:center">
+  //         <!--<img src="logo-set.png" alt="" srcset="" / style="height: 100px;width:-->
+  //         <!--300;">-->
+  //         <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
+  //       </div>
+  //       <!-- <div class="text-center fw-bold"><h2>Welcome to SETC Zone</h2></div> -->
+  //       <div class="message">
+  //             <p>
+                 
+  //                 Dear <strong>${req.body.user.first_name}' '${req.body.user.last_name}</strong> ,
+  //             </p>
+  //         <p>
+  //             We are writing to confirm that we have received the documentation you uploaded for your application for the Self-employment Tax Credit (SETC). Thank you for submitting all the required materials in a timely manner.
+  //         </p>
+          
+  //         <p>
+  //             We understand how important this credit is for you, and we want to assure you that we are committed to assisting you throughout the application process. Our team of experts is working diligently to ensure that your application is handled promptly and efficiently.
+  //         </p>
+          
+  //         <p>
+  //             Within the next 72 hours, a member of our team will be in contact with you to discuss your application further. If you have any additional questions or concerns, please do not hesitate to reach out to us at <a href="mailto:support@setczone.com">support@setczone.com</a>. We are always here to help.
+  //         </p>
+          
+  //         <p>
+  //             Thank you again for choosing us to assist you with your SETC application. We look forward to working with you.
+  //         </p>
+      
+  //         <p>
+  //             Best regards,<br>
+  //             SETC Zone
+  //         </p>
+  //        <div style="text-align:center;">
+  //             <a href="https://app.setczone.com/"><button type="button" class="btn btn-primary" style="background-color:#5ab5e6;border:1px #5ab5e6;padding:10px 40px;border-radius:10px" > Login</button></a>
+  //         </div>
+  //       </div>
+  //     </div>
+  //     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  //     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+  //     <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  // </body>
+  //   </body>
+  // </html>
+
+  // `;
+  // const htmlContent = `
+  // <!DOCTYPE html>
+  // <html lang="en">
+  //   <head>
+  //     <meta charset="utf-8">
+  //     <meta name="viewport" content="width=device-width, initial-scale=1">
+  //     <title>SETC Zone - Prequalification</title>
+  //     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  //     <link rel="preconnect" href="https://fonts.googleapis.com">
+  //     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  //     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  //     <style>
+  //       body {
+  //         font-family: 'Roboto', sans-serif;
+  //         line-height: 1.6;
+  //         font-weight: 400;
+  //         margin: 20px;
+  //       }
+  //       .container {
+  //         max-width: 550px;
+  //         margin: 0 auto;
+  //       }
+  //       .message {
+  //         background-color: #f4f4f4;
+  //         border-top: 4px solid #5AB5E6;
+  //         border-bottom: 4px solid #5AB5E6;
+  //         padding: 40px 20px;
+  //         border-radius: 8px;
+  //         margin-top: 20px;
+  //         font-family: 'Roboto', sans-serif;
+  //         font-weight: 400;
+  //       }
+  //       .message p {
+  //         font-family: 'Roboto', sans-serif;
+  //         font-weight: 400;
+  //       }
+  //     </style>
+  //   </head>
+  //   <body>
+  //     <div class="container">
+  //       <div class="message">
+  //         <p>
+  //           Dear [Client],
+  //         </p>
+  //         <p>
+  //           Well done on taking the initial step towards getting the Self-Employed Tax Credit. We are pleased to inform you that you have been prequalified for [$Amount]. The next crucial step is to have one of our expert CPAs review your file to confirm your tax credit amount.
+  //         </p>
+  //         <p>
+  //           We understand that the process of claiming your tax credit may be confusing, but don't worry, we will guide you every step of the way. Completing your application is simple, and you only need to follow these three easy steps:
+  //         </p>
+  //         <ol>
+  //           <li>Fill out the online questionnaire on <a href="https://setczone.com">https://setczone.com</a>.</li>
+  //           <li>Upload your documents, including your tax returns for 2019, 2020, and 2021, along with all schedules.</li>
+  //           <li>Collect your funds!</li>
+  //         </ol>
+  //         <p>
+  //           Please note that the application deadline is fast approaching. We urge you to complete the above steps as soon as possible. Once you submit your application and documents, one of our team members will reach out to you within 72 hours to discuss your application's specifics and answer any questions you may have.
+  //         </p>
+  //         <p>
+  //           If you have any queries or concerns, please do not hesitate to contact us at <a href="mailto:support@setczone.com">support@setczone.com</a>. We are here to help you.
+  //         </p>
+  //         <p>
+  //           Thank you for trusting SETC Zone.
+  //         </p>
+  //         <p>
+  //           Sincerely,
+  //           SETC Zone, Here to help.
+  //         </p>
+  //       </div>
+  //     </div>
+  //     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  //     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+  //     <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  //   </body>
+  // </html>
+  // `;
+//   const htmlContent = `
+// <!DOCTYPE html>
+// <html lang="en">
+//   <head>
+//     <meta charset="utf-8">
+//     <meta name="viewport" content="width=device-width, initial-scale=1">
+//     <title>SETC Zone - Congratulations</title>
+//     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+//     <link rel="preconnect" href="https://fonts.googleapis.com">
+//     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+//     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+//     <style>
+//       body {
+//         font-family: 'Roboto', sans-serif;
+//         line-height: 1.6;
+//         font-weight: 400;
+//         margin: 20px;
+//       }
+//       .container {
+//         max-width: 550px;
+//         margin: 0 auto;
+//       }
+//       .message {
+//         background-color: #f4f4f4;
+//         border-top: 4px solid #5AB5E6;
+//         border-bottom: 4px solid #5AB5E6;
+//         padding: 40px 20px;
+//         border-radius: 8px;
+//         margin-top: 20px;
+//         font-family: 'Roboto', sans-serif;
+//         font-weight: 400;
+//       }
+//       .message p {
+//         font-family: 'Roboto', sans-serif;
+//         font-weight: 400;
+//       }
+//     </style>
+//   </head>
+//   <body>
+//     <div class="container">
+//       <div class="message">
+//       <div style="text-align:center;margin-bottom: 20px;">
+//       <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
+//     </div>
+//     <p>
+//     Dear <strong>${req.body.user.first_name} ${req.body.user.last_name}</strong>,
+//   </p>
+//         <p>
+//           Congratulations on taking the first steps towards claiming your SETC Credit!
+//         </p>
+//         <p>
+//           With up to $32,200.00 available to self-employed individuals and a deadline for the application soon approaching, now is the time to take action and file yours today!
+//         </p>
+//         <p>
+//           It’s just 3 easy steps to finish your application:
+//         </p>
+//         <ol>
+//           <li>Complete the online questionnaire at <a href="https://setczone.com">https://setczone.com</a>.</li>
+//           <li>Upload your 2019, 2020, and 2021 tax returns.</li>
+//           <li>Collect your funds.</li>
+//         </ol>
+//         <p>
+//           You can use your email address on our website under the “Login” tab to access your secure uploads portal.
+//         </p>
+//         <p>
+//           Need help navigating the application process or have questions? Book a call with a SETC expert today!
+//         </p>
+//         <p>
+//           Looking forward to assisting you!
+//         </p>
+//         <p>
+//           Sincerely,
+//           SETC Zone
+//         </p>
+//       </div>
+//     </div>
+//     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+//     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+//     <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+//   </body>
+// </html>
+// `;
+const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SETC Zone - Document Submission Confirmation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Roboto', sans-serif;
+        line-height: 1.6;
+        font-weight: 400;
+        margin: 20px;
+      }
+      .container {
+        max-width: 550px;
+        margin: 0 auto;
+      }
+      .message {
+        background-color: #f4f4f4;
+        border-top: 4px solid #5AB5E6;
+        border-bottom: 4px solid #5AB5E6;
+        padding: 40px 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+      }
+      .message p {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="message">
+      <div style="text-align:center;margin-bottom: 20px;">
           <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
         </div>
-        <!-- <div class="text-center fw-bold"><h2>Welcome to SETC Zone</h2></div> -->
-        <div class="message">
-              <p>
-                 
-                  Dear <strong>${req.body.user.first_name}' '${req.body.user.last_name}</strong> ,
-              </p>
-          <p>
-              We are writing to confirm that we have received the documentation you uploaded for your application for the Self-employment Tax Credit (SETC). Thank you for submitting all the required materials in a timely manner.
-          </p>
-          
-          <p>
-              We understand how important this credit is for you, and we want to assure you that we are committed to assisting you throughout the application process. Our team of experts is working diligently to ensure that your application is handled promptly and efficiently.
-          </p>
-          
-          <p>
-              Within the next 72 hours, a member of our team will be in contact with you to discuss your application further. If you have any additional questions or concerns, please do not hesitate to reach out to us at <a href="mailto:support@setczone.com">support@setczone.com</a>. We are always here to help.
-          </p>
-          
-          <p>
-              Thank you again for choosing us to assist you with your SETC application. We look forward to working with you.
-          </p>
-      
-          <p>
-              Best regards,<br>
-              SETC Zone
-          </p>
-         <div style="text-align:center;">
-              <a href="https://app.setczone.com/"><button type="button" class="btn btn-primary" style="background-color:#5ab5e6;border:1px #5ab5e6;padding:10px 40px;border-radius:10px" > Login</button></a>
-          </div>
-        </div>
+        <p>
+          Dear <strong>${req.body.user.first_name} ${req.body.user.last_name}</strong>,
+        </p>
+        <p>
+          We have received the documents you uploaded for your application for the Self-Employed Tax Credit (SETC).
+        </p>
+        <p>
+          Thank you for submitting all the required materials. We understand how important this credit is for you, and our team of experts is working diligently to see that your application is reviewed promptly and efficiently.
+        </p>
+        <p>
+          Within the next 72 hours, a member of our team will contact you to discuss your application and provide your calculation should you qualify. If you have any additional questions or concerns, please do not hesitate to reach out to us at <a href="mailto:support@setczone.com">support@setczone.com</a>. We are always here to help.
+        </p>
+        <p>
+          Best Regards,
+          SETC Zone
+        </p>
       </div>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-      <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   </body>
-    </body>
-  </html>
+</html>
+`;
 
-  `;
+// Use the htmlContent variable wherever you need to send or display the HTML content.
 
+
+// Use the htmlContent variable wherever you need to send or display the HTML content.
+
+  
+  // Use the htmlContent variable wherever you need to send or display the HTML content.
+  
   let info = await transporter.sendMail({
     from: 'afaq58681@gmail.com',
     to: 'hafiznizaqatali@gmail.com', // list of receivers
@@ -2078,6 +2694,8 @@ uploadFormMOre,
   senduserEmail,
   sendEmailonFirstStep,
   sendEmailonNinteenStep,
-  verification
+  sendEmailonNinteenStep2,
+  verification,
+
 //  uploadFileToHubSpot
 };
