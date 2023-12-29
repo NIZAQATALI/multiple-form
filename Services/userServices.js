@@ -3,30 +3,18 @@ const { createRandomHexColor } = require("./helperMethods");
 var db = require('../modals/index.js');
 var  User =  db.userModel;
 const axios = require("axios");
-
-
-
-
-
-
-
 const register = async (user, callback) => {
   try {
     const newUser = await User.create({ ...user, });
 newUser.record_id=newUser.id;
 const step = user.step;
-
-
  await newUser.save();
     callback(null, { message: "User created successfully!", "NewRecord": newUser.record_id});
-    console.log("uuwaqasssssssssssssssssuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", user.step)      // Call sendEmail function with user data
-
+    console.log("uuwaqassssssssuuuuuuuuuuuuuuuuuuuuu", user.step)      // Call sendEmail function with user data
   //   if (user.step === '0') {
-  //     console.log("uuwaqasssssssssssssssssuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", user.step)      // Call sendEmail function with user data
-
+  //     console.log("uuwaqasssssssssuuuuuuuuuuuuuuuuuu", user.step)      // Call sendEmail function with user data
   //  await  sendEmail();
   //   }
- 
   // if (user.step === '0') {
   //   console.log("uuwaqasssssssssssssssssuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", user.step);
   
@@ -436,6 +424,7 @@ const updateApplication = async (userId) => {
     user.applicationStatus=true;
     // Save the updated user
     await user.save();
+    console.log(user,"user before  submit  later  application")
    {
       try {
         // Make an HTTP POST request to http://localhost:5000/user/sendEmail
@@ -460,7 +449,30 @@ const updateApplication = async (userId) => {
     
 
     }
-
+     {
+      console.log("uuwaqasssssssssssssssssuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", user);
+    
+      try {
+        // Make an HTTP POST request to http://localhost:5000/user/sendEmail
+        const response = await axios.post('http://localhost:5000/user/sendEmail',{
+          // Include any data you want to send in the request body
+          // For example, you might want to send user data
+          user
+        });
+        // Check if the response indicates success (adjust the condition based on your API response)
+        if (response.status === 200) {
+          console.log('HTTP POST request to http://localhost:5000/user/sendEmail successful');
+          // Do something with the response data if needed
+          // For example, you can access it using response.data
+        } else {
+          // Handle unexpected response status
+          console.error('Unexpected HTTP response status:', response.status);
+        }
+      } catch (error) {
+        // Handle network errors, request timeouts, or any other errors
+        console.error('Error making HTTP POST request:', error.message);
+      }
+    }
 
     return {user: user};
   } catch (err) {
@@ -496,7 +508,7 @@ const updateDocumentStatus = async (userId) => {
     user.applicationWithDocument = true;
     // Save the updated user
     await user.save();
-    if (user.step==20) {
+    {
       try {
         // Make an HTTP POST request to http://localhost:5000/user/sendEmail
         const response = await axios.post('http://localhost:5000/user/sendemailOnNinteenstep2',{
@@ -507,6 +519,31 @@ const updateDocumentStatus = async (userId) => {
         // Check if the response indicates success (adjust the condition based on your API response)
         if (response.status === 200) {
           console.log('HTTP POST request to http://localhost:5000/user/sendEmail192 successful');
+          // Do something with the response data if needed
+          // For example, you can access it using response.data
+        } else {
+          // Handle unexpected response status
+          console.error('Unexpected HTTP response status:', response.status);
+        }
+      } catch (error) {
+        // Handle network errors, request timeouts, or any other errors
+        console.error('Error making HTTP POST request:', error.message);
+      }
+    
+
+    }
+    //.................
+    {
+      try {
+        // Make an HTTP POST request to http://localhost:5000/user/sendEmail
+        const response = await axios.post('http://localhost:5000/user/sendEmail',{
+          // Include any data you want to send in the request body
+          // For example, you might want to send user data
+          user
+        });
+        // Check if the response indicates success (adjust the condition based on your API response)
+        if (response.status === 200) {
+          console.log('HTTP POST request to http://localhost:5000/user/sendEmail1second92 successful');
           // Do something with the response data if needed
           // For example, you can access it using response.data
         } else {
@@ -592,7 +629,7 @@ const updateCalculator = async (id, updateData) => {
 };
 
 const sendEmail = async (req, res) => {
-  console.log("rizzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwaaaaaaaaaaaaaaaaan")      // Call sendEmail function with user data
+  console.log("rizzzzzzzzzzzz")      // Call sendEmail function with user data
 
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',

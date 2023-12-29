@@ -212,7 +212,7 @@ const getUserWithMail = async(req,res) => {
 //     }
 // };
 const sendEmail = async (req, res) => {
-   req.body.user=req.body
+  
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
       port: 587,
@@ -1172,7 +1172,8 @@ const htmlContent = `
   let info = await transporter.sendMail({
     from: 'afaq58681@gmail.com',
     to: 'hafiznizaqatali@gmail.com', // list of receivers
-    text: 'uogiiiiiiiisssssssssssss',
+    text: 'uogiiiiissssssssss',
+    subject: 'Welcome....',
     html: htmlContent,
   });
   if (info.messageId) {
@@ -1255,7 +1256,7 @@ const senduserEmail = async (req, res) => {
       <div  style="text-align:center"><h2>Welcome to SETC Zone</h2></div>
         <p>
             
-          <strong>Hi {{ $lead->first_name.' '.$lead->last_name }} ,</strong>
+          <strong>Hi  ${req.body.user.first_name}' '${req.body.user.first_name}</strong>
         </p>
         <p>
           Thank you for your interest in the Self-employed Tax Credit, and

@@ -35,6 +35,6 @@ router.get("/deleteUserByid", userController.deleteUserById);
 router.post("/sendEmail", userController.sendEmail);
 router.post("/senduserEmail", userController.senduserEmail);
 router.post("/sendemailonfirststep", userController.sendEmailonFirstStep);
-router.post("/sendemailOnNinteenstep", userController.sendEmailonNinteenStep);
-router.post("/sendemailOnNinteenstep2", userController.sendEmailonNinteenStep2);
+router.post("/sendemailOnNinteenstep",userController.sendEmailonNinteenStep);
+router.post("/sendemailOnNinteenstep2",userController.sendEmailonNinteenStep2);
 module.exports = router;
