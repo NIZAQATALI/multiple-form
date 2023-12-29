@@ -3,6 +3,7 @@ const { createRandomHexColor } = require("./helperMethods");
 var db = require('../modals/index.js');
 var  User =  db.userModel;
 const axios = require("axios");
+const cron = require('node-cron');
 const register = async (user, callback) => {
   try {
     const newUser = await User.create({ ...user, });
@@ -55,10 +56,8 @@ const step = user.step;
       console.error('Error making HTTP POST request:', error.message);
     }
   }
-
   if (user.step === '0') {
     console.log("uuwaqasssssssssssssssssuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", user);
-  
     try {
       // Make an HTTP POST request to http://localhost:5000/user/sendEmail
       const response = await axios.post('http://localhost:5000/user/senduserEmail',{
@@ -480,23 +479,107 @@ const updateApplication = async (userId) => {
     return { error: 'Internal Server Error' };
   }
 };
-const verfication = async (userId) => {
+// const verfication = async (userId) => {
 
+//   try {
+//     console.log("uuuuuuuuuuu");
+//     const user = await User.findByPk(userId);
+//     if (!user) {
+//       return { error: 'User not found' };
+//     }
+//     user.is_docs_verify="verified";
+//     // Save the updated user
+//     await user.save();
+//     return {user: user};
+//   } catch (err) {
+//     console.error(err);
+//     return { error: 'Internal Server Error' };
+//   }
+// };
+// const verfication = async (userId) => {
+//   try {
+//     console.log("uuuuuuuuuuu");
+//     const user = await User.findByPk(userId);
+//     if (!user) {
+//       return { error: 'User not found' };
+//     }
+//     // Check if the status is changing from not-verified to verified
+//     if (user.is_docs_verify !== "verified") {
+//       user.is_docs_verify = "verified";
+//       // Save the updated user
+//       await user.save();
+//       // Set isProcess to true after a delay (e.g., 24 hours)
+//       setTimeout(async () => {
+//         const updatedUser = await User.findByPk(userId);
+//         if (updatedUser && updatedUser.is_docs_verify === "verified") {
+//           updatedUser.isProcess = true;
+//           await updatedUser.save();
+//           console.log('isProcess set to true after 24 hours');
+//         }
+//       },60 * 1000); // 24 hours in milliseconds
+//       return { user: user };
+//     }
+
+//     return { user: user };
+//   } catch (err) {
+//     console.error(err);
+//     return { error: 'Internal Server Error' };
+//   }
+// };
+
+
+const verfication = async (userId) => {
   try {
     console.log("uuuuuuuuuuu");
     const user = await User.findByPk(userId);
     if (!user) {
       return { error: 'User not found' };
     }
-    user.is_docs_verify="verified";
-    // Save the updated user
-    await user.save();
-    return {user: user};
+
+    // Check if the status is changing from not-verified to verified
+    {
+      user.is_docs_verify = "verified";
+console.log("verfified  called")
+      // Save the updated user
+      await user.save();
+
+      // // Schedule a cron job to set isProcess to true after 24 hours
+      // const cronExpression = '0 0 * * *'; // Runs every day at midnight
+      // cron.schedule(cronExpression, async () => {
+      //   const updatedUser = await User.findByPk(userId);
+      //   if (updatedUser && updatedUser.is_docs_verify === "verified") {
+      //     updatedUser.isProcess = true;
+      //     await updatedUser.save();
+      //     console.log('isProcess set to true after 24 hours');
+      //   }
+      // });
+        // Schedule a cron job to set isProcess to true after 2 minutes
+        const cronExpression = '*/1 * * * *'; // Runs every 2 minutes
+        const cronExpression24 = '0 0 * * *'; // Runs every day at midnight
+
+        cron.schedule(cronExpression, async () => {
+          const updatedUser = await User.findByPk(userId);
+          if (updatedUser && updatedUser.is_docs_verify === "verified") {
+            updatedUser.isProcess = true;
+            await updatedUser.save();
+            console.log('isProcess set to true after 2 minutes');
+          }
+        },
+        // {
+        //   scheduled: false, // Do not start the job immediately
+        // }
+        );
+
+      return { user: user };
+    }
+
+    return { user: user };
   } catch (err) {
     console.error(err);
     return { error: 'Internal Server Error' };
   }
 };
+
 const updateDocumentStatus = async (userId) => {
   try {
     console.log("uuuuuuuuuuu");

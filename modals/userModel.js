@@ -702,6 +702,10 @@ documentStatus:{
       type:DataTypes.TEXT,
       defaultValue:"not verified"
       },
+      isProcess:{
+        type:DataTypes.BOOLEAN,
+        defaultValue:false
+        },
     // companies: {
     //   type: DataTypes.STRING, // Use STRING instead of ARRAY
     //   defaultValue: '[]',    // Set default value as a string representation of an empty array
