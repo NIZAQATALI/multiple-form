@@ -17,16 +17,17 @@ router.put("/multiple-form-data", userController.upload, auth.verifyToken,userCo
 router.put("/upload-for-dashboard/:id", userController.upload, userController.uploadfordashboard);
 router.delete("/remove-file",auth.verifyToken ,userController.removeFile);
 router.put("/updateApplication",auth.verifyToken ,userController.updateApplication);
-router.put("/verify",auth.verifyToken ,userController.verification);
+router.post("/verify-file",userController.verification);
 router.put("/updateDocumentStatus",auth.verifyToken ,userController.updateDocumentStaus);
 router.get("/get-all-uploaded-files",auth.verifyToken ,userController.getAllFiles);
 // Define a route for deleting a file
 router.delete('/deleteFile',auth.verifyToken, userController.deleteFileHandler);
 router.post('/setcformData',auth.verifyToken, userController.setCFormData);
-router.post('/dataPosttoHubspot',auth.verifyToken, userController.dataPosttoHubspot);
+router.post('/dataPosttoHubspot', userController.dataPosttoHubspot);
 //router.post('/filePosttoHubspot',auth.verifyToken, userController.upload, userController.uploadFileToHubSpot);
 router.post("/sessions", sController.sessionStripe);
 router.post("/webhook", sController.webhook);
+router.post("/webhookhubspot", sController.webhookhubspot);
 router.post("/form", dakuController.form);
 router.post("/pdf", userController.generatePDF);
 router.post("/createShareFileFolder", userController.createFolder);

@@ -11,7 +11,7 @@ newUser.record_id=newUser.id;
 const step = user.step;
  await newUser.save();
     callback(null, { message: "User created successfully!", "NewRecord": newUser.record_id});
-    console.log("uuwaqassssssssuuuuuuuuuuuuuuuuuuuuu", user.step)      // Call sendEmail function with user data
+    console.log("uuwaqasuuuuuu", user.step)      // Call sendEmail function with user data
   //   if (user.step === '0') {
   //     console.log("uuwaqasssssssssuuuuuuuuuuuuuuuuuu", user.step)      // Call sendEmail function with user data
   //  await  sendEmail();
@@ -526,16 +526,12 @@ const updateApplication = async (userId) => {
 //     return { error: 'Internal Server Error' };
 //   }
 // };
-
-
 const verfication = async (userId) => {
   try {
-    console.log("uuuuuuuuuuu");
     const user = await User.findByPk(userId);
     if (!user) {
       return { error: 'User not found' };
     }
-
     // Check if the status is changing from not-verified to verified
     {
       user.is_docs_verify = "verified";

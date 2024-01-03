@@ -15,7 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.raw({ type: 'application/json' }));
 // const endpointSecret = 'we_1OMAsFKQiLOn1OUqeZtUV1mA';
 const stripe = require('stripe')('sk_test_51ONV2iDFtRPRKo4NMXKF8kcY6zbFGNe8NWiNQMn4SfZHYpycBQXWftfU9XmArl4HcKNlNwz7BAWwDgFog8prxTKl00d4fgM9Qy');
-
+var db = require('../modals/index.js');
+var  User =  db.userModel;
 // const YOUR_DOMAIN = 'http://localhost:5000';
 //  async function sessionStripe (req, res)  {
 //   const session = await stripe.checkout.sessions.create({
@@ -64,12 +65,14 @@ async function sessionStripe(req, res) {
   }
 }
  async function webhook(req, res) {
-  const sigHeader = req.headers['stripe-signature'];
+   console.log(req);
+  console.log(req.body);
+  // const sigHeader = req.headers['stripe-signature'];
 
   //const eventString = req.body.toString('utf-8');
-  const eventString = JSON.stringify(req.body, null, 2);
-  
-console.log("eventstring...",eventString,"")
+  // const eventString = JSON.stringify(req.body, null, 2);
+  // console.log("webhook")
+// console.log("eventstring...",eventString,"")
  
   //const invoice = await stripe.invoices.retrieve(data.object.id);
 //   try {
@@ -101,7 +104,60 @@ console.log("eventstring...",eventString,"")
 //     res.status(400).send(`Webhook Error: ${err.message}`);
 //   }a
 }
+async function webhookhubspot(req, res) {
+
+  const body =req.body[0];
+    console.log(body);
+  const id=body.objectId;
+  console.log(body.propertyName,'name');
+  console.log(body.propertyValue,'value');
+  console.log(id,'object id');
+ const user=await User.findOne({where:{
+    hubspot_record_id:body.objectId
+  }});
+  console.log(user);
+  // user.hubspotAmount=body.propertyValue;
+  // console.log("user.hubspot  amount",user.hubspotAmount);
+  // await user.save();
+ // const sigHeader = req.headers['stripe-signature'];
+
+ //const eventString = req.body.toString('utf-8');
+ // const eventString = JSON.stringify(req.body, null, 2);
+ // console.log("webhook")
+// console.log("eventstring...",eventString,"")
+
+ //const invoice = await stripe.invoices.retrieve(data.object.id);
+//   try {
+//     const eventString = req.body.toString('utf-8');
+//     const event = JSON.parse(eventString);
+// console.log(event)
+//     // Handle specific event types
+//     switch (event.type) {
+//       case 'checkout.session.completed':
+//         const checkoutSession = event.data.object;
+//         // Access specific fields from the checkout session
+//         const sessionId = checkoutSession.id;
+//         const paymentStatus = checkoutSession.payment_status;
+//         const amountTotal = checkoutSession.amount_total;
+//         // Perform actions based on the received information
+//         console.log('Checkout session completed:', sessionId);
+//         console.log('Payment status:', paymentStatus);
+//         console.log('Total amount:', amountTotal);
+//         // Your logic to handle the completed checkout session
+//         break;
+//       // Handle other event types if needed
+//       default:
+//         console.log('Unhandled event type:', event.type);
+//     }
+
+//     res.json({ received: true });
+//   } catch (err) {
+//     console.error('Error verifying Stripe webhook:', err.message);
+//     res.status(400).send(`Webhook Error: ${err.message}`);
+//   }a
+}
 module.exports =  {
     webhook, 
-    sessionStripe
+    sessionStripe,
+     webhookhubspot
 }
