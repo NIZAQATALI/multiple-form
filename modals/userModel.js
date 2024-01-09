@@ -162,6 +162,37 @@ module.exports = (sequelize, DataTypes) => {
     employed_as_W2:{
       type: DataTypes.TEXT,
     },
+    accounting_professional:{
+      type: DataTypes.TEXT,
+    },
+    accounting_partnership:{
+      type: DataTypes.TEXT,
+    },
+    pre_signature_document_name:{
+      type: DataTypes.TEXT,
+    },
+    pre_signature_document:{
+      type: DataTypes.TEXT,
+    },
+    // personally_sick_symptoms_2020:{
+    //   type: DataTypes.TEXT,
+    // },
+    // personally_sick_symptoms_2021:{
+    //   type: DataTypes.TEXT,
+    // },
+    // covid_experienced_symptoms_2020:{
+    //   type: DataTypes.TEXT,
+    // },
+    // covid_experienced_symptoms_2021:{
+    //   type: DataTypes.TEXT,
+    // },
+    // childs_daycare_2020:{
+    //   type: DataTypes.TEXT,
+    // },
+    // childs_daycare_2021:{
+    //   type: DataTypes.TEXT,
+    // },
+    
     Family_Sick_Leave:{
       type: DataTypes.TEXT,
     },
@@ -443,17 +474,14 @@ module.exports = (sequelize, DataTypes) => {
     fivedays: {
       type: DataTypes.TEXT,
       field: '5days'
-     
     },
     fourdays: {
       type: DataTypes.TEXT,
       field: '4days'
-     
     },
     threedays: {
       type: DataTypes.TEXT,
       field: '3days'
-
     },
     twodays: {
       type: DataTypes.TEXT,
@@ -710,6 +738,10 @@ documentStatus:{
           type:DataTypes.BOOLEAN,
           defaultValue:false
           },
+          hubspotAmount:{
+            type:DataTypes.BOOLEAN,
+            defaultValue:false
+            },
     // companies: {
     //   type: DataTypes.STRING, // Use STRING instead of ARRAY
     //   defaultValue: '[]',    // Set default value as a string representation of an empty array

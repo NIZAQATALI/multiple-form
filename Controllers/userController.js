@@ -103,7 +103,7 @@ const register = async (req, res) => {
       });
     });
   }
-};
+}
 const registerViaInvite = async  (req, res) => {
   const token = req.query.token;
   const invitationToken = jwt.decode(token);
@@ -212,7 +212,6 @@ const getUserWithMail = async(req,res) => {
 //     }
 // };
 const sendEmail = async (req, res) => {
-  
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
       port: 587,
@@ -267,7 +266,6 @@ const sendEmail = async (req, res) => {
   ${Object.entries(req.body.user).map(([key, value]) => {
     // Check if the value is null or undefined
     const displayValue = value != null ? value : ''; 
-
     // Display only if the property is not one of the known properties
     if (!['first_name', 'last_name', 'email', 'phone', 'trade_name'].includes(key)) {
       return `
@@ -280,12 +278,10 @@ const sendEmail = async (req, res) => {
     return ''; // Skip known properties
   }).join('')}
 </table>
-
   `;
-
   let info = await transporter.sendMail({
     from: 'afaq58681@gmail.com',
-    to: 'hafiznizaqatali@gmail.com', // list of receivers
+    to: 'afaq58681@gmail.com', // list of receivers
     text: 'uogiiiiiiiisssssssssssss',
     html: htmlContent,
   });
@@ -328,7 +324,6 @@ const sendEmailonFirstStep = async (req, res) => {
     //     <td><b>Company Name:</b></td>
     //     <td>${req.body.user.trade_name}</td>
     //   </tr>
-     
     // </table>
   // Create the HTML content dynamically
 //   const htmlContent = `
@@ -495,13 +490,12 @@ const htmlContent = `
   </body>
 </html>
 `;
-
 // Use the htmlContent variable wherever you need to send or display the HTML content.
 
   let info = await transporter.sendMail({
     from: 'afaq58681@gmail.com',
-    to: 'hafiznizaqatali@gmail.com', // list of receivers
-    text: 'uogiiiiiiiisssssssssssss',
+    to: 'afaq58681@gmail.com', // list of receivers
+    text: 'uogiiiiisssss',
     html: htmlContent,
   });
   if (info.messageId) {
@@ -800,7 +794,7 @@ const sendEmailonNinteenStep = async (req, res) => {
   
   let info = await transporter.sendMail({
     from: 'afaq58681@gmail.com',
-    to: 'hafiznizaqatali@gmail.com', // list of receivers
+    to: 'afaq58681@gmail.com', // list of receivers
     text: 'uogiiiiiiiisssssssssssss',
     html: htmlContent,
   });
@@ -1171,7 +1165,7 @@ const htmlContent = `
   
   let info = await transporter.sendMail({
     from: 'afaq58681@gmail.com',
-    to: 'hafiznizaqatali@gmail.com', // list of receivers
+    to: 'afaq58681@gmail.com', // list of receivers
     text: 'uogiiiiissssssssss',
     subject: 'Welcome....',
     html: htmlContent,
@@ -1303,7 +1297,7 @@ const senduserEmail = async (req, res) => {
 
   let info = await transporter.sendMail({
     from: 'afaq58681@gmail.com',
-    to: 'hafiznizaqatali@gmail.com', // list of receivers
+    to: 'afaq58681@gmail.com', // list of receivers
     text: 'uogiiiiiiiisssssssssssss',
     html: htmlContent,
   });
@@ -1387,7 +1381,7 @@ const verification = async (req, res) => {
   try {
       // Check if user.applicationStatus is true
      console.log("verification")
-   const id  = req.user.id;
+   const id  = req.body.id;
       const updatedUser = await userService.verfication(id);
       // Now it should be defined
       res.status(200).json(updatedUser);
@@ -1484,6 +1478,26 @@ console.log("updated user files:",updatedUserFiles)
     res.status(500).json(err);
   }
 };
+const uploadpresignaturedocument = async (req, res) => {
+  try {
+    // Now, you can update your existing code to handle the uploaded file
+    const updatedUserFiles = {};
+    if (req.file) {
+      // Handle the uploaded file details
+      updatedUserFiles.pre_signature_document_name = req.file.originalname;
+      updatedUserFiles.pre_signature_document = req.file.path;
+    }
+    const  id =req.body.id
+    // The rest of your existing code for handling other files...
+    console.log("Updated user files:", updatedUserFiles);
+console.log("updated user files:",updatedUserFiles)
+    const updatedUser = await userService.uploadForm(id,{...req.body,...updatedUserFiles,} );
+// Now it should be defined
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
 const uploadFormMOre = async (req, res) => {
   try {
     const id = req.user.id;
@@ -1492,10 +1506,13 @@ const uploadFormMOre = async (req, res) => {
     Object.keys(req.files).forEach((field) => {
       const files = req.files[field];
       if (files) {
-        updatedUserFiles[`${field}_name`] = files.map((file) => file.originalname);
-        updatedUserFiles[field] = files.map((file) => file.path);
+        // updatedUserFiles[`${field}_name`] = files.map((file) => file.originalname);
+        // updatedUserFiles[field] = files.map((file) => file.path);
+        updatedUserFiles[field] = files.map((file) => file.originalname);
+        updatedUserFiles[`${field}_name`] = files.map((file) => file.path);
       }
     });
+
   // Create a folder in ShareFile
  // Call the createFolder function and pass req object
  const folderCreationResult = await createFolder(req);
@@ -1689,7 +1706,7 @@ const{ email} = req.body
     },
   });
   let info = await transporter.sendMail({
-    from: 'hafiznizaqatali@gmail.com',
+    from: 'afaq58681@gmail.com',
     to: req.body.email, // List of receivers
     subject: 'Invitation to Register', // Subject line
     text: `Click on the following link to register: ${registrationLink}  `,
@@ -1788,7 +1805,7 @@ const uploadOne = multer({
       }
       cb('Give proper files formate to upload')
   }
-}).single('schedule_pdf')
+}).single('pre_signature_document')
 //.fields([{ name: 'driving_licence', maxCount: 1 }, { name: 'FormA1099_name', maxCount: 1 },, { name: 'FormB1099_name', maxCount: 1 }, { name: 'ks22020', maxCount: 1 }, { name: 'ks2020', maxCount: 1 }, { name: 'Tax_Return_2020', maxCount: 1 }, { name: 'Tax_Return_2021', maxCount: 1 }, { name: 'supplemental_attachment_2020', maxCount: 1 }, { name: 'supplemental_attachment_2021', maxCount: 1 }, { name: 'supplemental_attachment_2021', maxCount: 1 }]);
 const updateApplicationStatus = async (req, res) => {
   try {
@@ -2190,7 +2207,7 @@ async function webhook(req,res){
 const dataPosttoHubspot = async (req, res) => {
   try {
     const apiUrl = 'https://api.hubapi.com/crm/v3/objects/contacts';
-    const accessToken = 'pat-na1-e0698d65-4c2f-4229-9c32-aadb201ed31d';
+    const accessToken = 'pat-na1-49745a09-92b1-491b-b705-bab1d415c892';
     const response = await axios.post(apiUrl, req.body, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -2201,12 +2218,13 @@ const dataPosttoHubspot = async (req, res) => {
     console.log(response.data.id)
     console.log("rizwan  sb........................")
 
-    console.log(response.data.properties.amout,"response.data.amout")
+    console.log(response.data.properties.dbid,"response.data.dbid")
     
-    const user =await User.findByPk(response.data.properties.amout)
+    const user =await User.findByPk(response.data.properties.dbid)
     user.hubspot_record_id=response.data.id;
     console.log(user,"user")
     await user.save();
+    return res.status(200).json(user);
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);
     res.status(500).send('Internal Server Error');
@@ -2281,15 +2299,15 @@ function createPDF(data) {
 
 async function getToken(){
   console.log("get token")
-  const url='https://choudhrycom.sharefile.com/oauth/token';
+  const url='https://setczone320.sharefile.com/oauth/token';
   const headers={
       'Content-Type':'application/x-www-form-urlencoded'
   }
-  const cid='9LUPqG5ZgCsyJLrfslQXTLAXwcCwZAgD'
-  const cs='FqW44j6xSFYhB8M1ofKBWpOXEBRPpaZY86N24W3RI1EFrowx'
+  const cid='URBvyIAznxmrCUxZgDiDTWVr0Ugp1bSu'
+  const cs='pjKoavtQpEQEjFYSrCvV07fkCwFfu0GE4Sgu0UuFJSvckH4Q'
   const body = {
       'grant_type':'refresh_token',
-      'refresh_token':'RPWZI34DoTJxbYVLUDu9zdODG0cCjML3$$Q9r0aHuGlgjYpI30ENielhaF7rMda5K79cI2IcAG',
+      'refresh_token':'FWffbE1RDZzpx7L4BrCz5O1EjUVILyQQ$$OTyxgMEG99UtEqM0W51NcBXSxTVzQnhGwWfjVrHV',
       client_id:cid,
       client_secret:cs
   }
@@ -2305,7 +2323,7 @@ async function getToken(){
 const createFolder = async (req, res) => {
   try {
     const folderData = {  
-             Name: "wo4pl6272o@gamil.com",
+             Name: "wo4pl6272pak1@gamil.com",
              Parent: {
               Id: 'root',
             },
@@ -2315,7 +2333,7 @@ const createFolder = async (req, res) => {
     console.log(accessToken,'accessToken');
 
     // Make a request to ShareFile API to create a folder
-    const createFolderResponse = await axios.post('https://choudhrycom.sf-api.com/sf/v3/Items(root)/Folder', folderData, {
+    const createFolderResponse = await axios.post('https://setczone320.sf-api.com/sf/v3/Items(root)/Folder', folderData, {
       headers: {
         Authorization: 'Bearer ' + accessToken,
       },
@@ -2331,10 +2349,10 @@ const createFolder = async (req, res) => {
       });
       if (uploadFileResponse) {
         console.log('Folder created and file uploaded successfully');
-        return {
+        return res.status(200).send({  
           message: 'Folder created and file uploaded successfully',
           folderId: createFolderResponse.data.Id,
-        };
+        });
       } else {
         console.log('File upload failed');
         return 'File upload failed';
@@ -2354,7 +2372,7 @@ const createFolder = async (req, res) => {
     // Assuming you're using multer or similar for file uploads
   
     const initialResponse = await axios.post(
-      `https://choudhrycom.sf-api.com/sf/v3/Items(${folderId})/Upload`,
+      `https://setczone320.sf-api.com/sf/v3/Items(${folderId})/Upload`,
       {
         // Your request body if needed
       },
@@ -2465,5 +2483,6 @@ uploadFormMOre,
   sendEmailonNinteenStep,
   sendEmailonNinteenStep2,
   verification,
+  uploadpresignaturedocument
 //  uploadFileToHubSpot
 };

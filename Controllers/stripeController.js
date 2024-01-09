@@ -14,7 +14,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.raw({ type: 'application/json' }));
 // const endpointSecret = 'we_1OMAsFKQiLOn1OUqeZtUV1mA';
-const stripe = require('stripe')('sk_test_51ONV2iDFtRPRKo4NMXKF8kcY6zbFGNe8NWiNQMn4SfZHYpycBQXWftfU9XmArl4HcKNlNwz7BAWwDgFog8prxTKl00d4fgM9Qy');
+// const stripe = require('stripe')('sk_test_51ONV2iDFtRPRKo4NMXKF8kcY6zbFGNe8NWiNQMn4SfZHYpycBQXWftfU9XmArl4HcKNlNwz7BAWwDgFog8prxTKl00d4fgM9Qy');
+const stripe = require('stripe')('sk_test_51OUZhhAvDgNxjxZsmHagCNCoaLxjoziywcsV3BCaibETvAkBFajQdLXWfNjvVwaKDkBkZKeXJABSWJhw1bx44BNs00bJVLwblw');
 var db = require('../modals/index.js');
 var  User =  db.userModel;
 // const YOUR_DOMAIN = 'http://localhost:5000';
@@ -41,12 +42,16 @@ async function sessionStripe(req, res) {
   try {
     const session = await stripe.checkout.sessions.create({
       line_items: [
+        // {
+        //   price: 'price_1ONVA5DFtRPRKo4NBcQgT0S4',
+        //   quantity: 1,
+        // },
+        // {
+        //   price: 'price_1ONVM9DFtRPRKo4Niznk6Mna',
+        //   quantity: 1,
+        // },
         {
-          price: 'price_1ONVA5DFtRPRKo4NBcQgT0S4',
-          quantity: 1,
-        },
-        {
-          price: 'price_1ONVM9DFtRPRKo4Niznk6Mna',
+          price: 'price_1OVIQuAvDgNxjxZsHTmilv85',
           quantity: 1,
         },
       ],
@@ -68,12 +73,10 @@ async function sessionStripe(req, res) {
    console.log(req);
   console.log(req.body);
   // const sigHeader = req.headers['stripe-signature'];
-
-  //const eventString = req.body.toString('utf-8');
-  // const eventString = JSON.stringify(req.body, null, 2);
-  // console.log("webhook")
-// console.log("eventstring...",eventString,"")
- 
+  const eventString = req.body.toString('utf-8');
+  const eventString1 = JSON.stringify(req.body, null, 2);
+  console.log("webhook")
+console.log("eventstring...",eventString1,"")
   //const invoice = await stripe.invoices.retrieve(data.object.id);
 //   try {
 //     const eventString = req.body.toString('utf-8');
@@ -105,22 +108,21 @@ async function sessionStripe(req, res) {
 //   }a
 }
 async function webhookhubspot(req, res) {
-
   const body =req.body[0];
     console.log(body);
-  const id=body.objectId;
+     const id=body.objectId;
   console.log(body.propertyName,'name');
   console.log(body.propertyValue,'value');
-  console.log(id,'object id');
+  console.log(body.objectId,'object id');
+  console.log(body.objectId,'object id');
  const user=await User.findOne({where:{
     hubspot_record_id:body.objectId
   }});
-  console.log(user);
-  // user.hubspotAmount=body.propertyValue;
-  // console.log("user.hubspot  amount",user.hubspotAmount);
-  // await user.save();
+  user.hubspotAmount=body.propertyValue;
+  console.log("user.hubspot  amount",user.hubspotAmount);
+  await user.save();
+    res.status(200).json({message:'success'});
  // const sigHeader = req.headers['stripe-signature'];
-
  //const eventString = req.body.toString('utf-8');
  // const eventString = JSON.stringify(req.body, null, 2);
  // console.log("webhook")
@@ -159,5 +161,5 @@ async function webhookhubspot(req, res) {
 module.exports =  {
     webhook, 
     sessionStripe,
-     webhookhubspot
+    webhookhubspot
 }

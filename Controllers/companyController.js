@@ -1,12 +1,22 @@
 const companyService = require('../Services/companyService.js');
 const create = async (req, res) => {
 	const companyData = req.body;
-		const id=req.user.id
-	await companyService.create(companyData,id, (err, result) => {
+		
+	await companyService.create(companyData, (err, result) => {
 		if (err) return res.status(500).send(err);
 		return res.status(201).send(result);
 	});
 };
+const login = async (req, res) => {
+	const {email} = req.body;
+	await userCompany.login(email, (err, result) => {
+		  console.log("result.....",result);
+	   result.token = auth.generateToken(result.id.toString(), result.email);
+	  return res
+		.status(200)
+		.send({ message: "User login successful!", user: result });
+	});
+  };
 const getCompanies= async (req, res) => {
     console.log(req.user);
 	const userId = req.user.id;
@@ -46,5 +56,6 @@ module.exports = {
 	getCompanies,
     getCompany,
 	updateCompany,
+	login
 	
 };

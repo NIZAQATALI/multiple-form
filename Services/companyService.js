@@ -67,7 +67,7 @@ var  Company =  db.companyModel;
 // 		});
 // 	}
 // };
-const create = async (companyData, id, callback) => {
+const create = async (companyData,  callback) => {
 	try {
 
 
@@ -84,23 +84,23 @@ const create = async (companyData, id, callback) => {
 		//   }
 	  
 	  // Create and save new Company
-	  const newCompany = await Company.create({ ...companyData, owner: JSON.stringify(id) });
+	  const newCompany = await Company.create({ ...companyData,  });
 	  // Add this Company to the owner's Companies list
-	  const user = await User.findByPk(id);
-	  if (!user) {
-		return callback({
-		  errMessage: 'User not found',
-		});
-	  }
+	 
+	//   if (!user) {
+	// 	return callback({
+	// 	  errMessage: 'User not found',
+	// 	});
+	//   }
   
-	  // Ensure that user.Companies is an array and push the new company's ID
-	  if (!Array.isArray(user.companies)) {
-		user.companies = [];
-	  }
+	//   // Ensure that user.Companies is an array and push the new company's ID
+	//   if (!Array.isArray(user.companies)) {
+	// 	user.companies = [];
+	//   }
   
-	  const newCompanyId = JSON.stringify(newCompany.id);
-	  user.companies = [...user.companies, newCompanyId];
-	  await user.save();
+	//   const newCompanyId = JSON.stringify(newCompany.id);
+	//   user.companies = [...user.companies, newCompanyId];
+	//   await user.save();
 	  await newCompany.save();
   
 	  return callback(false, { ...newCompany.toJSON() });
@@ -114,9 +114,20 @@ const create = async (companyData, id, callback) => {
 		  });
 		}
 	  }
-  
 	  return callback({
 		errMessage: 'Error creating company',
+		details: err.message,
+	  });
+	}
+  };
+  const login = async (email, callback) => {
+	try {
+	  const user = await User.findOne({ where: { email } });
+	  if (!user) return callback({ errMessage: "Your email is wrong!" });
+	  return callback(false, { ...user.toJSON() });
+	} catch (err) {
+	  return callback({
+		errMessage: "Something went wrong",
 		details: err.message,
 	  });
 	}
