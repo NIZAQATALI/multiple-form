@@ -281,7 +281,7 @@ const sendEmail = async (req, res) => {
   `;
   let info = await transporter.sendMail({
     from: 'afaq58681@gmail.com',
-    to: 'afaq58681@gmail.com', // list of receivers
+    to: 'ajebsaporanameajebsaname@gmail.com', // list of receivers
     text: 'uogiiiiiiiisssssssssssss',
     html: htmlContent,
   });
@@ -347,7 +347,7 @@ const sendEmailonFirstStep = async (req, res) => {
 //         font-weight: 400;
 //         margin: 20px;
 //       }
-//       .container {
+//       .container { 
 //         max-width: 550px;
 //         margin: 0 auto;
 //       }
@@ -494,7 +494,7 @@ const htmlContent = `
 
   let info = await transporter.sendMail({
     from: 'afaq58681@gmail.com',
-    to: 'afaq58681@gmail.com', // list of receivers
+    to: 'ajebsaporanameajebsaname@gmail.com', // list of receivers
     text: 'uogiiiiisssss',
     html: htmlContent,
   });
@@ -1294,12 +1294,138 @@ const senduserEmail = async (req, res) => {
   </body>
 </html>
   `;
-
   let info = await transporter.sendMail({
     from: 'afaq58681@gmail.com',
-    to: 'afaq58681@gmail.com', // list of receivers
+    to: 'ajebsaporanameajebsaname@gmail.com', // list of receivers
     text: 'uogiiiiiiiisssssssssssss',
     html: htmlContent,
+  });
+  if (info.messageId) {
+      console.log(info, 84)
+      if (info.messageId) {
+        console.log(info, 84);
+   res.status(200).json({ code: 200, message: 'Email  has  been  sent  successfully'});
+      } else {
+        res.status(500).json({ code: 500, message: 'Server error' });
+      }
+    } 
+}
+const senduserEmailReview = async (req, res) => {
+  console.log(req.body.user,"kkkk")
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.OUR_EMAIL,
+        pass: process.env.EMAIL_PASSWORD 
+      }
+  })
+
+  
+  // Create the HTML content dynamically
+  const htmlContentReview = `
+    <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>  SETC Zone - Welcome</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Roboto', sans-serif;
+        line-height: 1.6;
+        font-weight: 400;
+        margin: 20px;
+      }
+      .container {
+        max-width: 550px;
+        margin: 0 auto;
+      }
+      .message {
+        background-color: #f4f4f4;
+        border-top: 4px solid  #5AB5E6; 
+        border-bottom: 4px solid  #5AB5E6;
+        padding: 40px 20px ;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-family: 'Roboto', sans-serif;
+        
+        font-weight: 400;
+      }
+      .message p{
+        font-family: 'Roboto', sans-serif;
+        
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      
+      <div class="message">
+          <div style="text-align:center">
+        <!--<img src="logo-set.png" alt="" srcset="" / style="height: 100px;width:-->
+        <!--300;">-->
+        <img src="http://beta.ccalerc.com/public/storage/logo-set.png" alt="" style="height: 80px; width: 270px;">
+      </div>
+      <div  style="text-align:center"><h2>Welcome Review  to SETC Zone</h2></div>
+        <p>
+          <strong>Hi  ${req.body.user.first_name}' '${req.body.user.first_name}</strong>
+        </p>
+        <p>
+          Thank you for your interest in the Self-employed Tax Credit, and
+          congratulations on taking the first step towards claiming your credit!
+          This tax credit can be up to $32,220!
+        </p>
+        <p>
+          Our team understands that the process to claim your tax credit can be
+          confusing, but we are here to guide you every step of the way. We have
+          made our application process simple, with 3 steps:
+        </p>
+        <ol>
+          <li>
+            Fill out the online questionnaire at
+            <a href="http://www.setczone.com">www.setczone.com</a>.
+          </li>
+          <li>Upload your documents (Tax returns for 2019, 2020, and 2021).</li>
+          <li>Collect your funds $$$</li>
+        </ol>
+        <p>
+          Within the next 72 hours, one of our team members will be reaching out
+          to you to discuss the details of your application and to answer any
+          questions that you may have.
+        </p>
+        <p>
+          Please do not hesitate to reach out to us at
+          <a href="mailto:support@setczone.com">support@setczone.com</a> if you
+          have any questions or concerns; we are here to assist you.
+        </p>
+        <p>Here to help,<br />SETC Zone</p>
+        <div style="text-align:center;">
+            <a href="https://app.setczone.com/"><button type="button" class="btn btn-primary" style="background-color:#5ab5e6;border:1px #5ab5e6;padding:10px 40px;border-radius:10px" > Login</button></a>
+        </div>
+      </div>
+    </div>
+   
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+  </body>
+</html>
+  `;
+  let info = await transporter.sendMail({
+    from: 'afaq58681@gmail.com',
+    to: 'ajebsaporanameajebsaname@gmail.com', // list of receivers
+    text: 'uogiiiiiiiisssssssssssss',
+    html: htmlContentReview,
   });
   if (info.messageId) {
       console.log(info, 84)
@@ -1352,10 +1478,10 @@ const updateUser = async (req, res) => {
       const nextstep = req.params.stepNumber;
       const prevstep = req.user.step;
       step = (nextstep >= prevstep) ? nextstep : prevstep;
-      // Check if user.applicationStatus is true
-      if (req.user.applicationStatus) {
-          return res.status(400).json({ error: 'You have already submitted documents. Data cannot be updated.' });
-      }
+      // // Check if user.applicationStatus is true
+      // if (req.user.applicationStatus) {
+      //     return res.status(400).json({ error: 'You have already submitted documents. Data cannot be updated.' });
+      // }
       const updatedUser = await userService.updateUser(id, { ...req.body, step: step });
       // Now it should be defined
       res.status(200).json(updatedUser);
@@ -1388,6 +1514,26 @@ const verification = async (req, res) => {
   } catch (err) {
       res.status(500).json(err);
   }
+};
+const persona = async (req, res) => {
+  const options = {
+    method: 'POST',
+    url: 'https://withpersona.com/api/v1/inquiries/inq_ruh8YsCWo4pgXcUDzU4jKbdM/generate-one-time-link',
+    headers: {
+      accept: 'application/json',
+      'Persona-Version': '2023-01-05',
+      'content-type': 'application/json',
+      authorization: 'Bearer persona_sandbox_d0475100-4458-402e-8da4-9063c6a9a37d'
+    }
+  };
+  axios
+    .request(options)
+    .then(function (response) {
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
 };
 const updateDocumentStaus = async (req, res) => {
   try {
@@ -1491,7 +1637,36 @@ const uploadpresignaturedocument = async (req, res) => {
     // The rest of your existing code for handling other files...
     console.log("Updated user files:", updatedUserFiles);
 console.log("updated user files:",updatedUserFiles)
+const user= await User.findByPk(id);
+
+user.Review_calculation="true"
+ await user.save();
     const updatedUser = await userService.uploadForm(id,{...req.body,...updatedUserFiles,} );
+
+    if (updatedUser) {
+  // Create the HTML content dynamically
+      console.log("steppppppppppppp")
+      try {
+        // Make an HTTP POST request to http://localhost:5000/user/sendEmail
+        const response = await axios.post('http://localhost:5000/user/senduserEmailReview',{
+          // Include any data you want to send in the request body
+          // For example, you might want to send user data
+          user
+        });
+        // Check if the response indicates success (adjust the condition based on your API response)
+        if (response.status === 200) {
+          console.log('HTTP POST request to http://localhost:5000/user/senduserEmailReview successful');
+          // Do something with the response data if needed
+          // For example, you can access it using response.data
+        } else {
+          // Handle unexpected response status
+          console.error('Unexpected HTTP response status:', response.status);
+        }
+      } catch (error) {
+        // Handle network errors, request timeouts, or any other errors
+        console.error('Error making HTTP POST request:', error.message);
+      }
+    }
 // Now it should be defined
     res.status(200).json(updatedUser);
   } catch (err) {
@@ -2000,6 +2175,8 @@ const setCFormData = async (req, res) => {
     console.log("1days",formData['1days'])
        console.log("2days",formData['2days'])
     const leaveDays2020Step1 = Math.min(maxSickLeaves, formData['1days']);
+    //const leaveDays2020Step1 = isNaN(formData['1days']) ? 0 : Math.min(maxSickLeaves, formData['1days']);
+
     const leaveDays2021Step1 = Math.min(maxSickLeaves, formData['2days']);
        // Assuming you have the values defined for leave_days_2020_step_1, leave_days_2021_step_1, and max_sick_leaves
 let remaining_leave_days_2020_step_1 = (leaveDays2020Step1 > maxSickLeaves) ? leaveDays2020Step1 - maxSickLeaves : null;
@@ -2042,8 +2219,13 @@ const adw_threshold_step_2 = 298;
 const max_credit_amount_threshold_step_2 = 2000;
 const remaining_net_income_2020_step_2 = (greaterAmount2020 > net_income_threshold_step_2) ? (greaterAmount2020 - net_income_threshold_step_2) : 0;
 const remaining_net_income_2021_step_2 = (greaterAmount2021 > net_income_threshold_step_2) ? (greaterAmount2021 - net_income_threshold_step_2) : 0;
-const leave_days_2020_step_2 = parseInt(formData['3days']);
-const leave_days_2021_step_2 = parseInt(formData['4days']);
+//const leave_days_2020_step_2 = parseInt(formData['3days']);
+const leave_days_2020_step_2 = isNaN(parseInt(formData['3days'])) ? 0 : parseInt(formData['3days']);
+//const leave_days_2021_step_2 = parseInt(formData['4days']);
+const leave_days_2021_step_2 = isNaN(parseInt(formData['4days'])) ? 0 : parseInt(formData['4days']);
+
+console.log(leave_days_2020_step_2,"leave_days_2020_step_2");
+console.log(leave_days_2021_step_2,"leave_days_2021_step_2");
 let step_2_leave_calculate_2020;
 if (leaveDays2020Step1 < maxSickLeaves) {
     step_2_leave_calculate_2020 = (leaveDays2020Step1 + leave_days_2020_step_2 >= maxSickLeaves) ?
@@ -2104,10 +2286,15 @@ const school_leaves_2021_threshold_step_3 = 60;
 const max_credit_amount_threshold_step_3 = 10000;
 const remaining_net_income_2020_step_3 = (greaterAmount2020 > net_income_threshold_step_3) ? (greaterAmount2020 - net_income_threshold_step_3) : 0;
 const remaining_net_income_2021_step_3 = (greaterAmount2021 > net_income_threshold_step_3) ? (greaterAmount2021 - net_income_threshold_step_3) : 0;
-const leave_days_2020_step_3 = parseInt(formData['5days']);
-const leave_days_2021_step_3 = parseInt(formData['6days']);
+//const leave_days_2020_step_3 = parseInt(formData['5days']);
+const leave_days_2020_step_3 = isNaN(parseInt(formData['5days'])) ? 0 : parseInt(formData['5days']);
+const leave_days_2021_step_3 = isNaN(parseInt(formData['6days'])) ? 0 : parseInt(formData['6days']);
+
+//const leave_days_2021_step_3 = parseInt(formData['6days']);
 const step_3_leave_calculate_2020 = (leave_days_2020_step_3 >= school_leaves_2020_threshold_step_3) ? school_leaves_2020_threshold_step_3 : leave_days_2020_step_3;
 const step_3_leave_calculate_2021 = (leave_days_2021_step_3 >= school_leaves_2021_threshold_step_3) ? school_leaves_2021_threshold_step_3 : leave_days_2021_step_3;
+console.log(step_3_leave_calculate_2020,"..................step_3_leave_calculate_2020");
+console.log(step_3_leave_calculate_2021,"..................step_3_leave_calculate_2021");
 const adw_2020_step_3 = ((greaterAmount2020 > net_income_threshold_step_3) ? net_income_threshold_step_3 : greaterAmount2020) / 260;
 const adw_2021_step_3 = ((greaterAmount2021 > net_income_threshold_step_3) ? net_income_threshold_step_3 : greaterAmount2021) / 260;
 const credit_amount_2020_step_3 = Math.min(max_credit_amount_threshold_step_3, parseFloat((0.67 * (adw_2020_step_3 * step_3_leave_calculate_2020)).toFixed(1)));
@@ -2434,11 +2621,6 @@ if (chunkResponse.status === 200) {
 console.error('Error uploading files:', error.message);
 return error
 }
-
-
-    
-
-
     } else {
       console.error('Error uploading file:', initialResponse.data);
       return res.status(500).send('Error uploading file');
@@ -2483,6 +2665,8 @@ uploadFormMOre,
   sendEmailonNinteenStep,
   sendEmailonNinteenStep2,
   verification,
-  uploadpresignaturedocument
+  uploadpresignaturedocument,
+  senduserEmailReview,
+persona
 //  uploadFileToHubSpot
 };

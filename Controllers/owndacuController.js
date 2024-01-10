@@ -11,6 +11,8 @@ const cors = require("cors");
 const express = require('express');
 const app = express();
 const { JSDOM } = require('jsdom');
+var db = require('../modals/index.js');
+var  User =  db.userModel;
 app.use(cors()); 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.raw({ type: 'application/json' }));
@@ -27,6 +29,8 @@ let BASE_PATH = "https://demo.docusign.net/restapi";
 let ACCOUNT_ID = "867078f6-8663-4f76-9eca-01ede979aed4";
 // let TEMPLATE_ID = "906bd4c9-7194-4afd-b0b9-0915c6c24964";
 // let CLIENT_USER_ID = 1000;
+var my_envelope;
+var userId;
 let request={
     session:{ access_token:'', expires_at:''},
 
@@ -34,10 +38,11 @@ let request={
 
 async function Digisignature(req,res) {
   try{
-
+    console.log(req.body.email,"req.body.email....................")
+    console.log(req.body.name,"req.body.name")
     await checkToken(request);
     let envelopesApi =await getEnvelopesApi(request);
-    console.log(envelopesApi,'envelopesApiiiiiiiii');
+    console.log(envelopesApi,'envelopesApiiiiii');
     let envelope =await makeeEnvelope(
         req.body.name,
         req.body.email
@@ -46,9 +51,12 @@ async function Digisignature(req,res) {
   let results = await envelopesApi.createEnvelope(ACCOUNT_ID, {
     envelopeDefinition: envelope,
   });
+  userId=req.user.id;
   console.log(results.envelopeId,'envelopeId');
+ 
+  my_envelope=results.envelopeId;
+ // Create the recipient view, the Signing Ceremony
 
-  // Create the recipient view, the Signing Ceremony
   let viewRequest = await makeRecipientViewRequest(
     req.body.name,
     req.body.email
@@ -75,7 +83,6 @@ async function Digisignature(req,res) {
     console.log(error);
   }
   }
-
 function getEnvelopesApi(request) {
   let dsApiClient = new docusign.ApiClient();
   dsApiClient.setBasePath(BASE_PATH);
@@ -195,8 +202,17 @@ async function  makeeEnvelope(name,email) {
 
 async function makeRecipientViewRequest(name, email) {
   let viewRequest = new docusign.RecipientViewRequest();
+console.log(my_envelope,"my_envelope");
 
-  viewRequest.returnUrl = "http://localhost/";
+  viewRequest.returnUrl = "http://localhost:3000/strip";
+  if(viewRequest.returnUrl)
+  {
+    console.log(userId,"userId..........................")
+  const  user =await User.findByPk(userId);
+    console.log(user,"user.id..........................")
+    user.envelop_id=my_envelope;
+    await user.save();
+  }
   viewRequest.authenticationMethod = "none";
 
   // Recipient information must match embedded recipient info
@@ -206,20 +222,29 @@ async function makeRecipientViewRequest(name, email) {
   viewRequest.clientUserId = "fce6df83-b77c-4b10-952c-64abf5740f41";
   // Optional: Set clientUserId if needed
   // viewRequest.clientUserId = CLIENT_USER_ID;
-
   return viewRequest;
 }
-
 async function checkToken(request) {
   if (request.session.access_token && Date.now() < request.session.expires_at) {
     console.log("re-using access_token ", request.session.access_token);
   } else {
+    // console.log("generating a new access token");
+    // let dsApiClient = new docusign.ApiClient();
+    // dsApiClient.setBasePath(process.env.BASE_PATH);
+    // const results = await dsApiClient.requestJWTUserToken(
+    //     process.env.INTEGRATION_KEY,
+    //     process.env.USER_ID,
+    //     "signature",
+    //     fs.readFileSync(path.join(__dirname, "private.key")),
+    //     3600
+    // );
+
     const url = "https://account-d.docusign.com/oauth/token";
 
     const data = {
       grant_type: "refresh_token",
       refresh_token:
-        "eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAgABwCAmkwhQvbbSAgAgBqxGdUN3EgCAIPf5vx8txBLlSxkq_V0D0EVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAAGY1ZjAwMzExLTAyMzYtNGRiYS05Yzk0LWE5Y2UxM2NmNmI1NiIAJAAAAGY1ZjAwMzExLTAyMzYtNGRiYS05Yzk0LWE5Y2UxM2NmNmI1NjAAAID7Ejz220g3AC1YUzmtcd9LtcjvLYoCXoM.ecyl9Q1_QiJcsLlnaiDM0hXEUumVILxerJWeu2rlAQSqr-Hqq42ygexmTrKn_ullsjHvlAmkpM0swgzDBq4915l_z_YYmzVv7bE4M4KtomF6DID8lEtUOfegBvktS0TzKdwLqUqDiACpTbO7JDGQNdOpLZ8vOAUmeQlKR3-JNHpsaFaLTGIO0uJvGh7EKZDoXkiH6pr4dk5FaJbpQbQ0w2zRTz68N4B1Wm22ddfCgHDysCMbo_yFHzvJ5-6ifqPivAaIKBIGCVO048z0foC16g0A3DNjBuG-et5ewdnvG7USRlUCwHrrRNCUzhRm-dn6iFQ7oW8PpFFFcocsCDk9Tw",
+        "eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAgABwCAvllENfrbSAgAgD6-PMgR3EgCAIPf5vx8txBLlSxkq_V0D0EVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAAGY1ZjAwMzExLTAyMzYtNGRiYS05Yzk0LWE5Y2UxM2NmNmI1NiIAJAAAAGY1ZjAwMzExLTAyMzYtNGRiYS05Yzk0LWE5Y2UxM2NmNmI1NjAAAID7Ejz220g3AC1YUzmtcd9LtcjvLYoCXoM.UdoF--2wLQq0INMbMxyAGfRpNRJsLrKy4ylXxQ0BCX8azl_sfTJ_kvICmfwAv9eYC8qzdoUGETh0drL11dTVlmcQD6qRd73LQXW_p6F8T-B-zpu9-JPPK5EjTLM-8ykaXCRmiNFqxRuC5ZlyeRrEpRuwXzXc3779SLo6lkt3xwXv3ltVT4N2D3m92I764LRwRJcq5qK2fygFuaMWgh6siqERGi8MYQPP2_g_-3OSHPx4-fOhtn8xqPzq4Azo_FMJ62JOnrIPfNK5lVvgKzgcZMbLsCgoYaCh01rup9JILBG2QhsmRUXHGjJL6lnEAYHt0BZEIQPECdMpTdF3qI6S0g",
     };
 
     const headers = {
@@ -231,11 +256,46 @@ async function checkToken(request) {
     const results = await axios.post(url, new URLSearchParams(data), {
       headers,
     });
+    //  console.log('Token Response:', results.data);
+    //  request.session.access_token=response.data.access_token;
+    //  results.body.expires_in=response.data.expires_in;
+    //  return response.data;
+
+    //  throw error; // Re-throw the error to be caught by the calling function
+
+    // console.log(results.body);
     request.session.access_token = results.data.access_token;
     request.session.expires_at =
       Date.now() + (results.data.expires_in - 60) * 1000;
   }
 }
+
+// async function checkToken(request) {
+//   if (request.session.access_token && Date.now() < request.session.expires_at) {
+//     console.log("re-using access_token ", request.session.access_token);
+//   } else {
+//     const url = "https://account-d.docusign.com/oauth/token";
+
+//     const data = {
+//       grant_type: "refresh_token",
+//       refresh_token:
+//         "eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAgABwCAmkwhQvbbSAgAgBqxGdUN3EgCAIPf5vx8txBLlSxkq_V0D0EVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAAGY1ZjAwMzExLTAyMzYtNGRiYS05Yzk0LWE5Y2UxM2NmNmI1NiIAJAAAAGY1ZjAwMzExLTAyMzYtNGRiYS05Yzk0LWE5Y2UxM2NmNmI1NjAAAID7Ejz220g3AC1YUzmtcd9LtcjvLYoCXoM.ecyl9Q1_QiJcsLlnaiDM0hXEUumVILxerJWeu2rlAQSqr-Hqq42ygexmTrKn_ullsjHvlAmkpM0swgzDBq4915l_z_YYmzVv7bE4M4KtomF6DID8lEtUOfegBvktS0TzKdwLqUqDiACpTbO7JDGQNdOpLZ8vOAUmeQlKR3-JNHpsaFaLTGIO0uJvGh7EKZDoXkiH6pr4dk5FaJbpQbQ0w2zRTz68N4B1Wm22ddfCgHDysCMbo_yFHzvJ5-6ifqPivAaIKBIGCVO048z0foC16g0A3DNjBuG-et5ewdnvG7USRlUCwHrrRNCUzhRm-dn6iFQ7oW8PpFFFcocsCDk9Tw",
+//     };
+
+//     const headers = {
+//       Authorization:
+//         "Basic ZjVmMDAzMTEtMDIzNi00ZGJhLTljOTQtYTljZTEzY2Y2YjU2OmRkYjZkMmRhLTJjYzAtNGM0Yi04MjdmLTcxNzVjYWJhYTM0MQ==",
+//       "Content-Type": "application/x-www-form-urlencoded",
+//     };
+
+//     const results = await axios.post(url, new URLSearchParams(data), {
+//       headers,
+//     });
+//     request.session.access_token = results.data.access_token;
+//     request.session.expires_at =
+//       Date.now() + (results.data.expires_in - 60) * 1000;
+//   }
+// }
 module.exports={
     Digisignature
 }

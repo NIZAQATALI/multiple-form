@@ -339,14 +339,12 @@ console.log(`File saved at: ${filePath}`);
   }
   async function getTemplateDetails(envelope) {
     const templateUri = envelope.templateUri;
-  
     try {
       const response = await axios.get(templateUri, {
         headers: {
           'Authorization': 'Bearer ' + request.session.access_token, 
         },
       });
-  
       const templateDetails = response.data;
   
       // Extract document details from the template response

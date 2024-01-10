@@ -174,6 +174,16 @@ module.exports = (sequelize, DataTypes) => {
     pre_signature_document:{
       type: DataTypes.TEXT,
     },
+    Review_calculation:{
+      type: DataTypes.TEXT,
+    },
+    envelop_id:{
+      type: DataTypes.TEXT,
+    },
+    
+    strip_inprocess:{
+      type: DataTypes.TEXT,
+    },
     // personally_sick_symptoms_2020:{
     //   type: DataTypes.TEXT,
     // },
@@ -554,7 +564,6 @@ module.exports = (sequelize, DataTypes) => {
     adw_2020_step_1:{
       type: DataTypes.TEXT
     },
-   
     adw_2021_step_1:{
       type: DataTypes.TEXT
     },
@@ -672,9 +681,9 @@ module.exports = (sequelize, DataTypes) => {
     final_credit_amount:{
       type:DataTypes.TEXT,
     },
-      final_credit_amount:{
-      type:DataTypes.TEXT,
-    },
+    //   final_credit_amount:{
+    //   type:DataTypes.TEXT,
+    // },
     final_roundedValue:{
       type:DataTypes.TEXT,
     },

@@ -40,6 +40,10 @@ var  User =  db.userModel;
 // }
 async function sessionStripe(req, res) {
   try {
+   console.log(req.user.id,"oooooooooooooooooooooooooooooooooooo");
+       const user = await User.findByPk(req.user.id);
+       user.strip_inprocess="ture";
+        await user.save();
     const session = await stripe.checkout.sessions.create({
       line_items: [
         // {
@@ -60,7 +64,7 @@ async function sessionStripe(req, res) {
       cancel_url: `https://www.youtube.com`,
     });
 
-    console.log(session.url);
+    console.log(session.url,"session  url");
     
     // Sending the URL in the response
     res.status(200).json({ url: session.url });
