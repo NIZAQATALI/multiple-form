@@ -279,8 +279,6 @@ async function downloadSignedDocuments(body) {
     const dsApiClient = new docusign.ApiClient();
     dsApiClient.setBasePath('https://demo.docusign.net/restapi');
     dsApiClient.addDefaultHeader('Authorization', 'Bearer ' + request.session.access_token);
-  
-  
     // Create Envelopes API instance
     const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
   
