@@ -753,12 +753,22 @@ documentStatus:{
             },
             session_id:{
               type:DataTypes.TEXT,
-             
               },
               strip_payment:{
                 type:DataTypes.TEXT,
-               
                 },
+                verified_first:{
+                  type:DataTypes.TEXT,
+                  },
+                  verified_last:{
+                    type:DataTypes.TEXT,
+                    },
+                    approval_status:{
+                      type:DataTypes.TEXT,
+                      },
+                      session_status:{
+                        type:DataTypes.TEXT,
+                        },
     // companies: {
     //   type: DataTypes.STRING, // Use STRING instead of ARRAY
     //   defaultValue: '[]',    // Set default value as a string representation of an empty array

@@ -47,5 +47,6 @@ router.post("/createSession",auth.verifyToken,verifController.createsession);
 router.post("/deleteSession",verifController.deletesession);
 router.post("/personSession",verifController.sessionPerson);
 router.post("/verifwebhook", verifController.webhook);
+router.post("/verifwebhookb", verifController.webhookb);
 router.post("/upload-pre-signature", userController.uploadOne,userController.uploadpresignaturedocument);
 module.exports = router;

@@ -42,31 +42,30 @@ var ourUser;
 
 //  }
 async function webhook(req, res) {
-  console.log("veriffff")
+  console.log("veriffff",req.body)
   const userId = ourUser; 
   console.log(userId)
   console.log(req.body.id,"session id is  here")
   var dbUsername; 
-
   var verifyUsername;
   const user = await User.findOne({
     where: {
       session_id: req.body.id
     }
   });
+
   if (user) {
     // User found
     console.log(user);
     if (req.body.action === 'submitted') {
       const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
        // Introduce a delay of 5 seconds
   await delay(5000);
       const sessionPersonResponse = await sessionPerson(req.body.id);
-      console.log(user.id,".............db user idddddddddddddddddd")
+      console.log(user.id,".............db user idd")
       console.log(user.session_id,".............db session id")
       console.log(sessionPersonResponse,".............sessionPersonResponse")
-      if (sessionPersonResponse.status === "success") {
+      if (sessionPersonResponse.status == "success") {
        
           verifyUsername = sessionPersonResponse.person.firstName + sessionPersonResponse.person.lastName;
           console.log(verifyUsername,"................verifyUsername");
@@ -75,8 +74,8 @@ async function webhook(req, res) {
               // Check if dbUsername and verifyUsername match
               if (dbUsername !== verifyUsername) {
                   // Update user's first_name and last_name
-                  user.first_name = sessionPersonResponse.person.firstName;
-                  user.last_name = sessionPersonResponse.person.lastName;
+                  user.verified_first = sessionPersonResponse.person.firstName;
+                  user.verified_last = sessionPersonResponse.person.lastName;
                   console.log(user.first_name,"userrrrrrrrr");
                   // Save the updated user object
                   await user.save();
@@ -84,6 +83,11 @@ async function webhook(req, res) {
           } else {
               return res.status(404).json({ error: 'User not found' });
           }
+          user.session_status = "submitted";
+      await user.save();
+      } else if(sessionPersonResponse.status == "declined"){
+        user.approval_status = "declined";
+        await user.save();
       }
   } else if (req.body.action === 'started') {
       user.session_status = "started";
@@ -106,10 +110,27 @@ async function webhook(req, res) {
   // Add additional logic or response handling as needed
   return res.status(200).json({ message: 'Webhook processed successfully' });
 }
+async function webhookb(req, res) {
+  console.log('webhookb',req.body);
+  if(req.body.data.verification.decision){
+
+  
+ const status=req.body.data.verification.decision;
+ const sId=req.body.sessionId;
+ console.log(status,sId);
+ const user = await User.findOne({
+  where: {
+    session_id: sId
+  }
+});
+ user.approval_status=status;
+ user.save();
+  }
+}
  async function createsession(req, res) {
   const  id  =req.user.id;
   ourUser=id;
-  console.log(id,"iddddddddddddddddddddddddddd")
+  console.log(id,"idddddddddddddd")
 //   try {
 //     const apiUrl = `https://stationapi.veriff.com/v1/sessions/`;
 //     const response = await axios.post(apiUrl,{
@@ -140,7 +161,7 @@ try {
   if (response.ok) {
     // Parse the JSON response
     const data = await response.json();
-    console.log('API responseeeeeeee:', data.verification.id);
+    console.log('API responseeeee:', data.verification.id);
        const user=await User.findByPk(id);
     user.session_id=data.verification.id;
     await user.save();
@@ -149,16 +170,12 @@ try {
     console.error('API request failed with status:', response.status);
     // Handle the unsuccessful API response as needed
   }
- 
 } catch (error) {
   console.error('Error calling API:', error.message);
   // Handle the error appropriately, e.g., show an error message
 }
-
 }
-
-
- async function sessionPerson(sid,res) {
+ async function sessionPerson(sid) {
   const sharedSecretKey='9a7c250f-29bd-49bf-a3f0-ef157f07ce7a';
   const hmac = crypto.createHmac('sha256', sharedSecretKey);
   //SESSIONiD
@@ -178,12 +195,14 @@ const dataToSign=sid;
       },
     });
     console.log(response.data);//session url
-    return  res.status(200).json(response.data);
+    return  response.data;
  }catch(err){
   console.log(err)
  }
  
  }
+
+
  async function deletesession(req, res) {  
   try {
     const sharedSecretKey='9a7c250f-29bd-49bf-a3f0-ef157f07ce7a';
@@ -203,19 +222,16 @@ const dataToSign=sid;
 
     },
   });
-
   console.log(response);//session url
  
 
 }catch(err){
 console.log(err)
 }
-   
-
- 
  }
   module.exports =  { 
     webhook,
+    webhookb,
     createsession,
     deletesession,
     sessionPerson
