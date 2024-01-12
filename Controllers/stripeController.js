@@ -18,6 +18,7 @@ app.use(bodyParser.raw({ type: 'application/json' }));
 const stripe = require('stripe')('sk_test_51OUZhhAvDgNxjxZsmHagCNCoaLxjoziywcsV3BCaibETvAkBFajQdLXWfNjvVwaKDkBkZKeXJABSWJhw1bx44BNs00bJVLwblw');
 var db = require('../modals/index.js');
 var  User =  db.userModel;
+var ourUser;
 // const YOUR_DOMAIN = 'http://localhost:5000';
 //  async function sessionStripe (req, res)  {
 //   const session = await stripe.checkout.sessions.create({
@@ -41,6 +42,7 @@ var  User =  db.userModel;
 async function sessionStripe(req, res) {
   try {
    console.log(req.user.id,"oooooooooooooooooooooooooooooooooooo");
+   ourUser=req.user.id;
        const user = await User.findByPk(req.user.id);
        user.strip_inprocess="ture";
         await user.save();
@@ -74,13 +76,18 @@ async function sessionStripe(req, res) {
   }
 }
  async function webhook(req, res) {
-   console.log(req);
-  console.log(req.body);
+   //console.log(req.user);
+console.log(ourUser,"our Userrrrrrr id")
+if(ourUser){
+        newUser = await User.findByPk(ourUser);
+       newUser.strip_payment=req.body.data.object.amount_total;
+        await newUser.save();
+}
   // const sigHeader = req.headers['stripe-signature'];
   const eventString = req.body.toString('utf-8');
-  const eventString1 = JSON.stringify(req.body, null, 2);
-  console.log("webhook")
-console.log("eventstring...",eventString1,"")
+  //const eventString1 = JSON.stringify(req.body, null, 2);
+  console.log("webhook of  strip")
+console.log("eventstring...",eventString,"")
   //const invoice = await stripe.invoices.retrieve(data.object.id);
 //   try {
 //     const eventString = req.body.toString('utf-8');

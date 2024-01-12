@@ -751,6 +751,14 @@ documentStatus:{
             type:DataTypes.BOOLEAN,
             defaultValue:false
             },
+            session_id:{
+              type:DataTypes.TEXT,
+             
+              },
+              strip_payment:{
+                type:DataTypes.TEXT,
+               
+                },
     // companies: {
     //   type: DataTypes.STRING, // Use STRING instead of ARRAY
     //   defaultValue: '[]',    // Set default value as a string representation of an empty array
